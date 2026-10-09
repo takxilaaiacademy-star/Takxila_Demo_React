@@ -1,0 +1,64 @@
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { CssBaseline, GlobalStyles, ThemeProvider, type PaletteMode } from '@mui/material';
+import { createAppTheme } from '../theme/theme';
+import { load, save } from '../utils/storage';
+
+interface ThemeModeValue {
+  mode: PaletteMode;
+  toggleMode: () => void;
+}
+
+// Shared keyframes for the whole app. `.tx-reduce` (Preferences > Reduce motion) switches them off.
+const motion = {
+  '@keyframes txdrift': {
+    '0%,100%': { transform: 'translate(0,0) scale(1)' },
+    '33%': { transform: 'translate(80px,-50px) scale(1.15)' },
+    '66%': { transform: 'translate(-60px,60px) scale(.9)' },
+  },
+  '@keyframes txrise': { from: { opacity: 0, transform: 'translateY(28px)' }, to: { opacity: 1, transform: 'none' } },
+  '@keyframes txfade': { from: { opacity: 0 }, to: { opacity: 1 } },
+  '@keyframes txpop': { from: { opacity: 0, transform: 'scale(.92)' }, to: { opacity: 1, transform: 'none' } },
+  '@keyframes txmarq': { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-50%)' } },
+  '@keyframes txfloat': { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-12px)' } },
+  '@keyframes txshimmer': { from: { backgroundPosition: '-400px 0' }, to: { backgroundPosition: '400px 0' } },
+  '@keyframes txpulse': { '0%': { boxShadow: '0 0 0 0 rgba(245,185,63,.55)' }, '100%': { boxShadow: '0 0 0 16px rgba(245,185,63,0)' } },
+  '@keyframes txshine': { '0%,60%': { left: '-60%' }, '100%': { left: '130%' } },
+  '@keyframes txconfetti': {
+    '0%': { opacity: 1, transform: 'translate(0,0) rotate(0)' },
+    '100%': { opacity: 0, transform: 'translate(var(--dx), 105vh) rotate(var(--rot))' },
+  },
+  '@keyframes txspin': { to: { transform: 'rotate(360deg)' } },
+  '@keyframes txspotlight': { '0%': { opacity: 0, transform: 'translate(-72%, -62%) scale(.5)' }, '100%': { opacity: 1, transform: 'translate(-50%, -40%) scale(1)' } },
+  '@keyframes txmeteor': { '0%': { transform: 'rotate(215deg) translateX(0)', opacity: 1 }, '70%': { opacity: 1 }, '100%': { transform: 'rotate(215deg) translateX(-900px)', opacity: 0 } },
+  '@keyframes txgradient': { '0%,100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } },
+  '@keyframes txblurin': { from: { opacity: 0, filter: 'blur(10px)', transform: 'translateY(8px)' }, to: { opacity: 1, filter: 'blur(0)', transform: 'none' } },
+  '@keyframes txflip': { from: { opacity: 0, transform: 'translateY(60%) rotateX(-70deg)', filter: 'blur(6px)' }, to: { opacity: 1, transform: 'none', filter: 'blur(0)' } },
+  '@keyframes txbeam': { '0%': { strokeDashoffset: 1000 }, '100%': { strokeDashoffset: 0 } },
+  '@keyframes txtwinkle': { '0%,100%': { opacity: 0.15, transform: 'scale(.6)' }, '50%': { opacity: 1, transform: 'scale(1)' } },
+  '@keyframes txlamp': { from: { opacity: 0.4, width: '30%' }, to: { opacity: 1, width: '70%' } },
+  '.tx-reduce *, .tx-reduce *::before, .tx-reduce *::after': { animation: 'none !important', transition: 'none !important' },
+};
+
+const ThemeModeContext = createContext<ThemeModeValue | null>(null);
+
+export function ThemeModeProvider({ children }: { children: ReactNode }) {
+  const [mode, setMode] = useState<PaletteMode>(() => (load<string>('theme', 'dark') === 'light' ? 'light' : 'dark'));
+  useEffect(() => save('theme', mode), [mode]);
+  const theme = useMemo(() => createAppTheme(mode), [mode]);
+  const value = useMemo<ThemeModeValue>(() => ({ mode, toggleMode: () => setMode((m) => (m === 'dark' ? 'light' : 'dark')) }), [mode]);
+  return (
+    <ThemeModeContext.Provider value={value}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <GlobalStyles styles={motion} />
+        {children}
+      </ThemeProvider>
+    </ThemeModeContext.Provider>
+  );
+}
+
+export function useThemeMode(): ThemeModeValue {
+  const ctx = useContext(ThemeModeContext);
+  if (!ctx) throw new Error('useThemeMode must be used inside ThemeModeProvider');
+  return ctx;
+}

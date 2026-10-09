@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<!-- Template for the course summary videos. tools/render-videos.mjs opens it as
+     video.html#<course-id>, steps the CSS animations frame by frame and encodes an MP4. -->
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" />
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 960px; height: 540px; overflow: hidden; background: #0a1022; }
+  body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #fff; position: relative; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(70px); }
+  .o1 { width: 420px; height: 420px; left: -120px; top: -80px; background: rgba(245,185,63,.32); animation: drift 10s ease-in-out both; }
+  .o2 { width: 520px; height: 520px; right: -160px; bottom: -200px; background: rgba(72,104,255,.42); animation: drift 10s ease-in-out reverse both; }
+  @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(60px,40px) scale(1.15); } }
+  .logo { position: absolute; left: 36px; top: 28px; display: flex; align-items: center; gap: 10px; z-index: 5; animation: fade .6s .1s both; }
+  .logo img { width: 44px; height: 35px; }
+  .logo b { display: block; letter-spacing: .08em; font-size: 17px; }
+  .logo small { display: block; letter-spacing: .18em; font-size: 9px; color: #c0c7de; font-weight: 700; }
+  .tag { position: absolute; right: 36px; top: 34px; z-index: 5; font-size: 12px; font-weight: 800; letter-spacing: .14em; color: #f5b93f; animation: fade .6s .2s both; }
+  .scene { position: absolute; inset: 0; padding: 92px 56px 40px; }
+  /* Scene 1: banner + title (0 to 3.6s) */
+  .s1 { animation: out .5s 3.3s both; }
+  .banner { width: 100%; aspect-ratio: 375/110; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,.45); animation: pop .9s cubic-bezier(.2,.8,.2,1) .2s both; }
+  .banner img { width: 100%; height: 100%; object-fit: cover; animation: zoom 3.6s linear both; }
+  .cat { margin-top: 26px; font-size: 13px; font-weight: 800; letter-spacing: .14em; color: #c0c7de; animation: rise .7s .7s both; }
+  .title { margin-top: 8px; font-size: 38px; font-weight: 800; line-height: 1.12; letter-spacing: -.02em; animation: rise .8s .85s both; }
+  .title span { color: #f5b93f; }
+  /* Scene 2: what you will learn (3.6s to 7.2s) */
+  .s2 { animation: in .5s 3.6s both, out .5s 6.9s both; }
+  .k { font-size: 13px; font-weight: 800; letter-spacing: .14em; color: #f5b93f; }
+  .h { font-size: 40px; font-weight: 800; letter-spacing: -.02em; margin: 6px 0 22px; }
+  .item { display: flex; align-items: center; gap: 14px; font-size: 24px; font-weight: 700; margin-bottom: 14px; padding: 14px 18px; border-radius: 14px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16); }
+  .item i { width: 30px; height: 30px; border-radius: 50%; background: #f5b93f; color: #0a1022; display: grid; place-items: center; font-style: normal; font-size: 18px; font-weight: 800; flex: none; }
+  .chips { display: flex; gap: 10px; margin-top: 18px; }
+  .chip { padding: 8px 14px; border-radius: 99px; border: 1px solid rgba(255,255,255,.3); font-size: 15px; font-weight: 700; }
+  /* Scene 3: price + call to action (7.2s to 10s) */
+  .s3 { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; animation: in .6s 7.2s both; }
+  .s3 .t { font-size: 30px; font-weight: 800; max-width: 760px; line-height: 1.2; animation: rise .7s 7.4s both; }
+  .price { display: flex; align-items: baseline; gap: 14px; margin: 22px 0; animation: pop .8s cubic-bezier(.2,.8,.2,1) 7.7s both; }
+  .price b { font-size: 76px; font-weight: 800; color: #f5b93f; }
+  .price s { font-size: 30px; color: #c0c7de; }
+  .price em { font-style: normal; font-size: 18px; font-weight: 800; background: #2ebd85; color: #062016; padding: 6px 12px; border-radius: 99px; }
+  .cta { padding: 16px 34px; border-radius: 99px; background: #f5b93f; color: #0a1022; font-size: 22px; font-weight: 800; animation: rise .7s 8.1s both, pulse 1.2s ease-in-out 8.8s 2 both; }
+  .url { margin-top: 16px; color: #c0c7de; font-size: 15px; animation: fade .6s 8.4s both; }
+  .bar { position: absolute; left: 0; bottom: 0; height: 5px; background: #f5b93f; animation: grow 10s linear both; }
+  @keyframes grow { from { width: 0; } to { width: 100%; } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+  @keyframes pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
+  @keyframes zoom { from { transform: scale(1); } to { transform: scale(1.08); } }
+  @keyframes in { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: none; } }
+  @keyframes out { to { opacity: 0; transform: translateX(-50px); } }
+  @keyframes pulse { 50% { transform: scale(1.06); box-shadow: 0 0 0 14px rgba(245,185,63,.18); } }
+</style>
+</head>
+<body>
+  <div class="orb o1"></div><div class="orb o2"></div>
+  <div class="logo"><img src="/public/assets/logo-light.svg" alt="" /><div><b>TAKXILA</b><small>AI ACADEMY</small></div></div>
+  <div class="tag">COURSE PREVIEW</div>
+  <div class="scene s1"><div class="banner"><img id="img" alt="" /></div><div class="cat" id="cat"></div><div class="title" id="title"></div></div>
+  <div class="scene s2"><div class="k">WHAT YOU WILL LEARN</div><div class="h" id="short"></div><div id="learn"></div><div class="chips" id="meta"></div></div>
+  <div class="scene s3"><div class="t" id="t3"></div><div class="price" id="price"></div><div class="cta" id="cta"></div><div class="url">academy.takxila.in</div></div>
+  <div class="bar"></div>
+  <script>
+    window.setCourse = (c) => {
+      const $ = (id) => document.getElementById(id);
+      const esc = (s) => s.replace(/[&<>]/g, (x) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[x]);
+      $('img').src = c.img.replace(/^\/assets/, '/public/assets');
+      $('cat').textContent = c.catLabel;
+      const words = c.title.split(' ');
+      const cut = Math.max(1, Math.ceil(words.length / 2));
+      $('title').innerHTML = esc(words.slice(0, cut).join(' ')) + ' <span>' + esc(words.slice(cut).join(' ')) + '</span>';
+      if (c.title.length > 70) $('title').style.fontSize = '30px';
+      $('short').textContent = c.short;
+      if (c.short.length > 48) $('short').style.fontSize = '32px';
+      $('learn').innerHTML = c.learn.slice(0, 4).map((l, i) => `<div class="item" style="animation: rise .5s ${4.0 + i * 0.45}s both"><i>✓</i>${esc(l)}</div>`).join('');
+      $('meta').innerHTML = c.meta.map((m, i) => `<div class="chip" style="animation: fade .5s ${5.9 + i * 0.15}s both">${esc(m)}</div>`).join('');
+      $('t3').textContent = c.title;
+      $('price').innerHTML = c.price === 0 ? '<b>FREE</b><em>Free course</em>' : `<b>₹${c.price}</b>` + (c.was ? `<s>₹${c.was}</s><em>${Math.round((1 - c.price / c.was) * 100)}% off</em>` : '');
+      $('cta').textContent = c.price === 0 ? 'Enroll for free today' : 'Enroll now on Takxila';
+      return Promise.all([document.fonts.ready, new Promise((r) => ($('img').complete ? r() : ($('img').onload = $('img').onerror = r)))]);
+    };
+    // Pause every animation and jump to time t (ms) so each frame is exact.
+    window.seek = (t) => document.getAnimations().forEach((a) => { a.pause(); a.currentTime = t; });
+  </script>
+</body>
+</html>
