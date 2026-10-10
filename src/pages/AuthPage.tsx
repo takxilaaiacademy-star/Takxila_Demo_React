@@ -6,12 +6,16 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import DarkModeIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeIcon from '@mui/icons-material/LightModeOutlined';
-import { useTheme } from '@mui/material/styles';
+import CheckCircleIcon from '@mui/icons-material/CheckCircleRounded';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useThemeMode } from '../context/ThemeModeContext';
 import Background from '../components/Background';
 import Logo from '../components/Logo';
+import { GradientText, GridBackdrop } from '../components/fx';
+import { HumanCheck, LatestAnnouncements, LostPasswordDialog, MiniCalendar, SocialButtons, VisitorCounter } from '../components/AuthExtras';
+import { socialSignIn, type Provider } from '../utils/social';
 import { useBlobUrl } from '../utils/media';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -26,6 +30,7 @@ interface AuthForm {
   remember: boolean;
   agree: boolean;
   refBy: string;
+  human: boolean;
 }
 type FieldErrors = Partial<Record<keyof AuthForm, string>>;
 interface LocationState {
@@ -52,21 +57,22 @@ function PasswordField(props: TextFieldProps) {
 }
 
 export default function AuthPage() {
-  const { isAuthed, login, register, lastEmail } = useAuth();
+  const { isAuthed, login, register, socialLogin, lastEmail } = useAuth();
   const { mode, toggleMode } = useThemeMode();
-  const theme = useTheme();
   const heroUrl = useBlobUrl(mode === 'dark' ? '/assets/3.jpg' : '/assets/1.jpg');
   const nav = useNavigate();
   const loc = useLocation();
   const from = (loc.state as LocationState | null)?.from;
   const refParam = new URLSearchParams(loc.search).get('ref') || '';
   const [tab, setTab] = useState<AuthTab>(loc.hash === '#register' || refParam ? 'register' : 'login');
-  const [f, setF] = useState<AuthForm>({ name: '', email: lastEmail || '', phone: '', password: '', confirm: '', remember: true, agree: false, refBy: refParam.toUpperCase() });
+  const [f, setF] = useState<AuthForm>({ name: '', email: lastEmail || '', phone: '', password: '', confirm: '', remember: true, agree: false, refBy: refParam.toUpperCase(), human: false });
+  const [lost, setLost] = useState(false);
+  const [social, setSocial] = useState<Provider | null>(null);
   const [err, setErr] = useState<FieldErrors>({});
   const [formErr, setFormErr] = useState('');
   const [busy, setBusy] = useState(false);
 
-  if (isAuthed) return <Navigate to={from || '/dashboard'} replace />;
+  if (isAuthed) return <Navigate to={from || '/home'} replace />;
 
   const set = (k: keyof AuthForm) => (e: ChangeEvent<HTMLInputElement>) => setF((s) => ({ ...s, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }));
   const switchTab = (t: AuthTab) => {
@@ -85,8 +91,23 @@ export default function AuthPage() {
       if (f.confirm !== f.password) e.confirm = 'Passwords do not match.';
       if (!f.agree) e.agree = 'Please accept the terms to continue.';
     } else if (!f.password) e.password = 'Enter your password.';
+    if (!f.human) e.human = 'Please tick the box to show you are not a robot.';
     setErr(e);
     return !Object.keys(e).length;
+  };
+
+  const withProvider = async (p: Provider) => {
+    setFormErr('');
+    setSocial(p);
+    try {
+      const profile = await socialSignIn(p);
+      socialLogin(profile, f.remember);
+      nav(from || '/home', { replace: true, state: { calc: true } });
+    } catch (e) {
+      setFormErr(e instanceof Error ? e.message : 'Sign-in failed. Please try again.');
+    } finally {
+      setSocial(null);
+    }
   };
 
   const submit = async (ev: FormEvent<HTMLFormElement>) => {
@@ -97,7 +118,8 @@ export default function AuthPage() {
     try {
       if (tab === 'register') await register(f);
       else await login(f);
-      nav(from || '/dashboard', { replace: true });
+      // Every login lands on Home and opens the AI course calculator on top of it.
+      nav(from || '/home', { replace: true, state: { calc: true } });
     } catch (e) {
       setFormErr(e instanceof Error ? e.message : 'Something went wrong. Please try again.');
     } finally {
@@ -106,7 +128,7 @@ export default function AuthPage() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', py: { xs: 3, md: 6 }, px: 2 }}>
+    <Box sx={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3, py: { xs: 3, md: 6 }, px: 2 }}>
       <Background />
       <Tooltip title={mode === 'dark' ? 'Light theme' : 'Dark theme'}>
         <IconButton onClick={toggleMode} sx={{ position: 'absolute', top: 16, right: 16, zIndex: 2 }}>
@@ -118,29 +140,42 @@ export default function AuthPage() {
           <Grid
             item
             md={6}
-            sx={{
-              display: { xs: 'none', md: 'flex' }, flexDirection: 'column', justifyContent: 'space-between', p: 5, minHeight: 620, position: 'relative',
-              backgroundImage: `linear-gradient(180deg, ${theme.palette.mode === 'dark' ? 'rgba(10,16,34,.15), rgba(10,16,34,.92)' : 'rgba(238,241,251,.1), rgba(238,241,251,.94)'}), url(${heroUrl ?? ''})`,
-              backgroundSize: 'cover', backgroundPosition: 'center',
-            }}
+            sx={(t) => ({
+              display: { xs: 'none', md: 'flex' }, flexDirection: 'column', gap: 3.5, p: 5, position: 'relative', overflow: 'hidden',
+              background: t.palette.mode === 'dark'
+                ? 'radial-gradient(120% 80% at 0% 0%, rgba(91,63,216,.45), transparent 60%), linear-gradient(160deg, #0E1530, #0A1022)'
+                : 'radial-gradient(120% 80% at 0% 0%, rgba(123,92,255,.22), transparent 60%), linear-gradient(160deg, #EEF1FF, #F8F9FF)',
+              borderRight: `1px solid ${t.tx.line}`,
+            })}
           >
-            <Logo size={52} />
-            <Box>
+            <GridBackdrop size={44} sx={{ opacity: 0.6 }} />
+            <Box sx={{ position: 'relative' }}>
+              <Logo size={52} />
+            </Box>
+            <AuthHero src={heroUrl} />
+            <Box sx={{ position: 'relative', mt: 'auto' }}>
               <Typography variant="overline" color="text.secondary">
                 THE AI SKILLS ACADEMY FOR REAL PEOPLE
               </Typography>
-              <Typography variant="h2" sx={{ fontSize: 44, my: 1 }}>
-                Learn AI Skills.{' '}
-                <Box component="span" sx={{ color: 'secondary.main' }}>
-                  Build What&apos;s Next.
-                </Box>
+              <Typography variant="h2" sx={{ fontSize: { md: 34, lg: 40 }, my: 1, lineHeight: 1.15 }}>
+                Learn AI Skills. <GradientText>Build What&apos;s Next.</GradientText>
               </Typography>
-              <Typography color="text.secondary">45 practical courses and challenges, a personal dashboard and course picks made for you.</Typography>
+              <Stack spacing={1} sx={{ mt: 2 }}>
+                {['45 practical courses and daily challenges', 'Certificates with a verifiable ID', '1:1 mentor help on email and WhatsApp'].map((x, i) => (
+                  <Stack key={x} direction="row" spacing={1.25} alignItems="center" sx={{ animation: `txrise .6s ${0.25 + i * 0.12}s both` }}>
+                    <CheckCircleIcon color="secondary" fontSize="small" />
+                    <Typography color="text.secondary">{x}</Typography>
+                  </Stack>
+                ))}
+              </Stack>
             </Box>
           </Grid>
           <Grid item xs={12} md={6} sx={{ p: { xs: 3, sm: 5 } }}>
             <Box sx={{ display: { md: 'none' }, mb: 3 }}>
               <Logo size={46} />
+              <Box sx={{ mt: 2.5 }}>
+                <AuthHero src={heroUrl} compact />
+              </Box>
             </Box>
             <Typography variant="h4" sx={{ mb: 0.5 }}>
               {tab === 'login' ? 'Welcome back' : 'Create your account'}
@@ -173,7 +208,7 @@ export default function AuthPage() {
               {tab === 'register' && (
                 <TextField label="Full name" value={f.name} onChange={set('name')} error={!!err.name} helperText={err.name} autoComplete="name" autoFocus />
               )}
-              <TextField label="Email" type="email" value={f.email} onChange={set('email')} error={!!err.email} helperText={err.email} autoComplete="email" autoFocus={tab === 'login'} />
+              <TextField label={tab === 'login' ? 'Username / email' : 'Email'} type="email" value={f.email} onChange={set('email')} error={!!err.email} helperText={err.email} autoComplete="email" autoFocus={tab === 'login'} />
               {tab === 'register' && (
                 <TextField label="Phone / WhatsApp (optional)" value={f.phone} onChange={set('phone')} error={!!err.phone} helperText={err.phone} autoComplete="tel" />
               )}
@@ -195,10 +230,22 @@ export default function AuthPage() {
                   )}
                 </Box>
               )}
+              <HumanCheck checked={f.human} onChange={(v) => setF((s) => ({ ...s, human: v }))} error={err.human} />
               <Button type="submit" variant="contained" size="large" disabled={busy} sx={{ borderRadius: '14px' }}>
                 {tab === 'login' ? 'Log in' : 'Create account'}
               </Button>
-              <Typography color="text.secondary" sx={{ textAlign: 'center' }}>
+              {tab === 'login' && (
+                <Stack direction="row" justifyContent="space-between" sx={{ flexWrap: 'wrap', gap: 1 }}>
+                  <Link component="button" type="button" onClick={() => switchTab('register')} sx={{ fontWeight: 700, color: 'secondary.main' }}>
+                    Create new account
+                  </Link>
+                  <Link component="button" type="button" onClick={() => setLost(true)} sx={{ fontWeight: 700, color: 'secondary.main' }}>
+                    Lost password?
+                  </Link>
+                </Stack>
+              )}
+              <SocialButtons onPick={withProvider} busy={social} />
+              <Typography color="text.secondary" sx={{ textAlign: 'center', display: tab === 'login' ? 'none' : undefined }}>
                 {tab === 'login' ? 'New to Takxila? ' : 'Already have an account? '}
                 <Link component="button" type="button" onClick={() => switchTab(tab === 'login' ? 'register' : 'login')} sx={{ fontWeight: 700, color: 'secondary.main', verticalAlign: 'baseline' }}>
                   {tab === 'login' ? 'Create an account' : 'Log in'}
@@ -211,6 +258,59 @@ export default function AuthPage() {
           </Grid>
         </Grid>
       </Card>
+      {/* Moodle-style sidebar blocks */}
+      <Box sx={{ width: '100%', maxWidth: 1080, display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1.2fr 1fr 0.8fr' }, position: 'relative', zIndex: 1 }}>
+        <LatestAnnouncements />
+        <MiniCalendar />
+        <VisitorCounter />
+      </Box>
+      <LostPasswordDialog open={lost} onClose={() => setLost(false)} email={f.email} />
+    </Box>
+  );
+}
+
+/**
+ * The banner photo shown whole (not stretched over the panel), in a floating rounded frame.
+ * The left edge of the source image has cut-off text, so the frame starts a little in from it.
+ */
+function AuthHero({ src, compact = false }: { src?: string; compact?: boolean }) {
+  return (
+    <Box sx={{ position: 'relative', animation: compact ? undefined : 'txfloat 7s ease-in-out infinite' }}>
+      <Box
+        sx={(t) => ({
+          position: 'relative', aspectRatio: '2.1', borderRadius: compact ? '16px' : '22px', overflow: 'hidden', border: `1px solid ${t.tx.line}`,
+          boxShadow: compact ? 'none' : `0 30px 70px ${t.tx.glow}`, bgcolor: t.tx.surface,
+        })}
+      >
+        {src && (
+          <Box
+            component="img"
+            src={src}
+            alt="A learner studying AI with Takxila"
+            sx={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: '72% 45%', display: 'block', animation: 'txblurin .8s both' }}
+          />
+        )}
+      </Box>
+      {!compact && (
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="center"
+          sx={(t) => ({
+            position: 'absolute', left: -14, bottom: -18, px: 1.5, py: 1, borderRadius: '14px', border: `1px solid ${t.tx.line}`,
+            background: t.palette.mode === 'dark' ? 'rgba(16,23,48,.92)' : 'rgba(255,255,255,.95)', backdropFilter: 'blur(12px)', boxShadow: '0 12px 30px rgba(0,0,0,.18)',
+            animation: 'txrise .7s .4s both',
+          })}
+        >
+          <WorkspacePremiumIcon sx={{ color: '#F5B93F' }} />
+          <Box>
+            <Typography sx={{ fontWeight: 800, fontSize: 14, lineHeight: 1.2 }}>Certified learning</Typography>
+            <Typography color="text.secondary" sx={{ fontSize: 12 }}>
+              Finish a course, get your certificate
+            </Typography>
+          </Box>
+        </Stack>
+      )}
     </Box>
   );
 }

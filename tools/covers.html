@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<!-- Course cover template. tools/render-covers.mjs opens covers.html#<course-id> and screenshots it at 1125x330.
+     Every course gets its own colours and a scene that shows what the course is about. -->
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1125px; height: 330px; overflow: hidden; }
+  body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #fff; position: relative; background: var(--bg); }
+  .glow { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .55; }
+  .dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.12) 1px, transparent 1px); background-size: 22px 22px;
+    mask-image: linear-gradient(90deg, transparent 30%, #000 70%); }
+  .left { position: absolute; left: 40px; top: 26px; bottom: 26px; width: 520px; display: flex; flex-direction: column; z-index: 3; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .14em; font-size: 15px; }
+  .brand img { height: 30px; }
+  .badge { align-self: flex-start; margin-top: 16px; padding: 6px 14px; border-radius: 99px; font-size: 12.5px; font-weight: 800; letter-spacing: .1em; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); color: var(--acc); }
+  h1 { font-size: 33px; line-height: 1.08; letter-spacing: -.02em; margin-top: 12px; font-weight: 800; }
+  h1 span { color: var(--acc); display: block; }
+  .sub { margin-top: 8px; font-size: 14px; color: rgba(255,255,255,.72); font-weight: 600; }
+  .buy { margin-top: auto; display: flex; gap: 12px; align-items: stretch; }
+  .price { display: flex; border-radius: 12px; overflow: hidden; font-weight: 800; box-shadow: 0 10px 26px rgba(0,0,0,.3); }
+  .price .off { background: #E5383B; padding: 10px 14px; font-size: 15px; display: flex; align-items: center; }
+  .price .amt { background: var(--acc); color: var(--accInk); padding: 8px 16px; font-size: 25px; display: flex; align-items: center; gap: 8px; }
+  .price .amt s { font-size: 15px; opacity: .65; font-weight: 700; }
+  .price .amt small { font-size: 13px; letter-spacing: .06em; }
+  .dur { display: flex; align-items: center; gap: 8px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,.25); font-weight: 800; font-size: 16px; background: rgba(255,255,255,.06); }
+  .dur svg { width: 18px; height: 18px; }
+
+  .scene { position: absolute; left: 590px; top: 22px; width: 505px; height: 286px; z-index: 2; }
+  .card { position: absolute; border-radius: 16px; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(10px); box-shadow: 0 24px 50px rgba(0,0,0,.35); overflow: hidden; }
+  .light { background: #fff; color: #1b1f33; border-color: rgba(255,255,255,.6); }
+  .bar { height: 30px; display: flex; align-items: center; gap: 6px; padding: 0 12px; border-bottom: 1px solid rgba(255,255,255,.12); font-size: 12px; font-weight: 700; color: rgba(255,255,255,.8); }
+  .light .bar { border-color: #e8ebf3; color: #59607a; }
+  .bar i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.35); display: inline-block; }
+  .bar i:nth-child(1) { background: #ff5f57; } .bar i:nth-child(2) { background: #febc2e; } .bar i:nth-child(3) { background: #28c840; }
+  .bar b { margin-left: 8px; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .bubble { padding: 9px 12px; border-radius: 14px; font-size: 13px; line-height: 1.4; font-weight: 600; max-width: 82%; }
+  .me { margin-left: auto; background: var(--acc); color: var(--accInk); border-bottom-right-radius: 4px; }
+  .ai { background: rgba(255,255,255,.1); border-bottom-left-radius: 4px; }
+  .light .ai { background: #f1f3f9; }
+  .ln { height: 8px; border-radius: 4px; background: rgba(255,255,255,.22); margin-top: 7px; }
+  .light .ln { background: #e3e6ef; }
+  .pill { padding: 5px 10px; border-radius: 99px; font-size: 11.5px; font-weight: 800; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); white-space: nowrap; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .ico { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font-weight: 800; font-size: 20px; box-shadow: 0 12px 26px rgba(0,0,0,.3); }
+  .ico svg { width: 24px; height: 24px; }
+  .chip { position: absolute; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 12px; background: #fff; color: #1b1f33; font-weight: 800; font-size: 12.5px; box-shadow: 0 14px 30px rgba(0,0,0,.35); white-space: nowrap; }
+  .chip em { font-style: normal; color: #18a058; }
+  .tile { border-radius: 10px; position: relative; overflow: hidden; }
+  .tile::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.45), transparent 45%); }
+  .wave { display: flex; align-items: center; gap: 3px; height: 50px; }
+  .wave span { width: 4px; border-radius: 3px; background: var(--acc); }
+</style>
+</head>
+<body>
+<div class="glow" style="width:420px;height:420px;right:-60px;top:-160px;background:var(--g1)"></div>
+<div class="glow" style="width:360px;height:360px;left:420px;bottom:-230px;background:var(--g2)"></div>
+<div class="dots"></div>
+<div class="left">
+  <div class="brand"><img src="../public/assets/logo-mark-dark.webp" alt="" />TAKXILA ™</div>
+  <div class="badge" id="badge"></div>
+  <h1 id="title"></h1>
+  <div class="sub" id="sub"></div>
+  <div class="buy" id="buy"></div>
+</div>
+<div class="scene" id="scene"></div>
+
+<script>
+// ---------- Icons (inline SVG paths) ----------
+const P = {
+  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>',
+  spark: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z"/></svg>',
+  mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>',
+  img: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg>',
+  text: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 6h14M5 12h14M5 18h9"/></svg>',
+  video: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z"/></svg>',
+  search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',
+  code: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>',
+  bolt: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>',
+  heart: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 5.8-8 11-8 11z"/></svg>',
+  up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M4 17l6-6 4 4 6-7M15 8h5v5"/></svg>',
+  user: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0z"/></svg>',
+  file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 13h6M9 17h6"/></svg>',
+  music: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 17.5a3 3 0 11-2-2.8V5l12-2v11.5a3 3 0 11-2-2.8V6.4L9 7.8z"/></svg>',
+  globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>',
+  cart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 4h2l2.4 11h10.2L20 8H6.2"/><circle cx="9" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',
+  rupee: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 4h11M7 9h11M7 4c6 0 6 10 0 10h-1l8 7"/></svg>',
+  star: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.8 5.8 6.2.8-4.6 4.3 1.2 6.2L12 17l-5.6 3.1 1.2-6.2L3 9.6l6.2-.8z"/></svg>',
+};
+const ico = (k, bg, fg = '#fff', extra = '') => `<div class="ico" style="background:${bg};color:${fg};${extra}">${P[k]}</div>`;
+const lines = (n, w = [90, 70, 80, 60]) => Array.from({ length: n }, (_, i) => `<div class="ln" style="width:${w[i % w.length]}%"></div>`).join('');
+const pos = (l, t, w, h) => `left:${l}px;top:${t}px;width:${w}px;${h ? 'height:' + h + 'px;' : ''}`;
+const grad = (a, b, deg = 135) => `linear-gradient(${deg}deg, ${a}, ${b})`;
+
+// ---------- Scenes ----------
+const S = {
+  // A chat app: the course tool answering a prompt.
+  chat: ({ app, logo, prompt, reply, side, chips = [] }) => `
+    <div class="card" style="${pos(40, 18, 400, 236)}">
+      <div class="bar"><i></i><i></i><i></i><b>${app}</b></div>
+      <div style="display:flex;height:206px">
+        ${side ? `<div style="width:112px;border-right:1px solid rgba(255,255,255,.12);padding:10px 8px;font-size:11px;font-weight:700;color:rgba(255,255,255,.7)">${side.map((s, i) => `<div style="padding:6px 8px;border-radius:8px;margin-bottom:4px;${i === 0 ? 'background:rgba(255,255,255,.12);color:#fff' : ''}">${s}</div>`).join('')}</div>` : ''}
+        <div style="flex:1;padding:14px;display:flex;flex-direction:column;gap:10px">
+          <div class="bubble me">${prompt}</div>
+          <div class="row" style="align-items:flex-start">${logo}<div class="bubble ai" style="flex:1">${reply}${lines(2, [92, 64])}</div></div>
+          <div style="margin-top:auto;display:flex;gap:6px;flex-wrap:wrap">${chips.map((c) => `<span class="pill">${c}</span>`).join('')}</div>
+        </div>
+      </div>
+    </div>`,
+  terminal: ({ cmds }) => `
+    <div class="card" style="${pos(30, 14, 420, 240)};background:#0d1117">
+      <div class="bar"><i></i><i></i><i></i><b class="mono">~/my-app — claude</b></div>
+      <div class="mono" style="padding:14px 16px;font-size:13px;line-height:1.75">${cmds.join('<br>')}</div>
+    </div>`,
+  sheet: ({ formula, head, rows, bars }) => `
+    <div class="card light" style="${pos(20, 20, 330, 230)}">
+      <div class="bar" style="background:#107c41;color:#fff;border:0"><b style="margin:0">Sheet1.xlsx</b></div>
+      <div class="mono" style="font-size:11.5px;padding:6px 10px;border-bottom:1px solid #e8ebf3;color:#107c41"><b>fx</b> ${formula}</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <tr>${head.map((h) => `<th style="background:#f3f5f9;padding:6px 8px;text-align:left;border:1px solid #e8ebf3">${h}</th>`).join('')}</tr>
+        ${rows.map((r, i) => `<tr>${r.map((c, j) => `<td style="padding:6px 8px;border:1px solid #eef0f5;${i === rows.length - 1 ? 'font-weight:800;background:#e9f7ef' : ''}${j ? ';text-align:right' : ''}">${c}</td>`).join('')}</tr>`).join('')}
+      </table>
+    </div>
+    <div class="card light" style="${pos(300, 110, 190, 150)};padding:12px">
+      <div style="font-size:12px;font-weight:800;color:#59607a">Monthly trend</div>
+      <div style="display:flex;align-items:flex-end;gap:8px;height:96px;margin-top:10px">${bars.map((b, i) => `<div style="flex:1;height:${b}%;border-radius:5px 5px 0 0;background:${i === bars.length - 1 ? 'var(--acc)' : '#c9d6f5'}"></div>`).join('')}</div>
+    </div>`,
+  gallery: ({ prompt, tiles, tag, cols = 3 }) => `
+    <div class="card" style="${pos(30, 10, 440, 266)};padding:12px">
+      <div class="row mono" style="padding:9px 12px;border-radius:10px;background:rgba(0,0,0,.35);font-size:12.5px"><span style="color:var(--acc)">${tag}</span><span style="opacity:.9">${prompt}</span></div>
+      <div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:8px;margin-top:10px;height:196px">${tiles.map((t) => `<div class="tile" style="background:${t}"></div>`).join('')}</div>
+    </div>`,
+  editor: ({ preview, label, clips, overlay = '' }) => `
+    <div class="card" style="${pos(20, 8, 460, 270)};background:#0f1220">
+      <div class="bar"><i></i><i></i><i></i><b>${label}</b></div>
+      <div style="margin:10px 12px;height:142px;border-radius:10px;background:${preview};position:relative;overflow:hidden">
+        ${overlay}
+        <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.9);color:#111;display:grid;place-items:center">${P.play.replace('<svg', '<svg width="22" height="22"')}</div>
+      </div>
+      <div style="padding:0 12px">${clips.map((row) => `<div style="display:flex;gap:4px;margin-bottom:5px">${row.map(([w, c]) => `<div style="flex:${w};height:18px;border-radius:5px;background:${c}"></div>`).join('')}</div>`).join('')}</div>
+      <div style="position:absolute;left:150px;top:182px;bottom:12px;width:2px;background:#ff4d4f"></div>
+    </div>`,
+  ad: ({ brand, platform, img, metrics, curve }) => `
+    <div class="card light" style="${pos(20, 6, 230, 274)}">
+      <div class="row" style="padding:10px"><div style="width:30px;height:30px;border-radius:50%;background:${grad('#f9ce34', '#ee2a7b')}"></div><div><div style="font-weight:800;font-size:12.5px">${brand}</div><div style="font-size:10.5px;color:#8a90a6">Sponsored · ${platform}</div></div></div>
+      <div style="height:150px;background:${img};position:relative"><div style="position:absolute;left:12px;bottom:12px;font-weight:800;font-size:18px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)">Summer Sale<br>40% OFF</div></div>
+      <div class="row" style="padding:10px;justify-content:space-between"><span style="color:#e0245e;display:flex;gap:4px;align-items:center;font-weight:800;font-size:12px">${P.heart.replace('<svg', '<svg width="16" height="16"')} 2.4k</span><span style="background:#1877f2;color:#fff;font-weight:800;font-size:12px;padding:6px 12px;border-radius:8px">Shop now</span></div>
+    </div>
+    <div class="card" style="${pos(270, 40, 225, 190)};padding:14px">
+      <div style="font-size:12px;font-weight:800;opacity:.8">Campaign results</div>
+      <div style="display:flex;gap:10px;margin-top:8px">${metrics.map(([k, v]) => `<div><div style="font-size:20px;font-weight:800;color:var(--acc)">${v}</div><div style="font-size:10.5px;opacity:.7;font-weight:700">${k}</div></div>`).join('')}</div>
+      <svg viewBox="0 0 200 80" style="width:100%;height:80px;margin-top:8px"><path d="${curve}" fill="none" stroke="var(--acc)" stroke-width="3.5" stroke-linecap="round"/><path d="${curve} L200 80 L0 80Z" fill="var(--acc)" opacity=".15"/></svg>
+    </div>`,
+  serp: ({ query, results }) => `
+    <div class="card light" style="${pos(20, 12, 450, 262)};padding:14px 16px">
+      <div class="row" style="border:1px solid #dfe3ec;border-radius:99px;padding:8px 14px;font-size:13px;font-weight:600;color:#3c4257">${P.search.replace('<svg', '<svg width="16" height="16" style="color:#4285f4"')} ${query}</div>
+      ${results.map(([url, title, rank], i) => `<div style="margin-top:12px;padding:${i === 0 ? '10px' : '0 10px'};border-radius:10px;${i === 0 ? 'background:#eef6ee;border:1px solid #bfe3c5' : ''}">
+        <div class="row" style="justify-content:space-between"><span style="font-size:11px;color:#3c7a3f;font-weight:700">${url}</span>${rank ? `<span style="font-size:11px;font-weight:800;background:#18a058;color:#fff;padding:3px 8px;border-radius:99px">${rank}</span>` : ''}</div>
+        <div style="font-size:15px;color:#1a0dab;font-weight:700;margin-top:2px">${title}</div>${lines(1, [86])}</div>`).join('')}
+    </div>`,
+  kanban: ({ cols }) => `
+    <div class="card" style="${pos(10, 10, 480, 266)};padding:12px;display:flex;gap:10px">
+      ${cols.map(([name, color, cards]) => `<div style="flex:1;background:rgba(0,0,0,.18);border-radius:12px;padding:10px">
+        <div class="row" style="font-size:12px;font-weight:800;margin-bottom:8px"><span style="width:8px;height:8px;border-radius:50%;background:${color}"></span>${name}<span style="margin-left:auto;opacity:.6">${cards.length}</span></div>
+        ${cards.map((c) => `<div style="background:#fff;color:#1b1f33;border-radius:9px;padding:8px 9px;margin-bottom:7px;font-size:11.5px;font-weight:700;box-shadow:0 4px 10px rgba(0,0,0,.15)">${c}<div style="height:4px;border-radius:3px;margin-top:6px;background:${color};width:${40 + c.length * 2}%"></div></div>`).join('')}
+      </div>`).join('')}
+    </div>`,
+  browser: ({ url, hero, prompt, blocks }) => `
+    <div class="card light" style="${pos(60, 8, 420, 250)}">
+      <div class="bar"><i></i><i></i><i></i><span style="margin-left:10px;flex:1;background:#f1f3f9;border-radius:6px;padding:3px 10px;font-weight:600;color:#59607a">${url}</span></div>
+      <div style="height:96px;margin:10px;border-radius:10px;background:${hero};padding:16px;color:#fff;font-weight:800;font-size:18px">${blocks[0]}<div style="margin-top:10px;display:inline-block;background:#fff;color:#111;padding:5px 12px;border-radius:8px;font-size:11px">Get started</div></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 10px">${blocks.slice(1).map((b) => `<div style="border:1px solid #e8ebf3;border-radius:9px;padding:9px;font-size:11px;font-weight:800">${b}${lines(2, [90, 60])}</div>`).join('')}</div>
+    </div>
+    ${prompt ? `<div class="card" style="${pos(0, 200, 250, 60)};padding:10px 12px;background:rgba(15,18,32,.92)"><div style="font-size:10.5px;font-weight:800;color:var(--acc)">PROMPT</div><div style="font-size:12.5px;font-weight:600">${prompt}</div></div>` : ''}`,
+  jobs: ({ jobs }) => `
+    ${jobs.map(([role, co, score, ok], i) => `<div class="card light" style="${pos(20 + i * 30, 6 + i * 90, 380, 78)};padding:12px 14px;display:flex;align-items:center;gap:12px">
+      <div style="width:44px;height:44px;border-radius:12px;background:${['#e8f0fe', '#fde8ef', '#e6f7ee'][i]};display:grid;place-items:center;font-weight:800;color:${['#4285f4', '#e0245e', '#18a058'][i]}">${co[0]}</div>
+      <div style="flex:1"><div style="font-weight:800;font-size:14px">${role}</div><div style="font-size:11.5px;color:#8a90a6;font-weight:600">${co} · Remote</div></div>
+      <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:${score > 80 ? '#18a058' : '#e0a100'}">${score}%</div><div style="font-size:10px;font-weight:800;color:#8a90a6">MATCH</div></div>
+      <div style="font-size:11px;font-weight:800;padding:6px 10px;border-radius:8px;background:${ok ? '#18a058' : '#eef0f5'};color:${ok ? '#fff' : '#8a90a6'}">${ok ? 'Applied ✓' : 'Skipped'}</div>
+    </div>`).join('')}`,
+  calendar: ({ days, done, label, mission }) => {
+    const cols = 7;
+    return `<div class="card" style="${pos(40, days > 14 ? 10 : 30)};width:400px;padding:14px">
+      <div class="row" style="justify-content:space-between"><b style="font-size:14px">${label}</b><span class="pill" style="background:var(--acc);color:var(--accInk);border:0">🔥 ${done}-day streak</span></div>
+      <div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:${days > 14 ? 6 : 9}px;margin-top:12px">
+        ${Array.from({ length: days }, (_, i) => `<div style="aspect-ratio:${days > 14 ? 1.5 : 1};border-radius:9px;display:grid;place-items:center;font-size:${days > 14 ? 11 : 15}px;font-weight:800;${i < done ? 'background:var(--acc);color:var(--accInk)' : i === done ? 'border:2px solid var(--acc);color:var(--acc)' : 'background:rgba(255,255,255,.08);color:rgba(255,255,255,.55)'}">${i < done ? '✓' : 'D' + (i + 1)}</div>`).join('')}
+      </div>
+      <div style="margin-top:12px;height:8px;border-radius:5px;background:rgba(255,255,255,.12)"><div style="height:100%;width:${(done / days) * 100}%;border-radius:5px;background:var(--acc)"></div></div>
+      ${days > 14 ? '' : `<div class="row" style="margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.08)"><span style="color:var(--acc)">${P.bolt.replace('<svg', '<svg width="18" height="18"')}</span><div><div style="font-size:11px;font-weight:800;opacity:.7">TODAY · DAY ${done + 1}</div><div style="font-size:13.5px;font-weight:700">${mission}</div></div></div>`}
+    </div>`;
+  },
+  flow: ({ nodes, edges }) => `
+    <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 505 286">${edges.map(([a, b]) => { const A = nodes[a], B = nodes[b]; const x1 = A[0] + 60, y1 = A[1] + 24, x2 = B[0] + 60, y2 = B[1] + 24; return `<path d="M${x1} ${y1} C ${(x1 + x2) / 2} ${y1}, ${(x1 + x2) / 2} ${y2}, ${x2} ${y2}" stroke="var(--acc)" stroke-width="2.5" fill="none" stroke-dasharray="6 5" opacity=".85"/>`; }).join('')}</svg>
+    ${nodes.map(([x, y, label, k, bg]) => `<div class="card" style="${pos(x, y, 120, 48)};display:flex;align-items:center;gap:8px;padding:0 10px;border-radius:12px;background:rgba(255,255,255,.95);color:#1b1f33"><div style="width:28px;height:28px;border-radius:8px;background:${bg};color:#fff;display:grid;place-items:center">${P[k].replace('<svg', '<svg width="16" height="16"')}</div><b style="font-size:12px">${label}</b></div>`).join('')}`,
+  phone: ({ screen, caption, stats }) => `
+    <div class="card" style="${pos(150, 0, 150, 286)};border-radius:26px;border:6px solid #111;background:${screen}">
+      <div style="position:absolute;inset:auto 10px 14px 10px;font-size:12px;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.5)">${caption}</div>
+      <div style="position:absolute;right:8px;bottom:60px;display:flex;flex-direction:column;gap:12px;align-items:center;font-size:10px;font-weight:800">${P.heart.replace('<svg', '<svg width="22" height="22"')}48k</div>
+    </div>
+    ${stats.map(([k, v, l, t], i) => `<div class="chip" style="left:${l}px;top:${t}px">${ico(k, ['#e0245e', '#7b5cff', '#18a058', '#f59e0b'][i], '#fff', 'width:30px;height:30px;border-radius:9px;box-shadow:none')}${v}</div>`).join('')}`,
+  avatar: ({ bg, sub }) => `
+    <div class="card" style="${pos(40, 6, 400, 236)};background:${bg}">
+      <div style="position:absolute;left:50%;top:14px;transform:translateX(-50%);width:150px;height:150px;border-radius:75px 75px 30px 30px;background:#2a1a12"></div>
+      <div style="position:absolute;left:50%;top:30px;transform:translateX(-50%);width:112px;height:120px;border-radius:50% 50% 46% 46%;background:${grad('#ffd7b5', '#e6a77d', 160)}"></div>
+      <div style="position:absolute;left:50%;top:22px;transform:translateX(-50%);width:120px;height:40px;border-radius:60px 60px 10px 40px;background:#2a1a12"></div>
+      <div style="position:absolute;left:calc(50% - 26px);top:76px;width:10px;height:12px;border-radius:50%;background:#2a1a12"></div>
+      <div style="position:absolute;left:calc(50% + 16px);top:76px;width:10px;height:12px;border-radius:50%;background:#2a1a12"></div>
+      <div style="position:absolute;left:50%;top:146px;transform:translateX(-50%);width:220px;height:110px;border-radius:110px 110px 0 0;background:${grad('#3b4cca', '#22307a')}"></div>
+      <div style="position:absolute;left:50%;top:108px;transform:translateX(-50%);width:30px;height:9px;border-radius:0 0 20px 20px;background:#b5483b"></div>
+      <div style="position:absolute;left:16px;right:16px;bottom:14px;text-align:center;font-size:13px;font-weight:700;background:rgba(0,0,0,.55);border-radius:8px;padding:6px">${sub}</div>
+      <div class="pill" style="position:absolute;left:12px;top:12px;background:#E5383B;border:0">● LIVE AVATAR</div>
+    </div>
+    <div class="chip" style="left:300px;top:250px">${P.mic.replace('<svg', '<svg width="16" height="16"')} Lip sync <em>98%</em></div>
+    <div class="chip" style="left:60px;top:250px">${P.globe.replace('<svg', '<svg width="16" height="16"')} Hindi · English · Tamil</div>`,
+  notebook: () => `
+    <div class="card" style="${pos(10, 10, 170, 260)};padding:12px">
+      <div style="font-size:11px;font-weight:800;opacity:.75;margin-bottom:8px">SOURCES</div>
+      ${['Research.pdf', 'Interview notes', 'YouTube link', 'Market data'].map((s, i) => `<div class="row" style="padding:8px;border-radius:9px;background:rgba(255,255,255,.08);margin-bottom:6px;font-size:11.5px;font-weight:700">${P[['file', 'text', 'video', 'up'][i]].replace('<svg', '<svg width="15" height="15"')}${s}</div>`).join('')}
+    </div>
+    <div class="card light" style="${pos(195, 10, 300, 150)};padding:14px">
+      <div style="font-weight:800;font-size:14px">Audio overview</div>
+      <div style="font-size:11.5px;color:#8a90a6;font-weight:600">Two AI hosts discuss your sources</div>
+      <div class="wave" style="margin-top:10px">${[20, 35, 60, 40, 80, 55, 30, 70, 90, 50, 35, 65, 45, 25, 55, 75, 40, 30, 60, 45, 20, 35].map((h) => `<span style="height:${h}%"></span>`).join('')}</div>
+    </div>
+    <div class="card" style="${pos(195, 172, 300, 98)};padding:12px 14px">
+      <div style="font-size:11px;font-weight:800;color:var(--acc)">STUDY GUIDE</div>${lines(3, [95, 80, 60])}
+    </div>`,
+  funnel: ({ stages }) => `
+    ${stages.map(([label, v, w], i) => `<div style="position:absolute;left:${(505 - w) / 2 - 60}px;top:${8 + i * 56}px;width:${w}px;height:48px;border-radius:12px;background:linear-gradient(90deg, var(--acc), ${['#ff7a59', '#ff4d8d', '#a855f7', '#4f7cff', '#22c55e'][i]});display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-weight:800;font-size:14px;color:#fff;box-shadow:0 12px 26px rgba(0,0,0,.3)"><span>${label}</span><span>${v}</span></div>`).join('')}
+    <div class="chip" style="left:360px;top:120px">${P.up.replace('<svg', '<svg width="16" height="16" style="color:#18a058"')} Leads <em>+212%</em></div>
+    <div class="chip" style="left:370px;top:180px">${P.mail.replace('<svg', '<svg width="16" height="16"')} Auto follow-up</div>`,
+  music: () => `
+    <div class="card" style="${pos(20, 14, 460, 250)};padding:14px">
+      <div class="row"><div style="width:62px;height:62px;border-radius:12px;background:${grad('#ff4d8d', '#7b5cff')};display:grid;place-items:center">${P.music.replace('<svg', '<svg width="30" height="30"')}</div>
+        <div><div style="font-weight:800;font-size:16px">Dil Ki Baat (AI Remix)</div><div style="font-size:12px;opacity:.7;font-weight:600">Lyrics · Melody · Vocals · Mix</div></div>
+        <span class="pill" style="margin-left:auto;background:var(--acc);color:var(--accInk);border:0">▶ 2:48</span></div>
+      <div class="wave" style="height:70px;margin-top:14px;gap:3px">${Array.from({ length: 60 }, (_, i) => `<span style="height:${20 + Math.abs(Math.sin(i * 0.55) * 60) + (i % 5) * 4}%;${i > 34 ? 'opacity:.35' : ''}"></span>`).join('')}</div>
+      ${['Vocals', 'Beat', 'Melody'].map((t, i) => `<div class="row" style="margin-top:7px;font-size:11px;font-weight:800"><span style="width:52px;opacity:.75">${t}</span><div style="flex:1;height:14px;border-radius:5px;background:${['#ff4d8d', '#7b5cff', '#22c55e'][i]};opacity:.8;margin-left:${i * 30}px"></div></div>`).join('')}
+    </div>`,
+  mixer: () => `
+    <div class="card" style="${pos(20, 14, 460, 250)};padding:14px">
+      <div class="row" style="justify-content:space-between"><b style="font-size:14px">Voice-over · Music · SFX</b><span class="pill">🎙 Voice clone</span></div>
+      ${['Narrator', 'Background score', 'Sound effects'].map((t, i) => `<div style="margin-top:12px"><div style="font-size:11px;font-weight:800;opacity:.75;margin-bottom:4px">${t}</div><div class="wave" style="height:34px">${Array.from({ length: 56 }, (_, j) => `<span style="height:${15 + Math.abs(Math.sin(j * (0.4 + i * 0.25)) * 80)}%;background:${['var(--acc)', '#7b5cff', '#22c55e'][i]}"></span>`).join('')}</div></div>`).join('')}
+    </div>`,
+  hub: ({ center, items }) => `
+    <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 505 286">${items.map(([, , x, y]) => `<line x1="240" y1="143" x2="${x + 50}" y2="${y + 20}" stroke="var(--acc)" stroke-width="2" stroke-dasharray="5 5" opacity=".7"/>`).join('')}<circle cx="240" cy="143" r="95" fill="none" stroke="rgba(255,255,255,.15)"/></svg>
+    <div style="position:absolute;left:190px;top:93px;width:100px;height:100px;border-radius:28px;background:${grad('var(--acc)', 'var(--g1)')};display:grid;place-items:center;box-shadow:0 20px 50px rgba(0,0,0,.4);font-weight:800;font-size:15px;text-align:center;color:var(--accInk)">${center}</div>
+    ${items.map(([label, k, x, y], i) => `<div class="chip" style="left:${x}px;top:${y}px">${ico(k, ['#7b5cff', '#ff4d8d', '#f59e0b', '#22c55e', '#4f7cff', '#ef4444'][i % 6], '#fff', 'width:28px;height:28px;border-radius:8px;box-shadow:none')}${label}</div>`).join('')}`,
+  canvas: () => `
+    <div class="card light" style="${pos(10, 8, 480, 270)};display:flex">
+      <div style="width:56px;background:#f3f1ff;display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:12px;color:#7b5cff">${['spark', 'text', 'img', 'star'].map((k) => P[k].replace('<svg', '<svg width="20" height="20"')).join('')}</div>
+      <div style="flex:1;padding:14px;background:#eceef4;display:flex;gap:12px;align-items:center;justify-content:center">
+        <div style="width:150px;height:220px;border-radius:8px;background:${grad('#00c4cc', '#7b2ff7', 160)};padding:14px;color:#fff;font-weight:800;font-size:20px;line-height:1.1;box-shadow:0 10px 24px rgba(0,0,0,.2)">Grand<br>Opening<div style="margin-top:80px;font-size:11px;background:#fff;color:#7b2ff7;display:inline-block;padding:5px 10px;border-radius:6px">Sat · 10 AM</div></div>
+        <div style="display:flex;flex-direction:column;gap:10px"><div style="width:150px;height:105px;border-radius:8px;background:${grad('#ffb86b', '#ff4d8d')};box-shadow:0 10px 24px rgba(0,0,0,.2)"></div><div style="width:150px;height:105px;border-radius:8px;background:${grad('#22c55e', '#0ea5e9')};box-shadow:0 10px 24px rgba(0,0,0,.2)"></div></div>
+      </div>
+    </div>
+    <div class="chip" style="left:24px;top:232px">${P.spark.replace('<svg', '<svg width="16" height="16" style="color:#7b5cff"')} Magic Design</div>`,
+  roadmap: ({ rows }) => `
+    <div class="card" style="${pos(10, 14, 480, 256)};padding:14px">
+      <div style="display:grid;grid-template-columns:110px repeat(4,1fr);font-size:11px;font-weight:800;opacity:.7;margin-bottom:10px"><span>Feature</span><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div>
+      ${rows.map(([name, start, len, color]) => `<div style="display:grid;grid-template-columns:110px 1fr;align-items:center;margin-bottom:12px"><span style="font-size:12px;font-weight:700">${name}</span><div style="position:relative;height:22px;background:rgba(255,255,255,.06);border-radius:6px"><div style="position:absolute;left:${start}%;width:${len}%;top:0;bottom:0;border-radius:6px;background:${color}"></div></div></div>`).join('')}
+    </div>`,
+  finance: () => `
+    <div class="card light" style="${pos(10, 10, 280, 260)};padding:14px">
+      <div style="font-size:12px;font-weight:800;color:#59607a">Cash-flow forecast</div>
+      <div style="font-size:24px;font-weight:800;margin-top:2px">₹12.4L <span style="font-size:12px;color:#18a058">▲ 18%</span></div>
+      <svg viewBox="0 0 250 120" style="width:100%;height:130px;margin-top:8px"><path d="M0 100 L40 86 L80 90 L120 64 L160 58 L200 36" fill="none" stroke="#1e3a8a" stroke-width="3.5"/><path d="M200 36 L250 18" fill="none" stroke="var(--acc)" stroke-width="3.5" stroke-dasharray="6 5"/><circle cx="200" cy="36" r="5" fill="#1e3a8a"/></svg>
+      <div style="display:flex;gap:6px"><span class="pill" style="background:#eef2ff;color:#1e3a8a;border:0">Forecast</span><span class="pill" style="background:#ecfdf3;color:#18a058;border:0">GST ready</span></div>
+    </div>
+    <div class="card light" style="${pos(300, 50, 195, 190)};padding:12px">
+      <div style="font-size:12px;font-weight:800;color:#59607a;margin-bottom:6px">Ledger</div>
+      ${[['Sales', '+₹84,000', '#18a058'], ['Rent', '−₹22,000', '#e5383b'], ['Software', '−₹6,400', '#e5383b'], ['Consulting', '+₹40,000', '#18a058'], ['Tax set aside', '₹19,200', '#59607a']].map(([a, b, c]) => `<div class="row" style="justify-content:space-between;font-size:12px;font-weight:700;padding:5px 0;border-bottom:1px solid #eef0f5"><span>${a}</span><span style="color:${c}">${b}</span></div>`).join('')}
+    </div>`,
+  dashboard: () => `
+    <div class="card" style="${pos(10, 10, 480, 266)};padding:14px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">${[['Leads', '3,482', '+38%'], ['Email opens', '61%', '+12%'], ['Revenue', '₹4.2L', '+27%']].map(([k, v, d]) => `<div style="background:rgba(255,255,255,.08);border-radius:12px;padding:10px"><div style="font-size:11px;font-weight:800;opacity:.7">${k}</div><div style="font-size:20px;font-weight:800">${v}</div><div style="font-size:11px;font-weight:800;color:#4ade80">${d}</div></div>`).join('')}</div>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <div style="flex:1.4;background:rgba(255,255,255,.06);border-radius:12px;padding:10px"><div style="font-size:11px;font-weight:800;opacity:.7">Channels</div><div style="display:flex;align-items:flex-end;gap:10px;height:100px;margin-top:8px">${[['SEO', 70], ['Ads', 90], ['Email', 55], ['Social', 80], ['WhatsApp', 62]].map(([k, h], i) => `<div style="flex:1;text-align:center"><div style="height:${h}px;border-radius:6px 6px 0 0;background:${['var(--acc)', '#7b5cff', '#22c55e', '#ff4d8d', '#25D366'][i]}"></div><div style="font-size:9px;font-weight:700;margin-top:4px;opacity:.75">${k}</div></div>`).join('')}</div></div>
+        <div style="flex:1;background:rgba(255,255,255,.06);border-radius:12px;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center"><svg viewBox="0 0 42 42" width="96" height="96"><circle cx="21" cy="21" r="15.9" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="6"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--acc)" stroke-width="6" stroke-dasharray="72 28" transform="rotate(-90 21 21)"/></svg><div style="font-size:11px;font-weight:800;margin-top:4px">72% automated</div></div>
+      </div>
+    </div>`,
+  wizard: ({ steps, title }) => `
+    <div class="card light" style="${pos(20, 6, 300)};padding:12px 14px">
+      <div style="font-weight:800;font-size:14px;margin-bottom:8px">${title}</div>
+      ${steps.map(([s, st], i) => `<div class="row" style="padding:7px 10px;border-radius:10px;margin-bottom:6px;background:${st === 2 ? '#eef4ff' : '#f6f7fb'};border:1px solid ${st === 2 ? '#4285f4' : 'transparent'}"><span style="width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;background:${st === 1 ? '#18a058' : st === 2 ? '#4285f4' : '#dfe3ec'};color:#fff">${st === 1 ? '✓' : i + 1}</span><span style="font-size:12.5px;font-weight:700">${s}</span></div>`).join('')}
+    </div>
+    <div class="card light" style="${pos(330, 40, 170, 120)};padding:12px"><div style="font-size:10.5px;font-weight:800;color:#18a058">Ad · yourshop.in</div><div style="font-size:13.5px;font-weight:800;color:#1a0dab;margin-top:4px">Handmade Gifts — Free Delivery</div>${lines(2, [92, 70])}</div>
+    <div class="chip" style="left:340px;top:186px">${P.up.replace('<svg', '<svg width="16" height="16" style="color:#18a058"')} CTR <em>6.8%</em></div>`,
+  deepthink: ({ app, prompt }) => `
+    <div class="card" style="${pos(20, 8, 460, 270)}">
+      <div class="bar"><i></i><i></i><i></i><b>${app}</b></div>
+      <div style="padding:12px 14px;display:flex;flex-direction:column;gap:9px">
+        <div class="bubble me">${prompt}</div>
+        <div style="border-left:3px solid var(--acc);padding:6px 10px;background:rgba(255,255,255,.06);border-radius:0 10px 10px 0;font-size:11.5px;font-weight:600;opacity:.85"><b style="color:var(--acc)">DeepThink (R1)</b> · Thought for 14 seconds<br>1. Compare the three options… 2. Check costs… 3. Pick the best fit…</div>
+        <div class="bubble ai" style="max-width:100%">Here is the plan with the numbers and a ready-to-run script.${lines(2, [88, 60])}</div>
+        <div style="display:flex;gap:6px">${['Search', 'DeepThink', 'Files', 'Vision', 'Code'].map((c, i) => `<span class="pill" style="${i === 1 ? 'background:var(--acc);color:var(--accInk);border:0' : ''}">${c}</span>`).join('')}</div>
+      </div>
+    </div>`,
+  answer: ({ q }) => `
+    <div class="card light" style="${pos(20, 8, 460, 270)};padding:14px 16px">
+      <div style="font-size:17px;font-weight:800">${q}</div>
+      <div style="display:flex;gap:8px;margin-top:10px">${['nature.com', 'who.int', 'mit.edu', '+6 sources'].map((s, i) => `<div style="flex:1;border:1px solid #e3e6ef;border-radius:9px;padding:7px 8px;font-size:10.5px;font-weight:800;color:#59607a"><span style="display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-3px;margin-right:4px;background:${['#20808d', '#4285f4', '#a31f34', '#c9ced9'][i]}"></span>${s}</div>`).join('')}</div>
+      <div style="margin-top:12px;font-size:12.5px;font-weight:800;color:#20808d">Answer</div>
+      ${lines(4, [96, 90, 94, 58])}
+      <div style="display:flex;gap:6px;margin-top:12px">${['Deep Research', 'Spaces', 'Files'].map((c) => `<span class="pill" style="background:#e9f6f7;color:#20808d;border:0">${c}</span>`).join('')}</div>
+    </div>`,
+  multimodal: ({ center }) => `
+    <div style="position:absolute;left:0;top:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:300px">
+      ${[['Text', 'text', grad('#4f7cff', '#7b5cff')], ['Image', 'img', grad('#ff9a3c', '#ff4d8d')], ['Video', 'video', grad('#00c4cc', '#2563eb')], ['Voice', 'mic', grad('#22c55e', '#0ea5e9')]].map(([l, k, g]) => `<div style="height:131px;border-radius:16px;background:${g};padding:14px;position:relative;box-shadow:0 16px 34px rgba(0,0,0,.3)"><div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.25);display:grid;place-items:center">${P[k]}</div><div style="position:absolute;left:14px;bottom:12px;font-weight:800;font-size:17px">${l}</div></div>`).join('')}
+    </div>
+    <div class="card" style="${pos(320, 60, 180, 160)};padding:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+      <div style="width:64px;height:64px;border-radius:50%;background:conic-gradient(#4285f4, #ea4335, #fbbc05, #34a853, #4285f4);display:grid;place-items:center"><div style="width:48px;height:48px;border-radius:50%;background:#111a3a;display:grid;place-items:center">${P.spark}</div></div>
+      <div style="font-weight:800;margin-top:10px">${center}</div><div style="font-size:11px;opacity:.7;font-weight:700">One prompt, every format</div>
+    </div>`,
+  storyboard: () => `
+    <div class="card light" style="${pos(10, 10, 210, 266)};padding:12px">
+      <div style="font-size:11px;font-weight:800;color:#7b5cff">SCRIPT · SCENE 1</div>
+      <div class="mono" style="font-size:11px;line-height:1.55;margin-top:6px;color:#333">EXT. MUMBAI ROOFTOP – DUSK<br><br>A young creator looks at the skyline. Camera slowly pushes in.<br><br><b>RIYA</b><br>"Tonight, we make a film with AI."</div>
+    </div>
+    <div style="position:absolute;left:236px;top:10px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:265px">
+      ${[grad('#ff9a3c', '#7a2e8e'), grad('#1e3a8a', '#0ea5e9'), grad('#f43f5e', '#7c2d12'), grad('#111827', '#6366f1')].map((g, i) => `<div style="height:122px;border-radius:12px;background:${g};position:relative;box-shadow:0 12px 26px rgba(0,0,0,.3)"><span class="pill" style="position:absolute;left:8px;top:8px;background:rgba(0,0,0,.45)">Shot ${i + 1}</span></div>`).join('')}
+    </div>`,
+};
+
+// ---------- Courses ----------
+// [badge, line 1, line 2 (accent), subtitle, colours {bg, acc, accInk, g1, g2}, scene]
+const T = (bg, acc, g1, g2, accInk = '#0b1020') => ({ bg, acc, g1, g2, accInk });
+const claudeLogo = '<div style="width:28px;height:28px;border-radius:8px;background:#d97757;display:grid;place-items:center;flex:none">' + P.spark.replace('<svg', '<svg width="16" height="16"') + '</div>';
+const gptLogo = '<div style="width:28px;height:28px;border-radius:50%;background:#10a37f;display:grid;place-items:center;flex:none">' + P.bolt.replace('<svg', '<svg width="15" height="15"') + '</div>';
+const gemLogo = '<div style="width:28px;height:28px;border-radius:50%;background:conic-gradient(#4285f4,#9b72cb,#d96570,#4285f4);display:grid;place-items:center;flex:none">' + P.spark.replace('<svg', '<svg width="15" height="15"') + '</div>';
+const tl = (n, c) => Array.from({ length: n }, (_, i) => [1 + ((i * 7) % 4), c[i % c.length]]);
+
+const C = {
+  'claude-7': ['7-DAY CHALLENGE', '7 Days', 'Claude AI Challenge', 'One practical Claude task a day for a week.', T('#1d130f', '#E8956B', '#c2410c', '#7c2d12'), S.calendar({ days: 7, done: 4, label: 'Your Claude week', mission: 'Build a Claude Project for your work files' })],
+  'mastery-14': ['14-DAY CHALLENGE', '14 Days', 'AI Mastery Challenge', 'ChatGPT, Claude, Gemini and more, daily.', T('#0d1630', '#5EEAD4', '#0d9488', '#1e3a8a'), S.calendar({ days: 14, done: 9, label: 'Two weeks of AI missions', mission: 'Make a 5-slide deck with Gemini' })],
+  'mastery-28': ['28-DAY CHALLENGE', '28 Days', 'AI Mastery Challenge', 'From AI basics to workflows and automations.', T('#170f2e', '#C4B5FD', '#7c3aed', '#be185d'), S.calendar({ days: 28, done: 17, label: '28 missions to mastery' })],
+  'omni-master': ['MULTIMODAL AI', 'Master the', 'Omni AI', 'Text, image, video and voice from one AI.', T('#0b1530', '#60A5FA', '#2563eb', '#db2777'), S.multimodal({ center: 'Omni AI' })],
+  'omni-basics': ['FUNDAMENTALS', 'Google Omni AI', 'Fundamentals', 'Your first multimodal prompts, step by step.', T('#0f1a2a', '#34D399', '#059669', '#2563eb'), S.hub({ center: 'Omni<br>AI', items: [['Text', 'text', 20, 30], ['Image', 'img', 340, 24], ['Video', 'video', 360, 200], ['Voice', 'mic', 10, 206]] })],
+  'kling-master': ['CINEMATIC AI VIDEO', 'Kling AI', 'In-Depth Mastery', 'Camera moves, motion control, final cut.', T('#120d1f', '#F472B6', '#9333ea', '#0ea5e9'),
+    S.editor({ label: 'Kling AI · Motion control', preview: grad('#0f172a', '#9333ea'), overlay: '<div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 60%, rgba(244,114,182,.6), transparent 50%)"></div><div class="pill" style="position:absolute;right:10px;top:10px">🎥 Dolly zoom · 5s</div>', clips: [tl(5, ['#f472b6', '#c084fc']), tl(4, ['#38bdf8', '#818cf8']), tl(6, ['rgba(255,255,255,.25)'])] })],
+  'kling-basics': ['FUNDAMENTALS', 'The Kling AI', 'Fundamentals', 'Make your first AI videos from text and images.', T('#0e1726', '#FBBF24', '#d97706', '#2563eb'),
+    S.editor({ label: 'Kling AI · Text to video', preview: grad('#f59e0b', '#1e3a8a', 180), overlay: '<div style="position:absolute;left:10px;top:10px;right:10px;font-size:12px;font-weight:700;background:rgba(0,0,0,.45);padding:6px 8px;border-radius:8px">“A tea stall in the rain, cinematic, slow push-in”</div>', clips: [tl(3, ['#fbbf24', '#f97316']), tl(5, ['rgba(255,255,255,.25)'])] })],
+  'genai-complete': ['COMPLETE COURSE', 'The Complete', 'Generative AI', 'Every major gen-AI skill, with real projects.', T('#0b1022', '#F5B93F', '#b45309', '#4f46e5'),
+    S.hub({ center: 'Gen<br>AI', items: [['LLMs', 'text', 20, 20], ['Images', 'img', 330, 10], ['Video', 'video', 370, 120], ['Audio', 'mic', 330, 230], ['Agents', 'bolt', 20, 230], ['Code', 'code', 0, 125]] })],
+  'mj-advanced': ['ADVANCED', 'Midjourney', 'Complete Mastery', 'Style references and consistent characters.', T('#0a0a12', '#E2E8F0', '#475569', '#7c3aed'),
+    S.gallery({ tag: '/imagine', prompt: 'hero portrait --sref 2741 --cref riya', cols: 4, tiles: [grad('#fda4af', '#7c3aed'), grad('#fde68a', '#be123c'), grad('#a5f3fc', '#1e3a8a'), grad('#d9f99d', '#065f46'), grad('#f5d0fe', '#86198f'), grad('#fed7aa', '#9a3412'), grad('#c7d2fe', '#312e81'), grad('#99f6e4', '#0f766e')] })],
+  'mj-entry': ['BEGINNER', 'Midjourney', 'Creative Mastery', 'Stunning AI images from your first prompt.', T('#16112a', '#A78BFA', '#6d28d9', '#0891b2'),
+    S.gallery({ tag: '/imagine', prompt: 'a cozy cafe in Jaipur, watercolor --ar 16:9', cols: 2, tiles: [grad('#fbcfe8', '#a855f7'), grad('#fde68a', '#ea580c'), grad('#bae6fd', '#4338ca'), grad('#bbf7d0', '#0f766e')] })],
+  'claude-code': ['FOR BUILDERS', 'Master the', 'Claude Code', 'Your AI pair programmer, from idea to deploy.', T('#1a120d', '#F0A97A', '#c2410c', '#1e293b'),
+    S.terminal({ cmds: ['<span style="color:#7ee787">$</span> claude', '<span style="color:#f0a97a">›</span> add login with email and tests', '<span style="opacity:.6">● Reading src/auth/…  ● Editing 4 files</span>', '<span style="color:#7ee787">✓</span> 12 tests passed', '<span style="color:#7ee787">✓</span> Committed: "Add email login"', '<span style="color:#7ee787">$</span> <span style="background:#f0a97a;color:#111">&nbsp;</span>'] })],
+  'claude-master': ['COMPLETE COURSE', 'Master the', 'Claude AI', 'Prompting, projects and everyday work.', T('#1f1611', '#E8956B', '#b45309', '#7c2d12'),
+    S.chat({ app: 'Claude', logo: claudeLogo, prompt: 'Turn these meeting notes into an action plan', reply: 'Here’s your plan, grouped by owner and due date:', chips: ['Projects', 'Artifacts', 'Files', 'Research'] })],
+  'claude-excel': ['CLAUDE + EXCEL', 'Claude for', 'Excel Mastery', 'Formulas, analysis and reports in minutes.', T('#0c1a14', '#4ADE80', '#15803d', '#d97706'),
+    S.sheet({ formula: '=SUMIFS(C:C, A:A, "North")', head: ['Region', 'Q1', 'Q2'], rows: [['North', '₹4.2L', '₹5.1L'], ['South', '₹3.8L', '₹4.4L'], ['West', '₹2.9L', '₹3.6L'], ['Total', '₹10.9L', '₹13.1L']], bars: [40, 55, 48, 70, 88] })],
+  'claude-deep': ['DEEP DIVE', 'Claude', 'Deep Dive', 'Projects, artifacts, connectors, research.', T('#141019', '#F4A261', '#9d174d', '#c2410c'),
+    S.chat({ app: 'Claude · Project: Launch plan', logo: claudeLogo, side: ['Launch plan', 'Brand voice', 'Research', 'Reports'], prompt: 'Draft the launch email from our files', reply: 'Using 3 files from this project. Draft below:', chips: ['Connectors', 'Artifacts'] })],
+  perplexity: ['AI RESEARCH', 'AI Mastery in', 'Perplexity', 'Answers with sources, in seconds.', T('#0b1a1c', '#5EEAD4', '#0f766e', '#155e75'), S.answer({ q: 'Is intermittent fasting safe for teenagers?' })],
+  deepseek: ['REASONING AI', 'DeepSeek', 'Complete Guide', 'Search, DeepThink, coding, files and vision.', T('#0b1230', '#7DA2FF', '#1d4ed8', '#4338ca'), S.deepthink({ app: 'DeepSeek', prompt: 'Which pricing plan should my startup pick?' })],
+  lovable: ['NO-CODE MVP', 'Lovable', 'Deep Dive', 'Prompt, edit and publish a real app.', T('#1a0f1c', '#FF8FAB', '#e11d48', '#7c3aed'),
+    S.browser({ url: 'my-tiffin-app.lovable.app', hero: grad('#ff6b9d', '#7c3aed'), prompt: 'Build a tiffin ordering app with login', blocks: ['Home-cooked tiffins, delivered', 'Menu', 'Orders', 'Payments'] })],
+  'chatgpt-deep': ['DEEP DIVE', 'ChatGPT', 'Deep Dive', 'Build, connect, create, code and automate.', T('#08201a', '#34D399', '#047857', '#0e7490'),
+    S.chat({ app: 'ChatGPT', logo: gptLogo, side: ['My GPTs', 'Sales coach', 'Data analyst', 'Code helper'], prompt: 'Analyse this sales CSV and chart it', reply: 'Sales grew 24% in Q3. Chart and summary below:', chips: ['GPTs', 'Code', 'Connectors'] })],
+  'canva-ai': ['DESIGN WITH AI', 'Master the', 'Canva AI', 'Magic Design, brand kits, social posts.', T('#0d1530', '#22D3EE', '#7b2ff7', '#00c4cc'), S.canvas()],
+  gemini: ['GOOGLE AI', 'AI Mastery in', 'Gemini', 'Gems, deep research and Workspace.', T('#0c1230', '#93B4FF', '#4285f4', '#9b72cb'),
+    S.chat({ app: 'Gemini', logo: gemLogo, prompt: 'Summarise my unread Gmail and draft replies', reply: '6 emails need you. I drafted replies for 4 of them:', chips: ['Gmail', 'Docs', 'Sheets', 'Gems'] })],
+  portfolio: ['CAREER', 'Job-Winning', 'Portfolio with AI', 'Portfolio site, resume and LinkedIn that get you hired.', T('#0f172a', '#FCD34D', '#ca8a04', '#2563eb'),
+    S.browser({ url: 'riya-sharma.design', hero: grad('#1e293b', '#ca8a04'), blocks: ['Hi, I’m Riya. I design with AI.', 'Case study', 'Resume', 'Contact'] })],
+  'job-agent': ['AI JOB AGENT', 'Score, Filter &', 'Auto-Apply Jobs', 'An agent that finds and applies for you.', T('#0b1a14', '#4ADE80', '#16a34a', '#0369a1'),
+    S.jobs({ jobs: [['AI Product Analyst', 'Google', 92, true], ['Prompt Engineer', 'Swiggy', 87, true], ['Data Associate', 'Zoho', 64, false]] })],
+  'meta-ads': ['AI-POWERED', 'Facebook &', 'Instagram Ads', 'Create, launch, optimise and scale.', T('#0b1534', '#7AA7FF', '#1877f2', '#db2777'),
+    S.ad({ brand: 'Ethnic Threads', platform: 'Instagram', img: grad('#f9a8d4', '#7c3aed'), metrics: [['ROAS', '4.8x'], ['CTR', '3.2%'], ['CPC', '₹6']], curve: 'M0 70 L40 62 L80 58 L120 40 L160 30 L200 10' })],
+  'ai-marketing': ['MARKETING SYSTEM', 'AI for', 'Marketing', 'Strategy, content, email, ads and analytics.', T('#1a0d24', '#F0ABFC', '#a21caf', '#ea580c'), S.dashboard()],
+  'ai-finance': ['FINANCE & TAX', 'AI for Finance', '& Accounting', 'Bookkeeping, tax research and forecasts.', T('#0a1a2a', '#38BDF8', '#0369a1', '#15803d'), S.finance()],
+  'ai-pm': ['PRODUCT', 'AI Product', 'Management', 'Discovery to launch, with AI at every step.', T('#141a2e', '#A5B4FC', '#4f46e5', '#0891b2'),
+    S.roadmap({ rows: [['User research', 0, 30, '#a5b4fc'], ['AI search', 18, 40, '#f472b6'], ['Mobile app', 40, 35, '#34d399'], ['Payments v2', 55, 30, '#fbbf24'], ['Analytics', 70, 28, '#38bdf8'], ['Launch', 88, 12, '#f87171']] })],
+  'ai-projects': ['PROJECTS', 'Project', 'Management with AI', 'Plans, tasks, risks and reports, faster.', T('#10202a', '#FDBA74', '#ea580c', '#0e7490'),
+    S.kanban({ cols: [['To do', '#94a3b8', ['Vendor list', 'Budget draft', 'Kick-off deck']], ['Doing', '#fdba74', ['Site visit', 'Risk log']], ['Done', '#4ade80', ['Project plan', 'Team roles', 'Timeline']]] })],
+  'gads-mastery': ['AI-POWERED', 'Google Ads', 'Mastery', 'Keywords, bidding, PMax and optimisation.', T('#0c1a2e', '#FBBC05', '#1a73e8', '#34a853'),
+    S.ad({ brand: 'Fresh Bakes', platform: 'Google Ads', img: grad('#fbbc05', '#ea4335'), metrics: [['Conv.', '+64%'], ['CPA', '₹48'], ['QS', '9/10']], curve: 'M0 66 L40 70 L80 50 L120 46 L160 24 L200 14' })],
+  'ai-seo': ['RANK HIGHER', 'AI for', 'SEO', 'Keywords, content and AI search visibility.', T('#0b1f17', '#86EFAC', '#15803d', '#0f766e'),
+    S.serp({ query: 'best ayurvedic skincare brand', results: [['yourbrand.in › skincare', 'Ayurvedic Skincare That Works – YourBrand', '#1'], ['example.com › guides', '10 Best Ayurvedic Brands (2026 Guide)'], ['blog.site › reviews', 'Honest Reviews of Natural Skincare']] })],
+  'gads-setup': ['STEP BY STEP', 'Setup Google Ads', 'with AI', 'Build, launch, analyse and optimise.', T('#0f1a33', '#8AB4F8', '#1a73e8', '#ea4335'),
+    S.wizard({ title: 'New campaign', steps: [['Goal: Sales', 1], ['Keywords with AI', 1], ['Write ads with AI', 2], ['Budget & bidding', 0], ['Launch & track', 0]] })],
+  'nocode-web': ['NO-CODE', 'No-Code', 'Websites & Apps', 'Drag, drop and publish, no coding.', T('#111827', '#67E8F9', '#0891b2', '#7c3aed'),
+    S.browser({ url: 'sharma-clinic.site', hero: grad('#0891b2', '#22c55e'), prompt: 'Drag a booking form onto the page', blocks: ['Book a doctor in 2 minutes', 'Services', 'Booking', 'Reviews'] })],
+  'film-1': ['FILMMAKING · PART 1', 'LLM & Prompts', 'Mastery', 'Scripts, scenes and shot lists with AI.', T('#160f1f', '#C084FC', '#7e22ce', '#be123c'), S.storyboard()],
+  'film-2': ['FILMMAKING · PART 2', 'AI Image', 'Mastery', 'Cinematic stills and consistent characters.', T('#1a1208', '#FDBA74', '#c2410c', '#6d28d9'),
+    S.gallery({ tag: 'Frame', prompt: 'cinematic still, 35mm, golden hour, same hero', cols: 3, tiles: [grad('#fdba74', '#7c2d12'), grad('#fca5a5', '#4c0519'), grad('#fde68a', '#78350f'), grad('#a5b4fc', '#1e1b4b'), grad('#f9a8d4', '#500724'), grad('#99f6e4', '#134e4a')] })],
+  'film-3': ['FILMMAKING · PART 3', 'AI Video', 'Mastery', 'Shots, transitions and the final edit.', T('#0b1120', '#F87171', '#b91c1c', '#1d4ed8'),
+    S.editor({ label: 'Edit · Short film v3', preview: grad('#1d4ed8', '#b91c1c'), overlay: '<div class="pill" style="position:absolute;left:10px;top:10px;background:#E5383B;border:0">● REC 00:42</div>', clips: [tl(6, ['#f87171', '#fb923c', '#facc15']), tl(5, ['#60a5fa', '#a78bfa']), tl(7, ['#4ade80', 'rgba(255,255,255,.25)'])] })],
+  'film-4': ['FILMMAKING · PART 4', 'AI Audio', 'Mastery', 'Voice-overs, music and sound effects.', T('#0e1424', '#FACC15', '#ca8a04', '#7c3aed'), S.mixer()],
+  'film-5': ['FILMMAKING · PART 5', 'AI Avatar', 'Mastery', 'Talking avatars and AI presenters.', T('#0c1628', '#7DD3FC', '#0284c7', '#9333ea'), S.avatar({ bg: grad('#0c4a6e', '#312e81'), sub: '“Namaste! Welcome to today’s lesson.”' })],
+  'film-6': ['FILMMAKING · PART 6', 'AI Influencer &', 'UGC Ads', 'AI creators and ads that convert.', T('#1f0c1a', '#FB7185', '#e11d48', '#f59e0b'),
+    S.phone({ screen: grad('#fb7185', '#7c3aed', 170), caption: 'This serum changed my skin in 7 days ✨ #ad', stats: [['heart', '48k likes', 0, 30], ['user', 'AI influencer', 330, 60], ['cart', '1,240 sales', 320, 190], ['up', 'ROAS 5.2x', 10, 200]] })],
+  'film-7': ['FILMMAKING · PART 7', 'NotebookLM', 'Masterclass', 'Research, audio and video overviews.', T('#101a24', '#A3E635', '#4d7c0f', '#0e7490'), S.notebook()],
+  'film-8': ['FILMMAKING · PART 8', 'AI Lead Generation', 'Mastery', 'Turn your AI films into leads and sales.', T('#1a1408', '#FDE047', '#ca8a04', '#dc2626'),
+    S.funnel({ stages: [['Video views', '84,000', 380], ['Clicks', '6,300', 320], ['Leads', '1,150', 260], ['Sales', '214', 200]] })],
+  'film-9': ['FILMMAKING · PART 9', 'AI Songs', 'Mastery', 'Lyrics, melody, vocals and release.', T('#1a0b24', '#F0ABFC', '#c026d3', '#4f46e5'), S.music()],
+};
+
+// ---------- Render ----------
+const id = decodeURIComponent(location.hash.slice(1)) || 'claude-code';
+const cfg = C[id];
+const meta = (window.COURSES || {})[id] || {};
+if (!cfg) document.body.innerHTML = '<h1 style="padding:40px">Unknown course ' + id + '</h1>';
+else {
+  const [badge, l1, l2, sub, theme, scene] = cfg;
+  const root = document.documentElement.style;
+  root.setProperty('--bg', `radial-gradient(120% 140% at 0% 0%, ${theme.bg} 30%, #070a16)`);
+  root.setProperty('--acc', theme.acc);
+  root.setProperty('--accInk', theme.accInk);
+  root.setProperty('--g1', theme.g1);
+  root.setProperty('--g2', theme.g2);
+  document.body.style.background = `linear-gradient(115deg, ${theme.bg} 0%, ${theme.bg} 45%, #070a16 100%)`;
+  document.getElementById('badge').textContent = badge;
+  document.getElementById('title').innerHTML = `${l1}<span>${l2}</span>`;
+  document.getElementById('sub').textContent = sub;
+  const price = meta.price ?? 0, was = meta.was ?? 0;
+  const off = was > price && price ? Math.round((1 - price / was) * 100) : 0;
+  document.getElementById('buy').innerHTML =
+    (price
+      ? `<div class="price">${off ? `<div class="off">${off}% OFF</div>` : ''}<div class="amt">₹${price}${was > price ? ` <s>₹${was}</s>` : ''} <small>ONLY</small></div></div>`
+      : `<div class="price"><div class="amt">FREE</div></div>`) +
+    (meta.dur ? `<div class="dur">${P.clock}${meta.dur}</div>` : '');
+  document.getElementById('scene').innerHTML = scene;
+}
+</script>
+</body>
+</html>

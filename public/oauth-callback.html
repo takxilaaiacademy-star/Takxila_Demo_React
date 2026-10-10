@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<!-- Return page for "Log in with Google / Facebook / Microsoft" (see src/utils/social.ts). -->
+<head><meta charset="utf-8" /><title>Signing in…</title></head>
+<body style="font-family:system-ui,sans-serif;display:grid;place-items:center;height:100vh;margin:0">
+<p>Signing you in…</p>
+<script>
+  if (window.opener) {
+    window.opener.postMessage({ type: 'tx-oauth', hash: location.hash, search: location.search }, location.origin);
+    window.close();
+  } else {
+    location.replace('/auth');
+  }
+</script>
+</body>
+</html>

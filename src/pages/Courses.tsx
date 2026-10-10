@@ -1,15 +1,15 @@
 import { useDeferredValue, useEffect, useMemo, useState } from 'react';
-import { Box, Chip, InputAdornment, MenuItem, Pagination, Stack, TextField, ToggleButton, ToggleButtonGroup, Tooltip, Typography } from '@mui/material';
+import { Box, Chip, CircularProgress, InputAdornment, MenuItem, Pagination, Stack, TextField, ToggleButton, ToggleButtonGroup, Tooltip, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ViewModuleIcon from '@mui/icons-material/ViewModuleOutlined';
 import AppsIcon from '@mui/icons-material/Apps';
 import { NumberedGrid } from '../components/Showcase';
 import { useSearchParams } from 'react-router-dom';
-import { CourseGrid } from '../components/CourseCard';
+import { CourseGrid, CourseGridSkeleton } from '../components/CourseCard';
 import { Heading, Page } from '../components/Section';
 import { useStore } from '../context/StoreContext';
 import { CAT_PILLS, COURSES } from '../data/courses';
-import { prefetch } from '../utils/media';
+import { isReady, prefetch, whenReady } from '../utils/media';
 import type { CatFilter, Course } from '../types';
 
 type SortKey = 'popular' | 'low' | 'high' | 'az';
@@ -47,8 +47,23 @@ export default function Courses() {
   const cur = Math.min(page, pages);
   const shown = useMemo(() => list.slice((cur - 1) * size, cur * size), [list, cur, size]);
 
-  // Warm the banners of the next page so it opens instantly.
-  useEffect(() => prefetch(list.slice(cur * size, (cur + 1) * size).map((c) => c.img)), [list, cur, size]);
+  // Warm every banner once (45 small WebP files), so any page, filter or sort opens instantly.
+  useEffect(() => prefetch(COURSES.map((c) => c.img)), []);
+
+  // While this page's banners are still loading, show skeleton cards so it is clear the courses are on their way.
+  const gridKey = [cat, sort, dq, cur, view, size].join('|');
+  const allReady = view === 'list' || shown.every((c) => isReady(c.img));
+  const [doneKey, setDoneKey] = useState('');
+  const loadingCards = !allReady && doneKey !== gridKey;
+  useEffect(() => {
+    if (allReady) return;
+    let live = true;
+    void whenReady(shown.map((c) => c.img), 1500).then(() => live && setDoneKey(gridKey));
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gridKey]);
 
   const setParam = (patch: Record<string, string | null>) => {
     const next = new URLSearchParams(params);
@@ -105,12 +120,20 @@ export default function Courses() {
             </Tooltip>
           </ToggleButton>
         </ToggleButtonGroup>
-        <Typography color="text.secondary" sx={{ ml: { sm: 'auto !important' } }}>
+        <Typography color="text.secondary" sx={{ ml: { sm: 'auto !important' }, display: 'flex', alignItems: 'center', gap: 1 }}>
+          {loadingCards && <CircularProgress size={16} aria-label="Loading courses" />}
+          {loadingCards ? 'Loading courses… ' : ''}
           {list.length ? `Showing ${(cur - 1) * size + 1}–${Math.min(cur * size, list.length)} of ${list.length}` : '0 courses'}
         </Typography>
       </Stack>
       <Box key={cat + sort + dq + cur + view} sx={{ opacity: q.toLowerCase().trim() !== dq ? 0.6 : 1, transition: 'opacity .2s' }}>
-        {view === 'list' ? <NumberedGrid courses={shown} start={(cur - 1) * size + 1} /> : <CourseGrid courses={shown} />}
+        {view === 'list' ? (
+          <NumberedGrid courses={shown} start={(cur - 1) * size + 1} />
+        ) : loadingCards ? (
+          <CourseGridSkeleton count={shown.length} />
+        ) : (
+          <CourseGrid courses={shown} />
+        )}
       </Box>
       {!list.length && (
         <Box sx={{ textAlign: 'center', py: 8 }}>

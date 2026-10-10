@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import type { Session, StoredUser, User } from '../types';
 import { hashPassword, load, remove, save } from '../utils/storage';
 import { referralCode } from '../data/showcase';
+import type { SocialProfile } from '../utils/social';
 
 export interface RegisterInput {
   name: string;
@@ -21,6 +22,8 @@ interface AuthValue {
   isAuthed: boolean;
   register: (input: RegisterInput) => Promise<StoredUser>;
   login: (input: LoginInput) => Promise<StoredUser>;
+  /** Log in (or sign up on first use) with a Google, Facebook or Microsoft profile. */
+  socialLogin: (profile: SocialProfile, remember: boolean) => StoredUser;
   logout: () => void;
   updateUser: (patch: Partial<Omit<StoredUser, 'email' | 'id' | 'passHash'>>) => void;
   changePassword: (current: string, next: string) => Promise<void>;
@@ -86,7 +89,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const e = norm(email);
     const u = users.find((x) => x.email === e);
     if (!u) throw new Error('No account found for this email. Register first.');
+    if (!u.passHash && u.provider) throw new Error(`This account uses ${u.provider[0].toUpperCase() + u.provider.slice(1)} sign-in. Use that button below.`);
     if (u.passHash !== (await hashPassword(password))) throw new Error('Wrong password. Please try again.');
+    startSession(e, remember);
+    return u;
+  };
+
+  const socialLogin = (p: SocialProfile, remember: boolean): StoredUser => {
+    const e = norm(p.email);
+    let u = users.find((x) => x.email === e);
+    if (!u) {
+      u = {
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+        name: p.name.trim() || e,
+        email: e,
+        phone: '',
+        passHash: '', // no password: this account signs in with its provider
+        createdAt: new Date().toISOString(),
+        provider: p.provider,
+        ...(p.avatar ? { avatar: p.avatar } : {}),
+      };
+      const created = u;
+      setUsers((list) => list.concat(created));
+    }
     startSession(e, remember);
     return u;
   };
@@ -109,7 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isAdmin = !!user && users[0]?.email === user.email;
   const members = useMemo(() => users.map((u) => ({ name: u.name, email: u.email })), [users]);
-  const value: AuthValue = { user, isAuthed: !!user, register, login, logout, updateUser, changePassword, isAdmin, lastEmail: load<string>('last_email', ''), members };
+  const value: AuthValue = { user, isAuthed: !!user, register, login, socialLogin, logout, updateUser, changePassword, isAdmin, lastEmail: load<string>('last_email', ''), members };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

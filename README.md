@@ -67,6 +67,78 @@ in the browser can be read by the user. Connect a real backend before taking pay
 - The logo comes from `public/assets/logo-mark*.webp` and `logo-full*.webp` (the `-dark` files are recoloured for
   the dark theme).
 
+## Round 5: login flow, mentorship, footer, covers
+- **After login** you land on `/home` and the AI course calculator opens on top of it, every time.
+  **Log out** returns to the public showcase page `/`.
+- **Mentorship** (`/mentorship`, also in the dashboard menu, Contact menu and footer): topics, a booking form and
+  your past requests. A floating chat button (bottom right, on every page) offers **Chat with a mentor** and
+  **Chat on WhatsApp**. Contact details live in `src/utils/contact.ts`.
+  - Mentor requests open the visitor's email app addressed to takxila.ai.academy@gmail.com with the subject and
+    message filled in (`mailto:`); the visitor presses Send. A copy is kept in `tx_messages`. To send without the
+    email app, post the same fields to a form service (for example FormSubmit or EmailJS) or your backend in
+    `sendMentorMail`.
+  - WhatsApp opens `https://wa.me/917992412683` with a prefilled message.
+- **Footer** (`src/components/Footer.tsx`) matches the main website: Explore, Company, Legal, Support, Follow Us,
+  a back-to-top button. The social links in `SOCIAL` are placeholders; put the academy's real profile URLs there.
+- **Scroll animations were removed** (they hid cards and the footer on some screens). Content is always visible; a back-to-top button appears after scrolling down.
+- **Themed scrollbars** (gold in dark mode, indigo in light) in `src/theme/theme.ts`.
+- **Languages**: English, Hindi, Bengali, Marathi, Gujarati, Tamil, Telugu, Kannada, Malayalam and Punjabi for menus
+  and navigation (`src/data/i18n.ts`). Course content stays in English.
+- **Course covers**: 40 courses have their own generated cover in `public/assets/covers/<id>.webp`, each showing what
+  the course is about (chat, terminal, spreadsheet, video editor, ads, SEO results, kanban, avatar and so on).
+  The 5 courses with real photo banners keep them. The design is `tools/covers.html`; regenerate with
+  `node tools/render-covers.mjs [course-id ...]` (needs Playwright). The summary videos were re-rendered with them.
+
+## Round 6: login page, email, loaders, speed
+
+### Social sign-in (Gmail, Facebook, Microsoft)
+The buttons work once you give the app your own app IDs. Copy `.env.example` to `.env` (next to `package.json`) and fill it in:
+
+```
+VITE_GOOGLE_CLIENT_ID=your-google-oauth-client-id.apps.googleusercontent.com
+VITE_FACEBOOK_APP_ID=your-facebook-app-id
+VITE_MICROSOFT_CLIENT_ID=your-azure-application-client-id
+```
+
+Then rebuild (`npm run build`). In each provider console, add this redirect URI (use your real domain, and
+`http://localhost:5173/oauth-callback.html` for local testing):
+
+`https://YOUR-DOMAIN/oauth-callback.html`
+
+- **Google**: Google Cloud console, APIs & Services, Credentials, OAuth client ID of type "Web application".
+  Add your domain under Authorised JavaScript origins and the URI above under Authorised redirect URIs.
+- **Facebook**: developers.facebook.com, create an app with Facebook Login, add the URI under
+  Valid OAuth Redirect URIs and request the `email` permission.
+- **Microsoft**: Azure portal, App registrations, new registration for "Accounts in any organizational directory and
+  personal Microsoft accounts". Add a Web platform redirect with the URI above and tick "ID tokens".
+
+Until an ID is set, the button opens a short dialog saying which line is missing. The sign-in runs in a popup
+(`src/utils/social.ts`, `public/oauth-callback.html`). As with the rest of this demo, accounts are stored in the
+browser and the token is not checked by a server, so add a backend before relying on it for real accounts.
+
+### Forms send email to takxila.ai.academy@gmail.com
+The Contact form, the mentor form, the chat widget and "Lost password?" send their message through
+[FormSubmit](https://formsubmit.co) (`src/utils/mail.ts`), with no server needed. **The first time anyone sends a
+form, FormSubmit emails takxila.ai.academy@gmail.com an activation link. Click it once**; from then on every
+message arrives in that inbox. If the service cannot be reached, the visitor's email app opens with the message
+filled in instead. To change the inbox, edit `INBOX` in `src/utils/mail.ts`.
+
+### Login page blocks
+Below the login card: Latest announcements, a calendar (today highlighted, dots on announcement days) and a
+visitor counter. The counter uses the free counterapi.dev service (`VisitorCounter` in
+`src/components/AuthExtras.tsx`) and falls back to a count for this browser if that service is blocked.
+"I'm not a robot" is a simple tick box, not a real CAPTCHA; swap in Google reCAPTCHA or Cloudflare Turnstile
+if you add a backend.
+
+### Loader, theme and catalog speed
+- Every page shows a full-page loader (logo spinner plus a progress bar) until its content and the images on
+  screen are ready; the footer appears only after the page, never on its own.
+- The dark/light switch now changes instantly (no colour fade across hundreds of elements).
+- Course covers are WebP (about 60% smaller). All 45 covers are fetched once in the background when the
+  catalog opens, so changing page, filter or sort is instant. While a page of covers is still loading,
+  skeleton cards and a "Loading courses…" spinner show that the courses are on their way.
+- The mentor chat's Topic dropdown no longer closes the chat when you pick an option.
+
 ## Speed and media
 - Every image and video is fetched once, stored in the Cache API (`tx-media-v2`) and shown from a
   `blob:` URL (`src/utils/media.ts`), so revisits and page changes don't reload them. Images are decoded
@@ -117,7 +189,7 @@ pages behind the login use `useUser()`, which gives a `User` rather than `User |
 
 ## Routes
 `/` (public showcase), `/auth` (`?ref=CODE`), `/home`, `/courses` (`?cat=claude&sort=low&page=2&q=agent&view=list`), `/courses/:id`, `/courses/:id/grades`, `/cart`,
-`/dashboard`, `/certificates`, `/refer`, `/resume`, `/leaderboard`, `/my-courses`, `/calculator`, `/announcements`, `/purchases`, `/profile`, `/grades`, `/calendar`,
+`/dashboard`, `/certificates`, `/refer`, `/resume`, `/leaderboard`, `/mentorship`, `/my-courses`, `/calculator`, `/announcements`, `/purchases`, `/profile`, `/grades`, `/calendar`,
 `/files`, `/reports`, `/preferences`, `/about`, `/helpdesk`, `/contact`, `/policies`.
 
 ## Deploying

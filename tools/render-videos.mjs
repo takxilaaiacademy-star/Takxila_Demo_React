@@ -20,7 +20,7 @@ const data = JSON.parse(src.match(/const DATA: CourseData\[\] = (\[.*?\n\]);/s)[
 const only = process.argv.slice(2);
 const courses = data.map((c) => ({ ...c, catLabel: cats[c.cat] })).filter((c) => !only.length || only.includes(c.id));
 
-const types = { '.html': 'text/html', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.png': 'image/png' };
+const types = { '.html': 'text/html', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.png': 'image/png' };
 const server = createServer((req, res) => {
   const file = join(ROOT, decodeURIComponent(new URL(req.url, 'http://x').pathname));
   if (!file.startsWith(ROOT) || !existsSync(file)) return res.writeHead(404).end();

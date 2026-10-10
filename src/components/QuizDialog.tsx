@@ -149,7 +149,7 @@ export default function QuizDialog() {
                 variant="contained"
                 onClick={() => {
                   closeQuiz();
-                  nav(quiz.mode === 'calc' ? '/calculator' : '/dashboard');
+                  if (quiz.mode === 'onboard') nav('/dashboard');
                 }}
               >
                 Done

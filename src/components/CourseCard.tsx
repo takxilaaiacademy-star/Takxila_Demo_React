@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Box, Button, Card, CardContent, Checkbox, Chip, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Checkbox, Chip, LinearProgress, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,7 @@ import type { Theme } from '@mui/material/styles';
 import { useStore } from '../context/StoreContext';
 import { offText, priceText } from '../data/recommend';
 import type { Course } from '../types';
-import { BlobImg } from './Media';
+import { BlobImg, shimmer } from './Media';
 import { usePreview } from './Preview';
 
 export const hoverLift = (theme: Theme) => ({
@@ -53,7 +53,7 @@ export const CourseCardView = memo(function CourseCardView({ c, index, isOwned, 
     <Card
       sx={(t) => ({
         height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', ...hoverLift(t),
-        animation: `txrise .55s cubic-bezier(.2,.8,.2,1) ${Math.min(index, 11) * 55}ms both`,
+        animation: `txrise .4s cubic-bezier(.2,.8,.2,1) ${Math.min(index, 6) * 35}ms both`,
         ...(selected && { borderColor: t.tx.hl, boxShadow: `0 0 0 2px ${t.tx.hl}` }),
         '&:hover .tx-play': { opacity: 1, transform: 'translate(-50%,-50%) scale(1)' },
       })}
@@ -155,6 +155,39 @@ export function CourseGrid({ courses }: { courses: Course[] }) {
           addToCart={addToCart}
           toggleSel={toggleSel}
         />
+      ))}
+    </Box>
+  );
+}
+
+/** Placeholder card shown while a page of courses loads, same size as a real card. */
+export function CourseCardSkeleton() {
+  return (
+    <Card aria-hidden sx={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <Box sx={(t) => ({ aspectRatio: '375 / 110', ...shimmer(t) })} />
+      <CardContent sx={{ flexGrow: 1, pb: 1 }}>
+        <Skeleton width="45%" />
+        <Skeleton variant="text" sx={{ fontSize: 22 }} />
+        <Skeleton variant="text" width="70%" sx={{ fontSize: 22, mb: 1 }} />
+        <Skeleton width="55%" sx={{ mb: 1.5 }} />
+        <Skeleton width="30%" />
+        <Skeleton width="80%" sx={{ mb: 1 }} />
+        <Skeleton width="40%" sx={{ fontSize: 24 }} />
+      </CardContent>
+      <Stack direction="row" spacing={1} sx={{ p: 2, pt: 1 }}>
+        <Skeleton variant="rounded" height={38} sx={{ flex: 1 }} />
+        <Skeleton variant="rounded" height={38} width={80} />
+      </Stack>
+    </Card>
+  );
+}
+
+/** Grid of skeleton cards, laid out like CourseGrid. */
+export function CourseGridSkeleton({ count }: { count: number }) {
+  return (
+    <Box role="status" aria-label="Loading courses" sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' } }}>
+      {Array.from({ length: count }, (_, i) => (
+        <CourseCardSkeleton key={i} />
       ))}
     </Box>
   );

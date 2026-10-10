@@ -55,6 +55,18 @@ export function createAppTheme(mode: PaletteMode) {
       MuiCssBaseline: {
         styleOverrides: {
           body: { backgroundColor: t.bg, transition: 'background-color .4s, color .4s' },
+          // Scrollbars in the theme colours (Firefox and Chromium/Safari).
+          html: { scrollbarColor: `${mode === 'dark' ? 'rgba(245,185,63,.55)' : 'rgba(20,32,138,.45)'} transparent`, scrollbarWidth: 'thin' },
+          '*': { scrollbarColor: `${mode === 'dark' ? 'rgba(245,185,63,.45)' : 'rgba(20,32,138,.35)'} transparent`, scrollbarWidth: 'thin' },
+          '::-webkit-scrollbar': { width: 10, height: 10 },
+          '::-webkit-scrollbar-track': { background: 'transparent' },
+          '::-webkit-scrollbar-thumb': {
+            borderRadius: 99, border: '2px solid transparent', backgroundClip: 'padding-box',
+            backgroundImage: mode === 'dark' ? 'linear-gradient(180deg, #F5B93F, #B8862A)' : 'linear-gradient(180deg, #2B2BD6, #14208A)',
+          },
+          '::-webkit-scrollbar-thumb:hover': { backgroundImage: mode === 'dark' ? 'linear-gradient(180deg, #FFD06B, #F5B93F)' : 'linear-gradient(180deg, #4D4DFF, #2B2BD6)' },
+          '::-webkit-scrollbar-corner': { background: 'transparent' },
+          '::selection': { background: t.glow },
           '@media (prefers-reduced-motion: reduce)': { '*': { animation: 'none !important', transition: 'none !important' } },
         },
       },

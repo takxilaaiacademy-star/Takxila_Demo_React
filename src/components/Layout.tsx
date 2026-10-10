@@ -1,7 +1,7 @@
-import { Suspense, useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import type { Theme } from '@mui/material/styles';
 import {
-  AppBar, Avatar, Badge, Box, Button, Container, Divider, Drawer, Grid, IconButton, LinearProgress, List, ListItemButton,
+  AppBar, Avatar, Badge, Box, Button, CircularProgress, Container, Divider, Drawer, IconButton, LinearProgress, List, ListItemButton,
   ListItemIcon, ListItemText, ListSubheader, Menu, MenuItem, Popover, Stack, Toolbar, Tooltip, Typography, useMediaQuery,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -21,7 +21,10 @@ import { useThemeMode } from '../context/ThemeModeContext';
 import { CAT_PILLS } from '../data/courses';
 import { LANGS, translate, type StrKey } from '../data/i18n';
 import Background from './Background';
+import Footer from './Footer';
 import Logo from './Logo';
+import ChatWidget from './ChatWidget';
+import { useBackToTop } from '../utils/scrollFx';
 import { PreviewProvider } from './Preview';
 import QuizDialog from './QuizDialog';
 import SearchDialog from './SearchDialog';
@@ -45,26 +48,60 @@ const NAV: NavItem[] = [
   { key: 'about', to: '/about' },
   { key: 'helpdesk', to: '/helpdesk' },
   { key: 'policies', to: '/policies', subs: [['Privacy policy', '/policies#privacy'], ['Refund policy', '/policies#refund'], ['Terms of use', '/policies#terms']] },
-  { key: 'contact', to: '/contact', subs: [['Contact form', '/contact'], ['Announcements', '/announcements'], ['Helpdesk', '/helpdesk']] },
+  { key: 'contact', to: '/contact', subs: [['Contact form', '/contact'], ['Mentorship', '/mentorship'], ['Announcements', '/announcements'], ['Helpdesk', '/helpdesk']] },
 ];
 
 // The profile menu, in the same order as the academy's Moodle site.
 const PROFILE_MENU: [StrKey, string][] = [
   ['purchases', '/purchases'], ['profile', '/profile'], ['grades', '/grades'], ['calendar', '/calendar'],
-  ['files', '/files'], ['reports', '/reports'], ['certificates', '/certificates'], ['refer', '/refer'], ['resume', '/resume'], ['leaderboard', '/leaderboard'],
+  ['files', '/files'], ['reports', '/reports'], ['certificates', '/certificates'], ['refer', '/refer'], ['resume', '/resume'], ['leaderboard', '/leaderboard'], ['mentorship', '/mentorship'],
 ];
 
 const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
 
 /** Shown while a page's code loads (pages are split into their own files). */
-export function PageLoader() {
-  return <LinearProgress color="secondary" sx={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 2000, height: 3 }} />;
+export function PageLoader({ full = false }: { full?: boolean }) {
+  return (
+    <>
+      <LinearProgress color="secondary" sx={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 2000, height: 3 }} />
+      {full && (
+        <Box role="status" aria-live="polite" sx={{ minHeight: '70vh', display: 'grid', placeItems: 'center', position: 'relative', zIndex: 1 }}>
+          <Stack alignItems="center" spacing={2}>
+            <Box sx={{ position: 'relative', width: 72, height: 72, display: 'grid', placeItems: 'center' }}>
+              <CircularProgress color="secondary" size={72} thickness={2.5} sx={{ position: 'absolute', inset: 0 }} />
+              <Logo size={40} withText={false} />
+            </Box>
+            <Typography color="text.secondary" sx={{ fontWeight: 600 }}>
+              Loading…
+            </Typography>
+          </Stack>
+        </Box>
+      )}
+    </>
+  );
+}
+
+/** Rendered after the page's code has loaded (it sits in the same Suspense boundary as the page). */
+function PageReady({ onReady }: { onReady: () => void }) {
+  useEffect(() => {
+    onReady();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return null;
+}
+
+/** Waits (at most `max` ms) for the images visible in the first screen of the page to finish loading. */
+function waitForVisibleImages(root: HTMLElement | null, max: number): Promise<void> {
+  if (!root) return Promise.resolve();
+  const imgs = [...root.querySelectorAll('img')].filter((i) => !i.complete && i.getBoundingClientRect().top < innerHeight);
+  const all = Promise.all(imgs.map((i) => new Promise<void>((r) => { i.addEventListener('load', () => r(), { once: true }); i.addEventListener('error', () => r(), { once: true }); })));
+  return Promise.race([all.then(() => undefined), new Promise<void>((r) => setTimeout(r, max))]);
 }
 
 export default function Layout() {
   const user = useUser();
   const { logout } = useAuth();
-  const { cart, profile, ready, quiz, openQuiz, prefs, setPrefs, annSeen, markAnnouncementsSeen } = useStore();
+  const { cart, ready, openQuiz, prefs, setPrefs, annSeen, markAnnouncementsSeen } = useStore();
   const { items: anns } = useAnnouncements();
   const { mode, toggleMode } = useThemeMode();
   const nav = useNavigate();
@@ -77,6 +114,20 @@ export default function Layout() {
   const [langMenu, setLangMenu] = useState<HTMLElement | null>(null);
   const [bell, setBell] = useState<HTMLElement | null>(null);
   const t = (k: StrKey) => translate(prefs.lang, k);
+  const mainRef = useRef<HTMLDivElement>(null);
+  const [readyPath, setReadyPath] = useState('');
+  const loading = readyPath !== loc.pathname;
+  const markReady = () => {
+    const path = loc.pathname;
+    void waitForVisibleImages(mainRef.current, 1500).then(() => setReadyPath(path));
+  };
+  // Safety net: never keep a page hidden for more than 4 seconds.
+  useEffect(() => {
+    if (!loading) return;
+    const path = loc.pathname;
+    const tm = setTimeout(() => setReadyPath(path), 4000);
+    return () => clearTimeout(tm);
+  }, [loading, loc.pathname]);
 
   const unread = useMemo(() => (prefs.notify ? anns.filter((a) => !annSeen || a.at > annSeen).length : 0), [anns, annSeen, prefs.notify]);
 
@@ -84,20 +135,18 @@ export default function Layout() {
     if (!loc.hash) window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [loc.pathname, loc.hash]);
 
-  // First visit after login: ask the onboarding questions once per browser session.
+  // Right after login: open the AI course calculator on top of Home, then clear the flag so a refresh doesn't reopen it.
   useEffect(() => {
-    if (!ready || profile || quiz) return;
-    let dismissed = false;
-    try {
-      dismissed = sessionStorage.getItem('tx_onboard_dismissed') === '1';
-    } catch {
-      /* ignore */
-    }
-    if (dismissed) return;
-    const tm = setTimeout(() => openQuiz('onboard'), 700);
-    return () => clearTimeout(tm);
+    if (!ready || !(loc.state as { calc?: boolean } | null)?.calc) return;
+    openQuiz('calc');
+    nav(loc.pathname + loc.search, { replace: true, state: null });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready, profile]);
+  }, [ready, loc.state]);
+
+  useBackToTop();
+  useEffect(() => {
+    document.documentElement.lang = prefs.lang;
+  }, [prefs.lang]);
 
   const active = (to: string) => (to === '/' ? loc.pathname === '/' : loc.pathname.startsWith(to));
   const go = (to: string) => {
@@ -109,8 +158,9 @@ export default function Layout() {
   };
   const doLogout = () => {
     setUserMenu(null);
-    logout();
-    nav('/auth', { replace: true });
+    // Leave the protected pages first, so the login guard doesn't send us to /auth on the way out.
+    nav('/', { replace: true });
+    setTimeout(logout, 0);
   };
 
   return (
@@ -299,42 +349,23 @@ export default function Layout() {
           </List>
         </Drawer>
 
-        <Box component="main" sx={{ flexGrow: 1, position: 'relative', zIndex: 1 }}>
-          {/* Keyed by path so every page change fades and lifts in */}
-          <Box key={loc.pathname} sx={{ animation: 'txrise .5s cubic-bezier(.2,.8,.2,1) both' }}>
-            <Suspense fallback={<PageLoader />}>
+        {/* The page and footer appear together once the page has loaded; until then a loader shows. */}
+        <Box component="main" ref={mainRef} sx={{ flexGrow: 1, position: 'relative', zIndex: 1 }}>
+          {loading && <PageLoader full />}
+          <Box key={loc.pathname} sx={loading ? { position: 'absolute', inset: 0, opacity: 0, pointerEvents: 'none', overflow: 'hidden' } : { animation: 'txfade .35s ease both' }}>
+            <Suspense fallback={null}>
               <Outlet />
+              <PageReady key={loc.pathname} onReady={markReady} />
             </Suspense>
           </Box>
         </Box>
 
-        <Box component="footer" sx={{ borderTop: 1, borderColor: 'divider', mt: 6, py: 5, position: 'relative', zIndex: 1, pb: 12 }}>
-          <Container maxWidth="lg">
-            <Grid container spacing={3} alignItems="center">
-              <Grid item xs={12} md={4}>
-                <Logo size={46} />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Stack direction="row" flexWrap="wrap" gap={2}>
-                  {[...NAV.map((n): [StrKey, string] => [n.key, n.to]), ['announcements', '/announcements'] as [StrKey, string]].map(([k, to]) => (
-                    <Typography key={k} component={RouterLink} to={to} sx={{ color: 'text.secondary', textDecoration: 'none', fontSize: 14, '&:hover': { color: 'secondary.main' } }}>
-                      {t(k)}
-                    </Typography>
-                  ))}
-                </Stack>
-              </Grid>
-              <Grid item xs={12} md={2}>
-                <Typography color="text.secondary" sx={{ fontSize: 14 }}>
-                  academy.takxila.in
-                </Typography>
-              </Grid>
-            </Grid>
-          </Container>
-        </Box>
+        {!loading && <Footer />}
 
         <SearchDialog open={search} onClose={() => setSearch(false)} />
         <QuizDialog />
         <SelectionBar />
+        <ChatWidget />
       </Box>
     </PreviewProvider>
   );

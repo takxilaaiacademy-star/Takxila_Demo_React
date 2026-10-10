@@ -1,4 +1,3 @@
-// Public showcase page: the first thing a visitor sees, before logging in.
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Box, Button, Chip, Container, Drawer, Grid, IconButton, LinearProgress, List, ListItemButton, ListItemText, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -29,6 +28,8 @@ import Background from '../components/Background';
 import { CourseIcon } from '../components/CourseIcon';
 import { BlobImg, CourseVideo } from '../components/Media';
 import { CountUp, Reveal } from '../components/Motion';
+import ChatWidget from '../components/ChatWidget';
+import Footer from '../components/Footer';
 import Logo, { LogoFull } from '../components/Logo';
 import { PreviewProvider, usePreview } from '../components/Preview';
 import { ComboPacks, ComparisonTable, CourseFaq, HowItWorks, NumberedGrid, Perks, Plans } from '../components/Showcase';
@@ -36,6 +37,7 @@ import {
   FlipWords, GradientText, GridBackdrop, InfiniteRow, Lamp, Meteors, MovingBorderButton, ScrollTilt, ScrollTimeline, Sparkles, Spotlight, TextGenerate, TiltCard,
 } from '../components/fx';
 import { prefetch } from '../utils/media';
+import { useBackToTop } from '../utils/scrollFx';
 
 const LINKS: [label: string, id: string][] = [
   ['Courses', 'courses'], ['Inside', 'inside'], ['Challenges', 'challenges'], ['Packs', 'packs'], ['Compare', 'compare'],
@@ -451,36 +453,11 @@ const JOURNEY = [
   { title: 'Build your resume and grow', body: 'Your certificates flow into the resume builder. Share your code and earn while friends learn.', icon: <DescriptionIcon fontSize="small" /> },
 ];
 
-function Footer() {
-  const nav = useNavigate();
-  return (
-    <Box component="footer" sx={(t) => ({ borderTop: `1px solid ${t.tx.line}`, py: 5, position: 'relative', zIndex: 1 })}>
-      <Container maxWidth="lg">
-        <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} justifyContent="space-between" alignItems={{ md: 'center' }}>
-          <Logo size={40} />
-          <Stack direction="row" gap={1} flexWrap="wrap">
-            {LINKS.map(([l, id]) => (
-              <Button key={id} color="inherit" size="small" onClick={() => go(id)}>
-                {l}
-              </Button>
-            ))}
-            <Button color="inherit" size="small" onClick={() => nav('/auth')}>
-              Log in
-            </Button>
-          </Stack>
-          <Typography variant="body2" color="text.secondary">
-            © {new Date().getFullYear()} Takxila AI Academy
-          </Typography>
-        </Stack>
-      </Container>
-    </Box>
-  );
-}
-
 export default function Landing() {
   const nav = useNavigate();
   const { hash } = useLocation();
   const { isAuthed } = useAuth();
+  useBackToTop();
   useEffect(() => {
     if (hash) setTimeout(() => go(hash.slice(1)), 350);
   }, [hash]);
@@ -550,6 +527,7 @@ export default function Landing() {
           </Container>
         </Lamp>
         <Footer />
+        <ChatWidget />
       </Box>
     </PreviewProvider>
   );

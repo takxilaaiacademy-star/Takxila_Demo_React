@@ -110,7 +110,7 @@ export default function Dashboard() {
         </Stack>
 
         <Grid container spacing={2.5}>
-          <Grid item xs={12} lg={8.5}>
+          <Grid item xs={12} xl={8.5} sx={{ minWidth: 0 }}>
             <Grid container spacing={2} sx={{ mb: 2.5 }}>
               <Grid item xs={12} sm={6}>
                 <Promo
@@ -182,7 +182,7 @@ export default function Dashboard() {
               )}
             </Panel>
 
-            <Stack direction="row" alignItems="center" sx={{ mb: 2 }} spacing={1}>
+            <Stack direction="row" alignItems="center" sx={{ mb: 2, flexWrap: 'wrap', gap: 1 }}>
               <Typography variant="h5" sx={{ flexGrow: 1 }}>
                 Recommended for you
               </Typography>
@@ -198,17 +198,20 @@ export default function Dashboard() {
             <NumberedGrid courses={recs} />
           </Grid>
 
-          <Grid item xs={12} lg={3.5}>
-            <Stack spacing={2.5} sx={{ position: { lg: 'sticky' }, top: { lg: 96 } }}>
-              <StreakTiles />
-              <StreakCalendar />
+          {/* Side column on wide screens; below the courses, in two columns, on laptops and tablets. */}
+          <Grid item xs={12} xl={3.5} sx={{ minWidth: 0 }}>
+            <Box sx={{ display: 'grid', gap: 2.5, alignItems: 'start', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))', xl: '1fr' } }}>
+              <Stack spacing={2.5} sx={{ minWidth: 0 }}>
+                <StreakTiles />
+                <StreakCalendar />
+              </Stack>
               <Panel>
                 <LeaderboardList limit={8} />
                 <Button fullWidth size="small" endIcon={<ArrowForwardIcon />} sx={{ mt: 1 }} onClick={() => nav('/leaderboard')}>
                   Full leaderboard
                 </Button>
               </Panel>
-            </Stack>
+            </Box>
           </Grid>
         </Grid>
       </DashShell>

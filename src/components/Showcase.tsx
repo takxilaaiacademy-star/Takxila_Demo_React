@@ -63,9 +63,9 @@ export const NumberedCourse = memo(function NumberedCourse({ c, n, index = 0, ac
           {c.title}
         </Typography>
       </Stack>
-      <Stack direction="row" spacing={0.75} alignItems="center" sx={(t) => ({ border: `1px solid ${t.tx.line}`, borderRadius: '8px', px: 1, py: 0.5, color: 'text.secondary', fontSize: 13 })}>
+      <Stack direction="row" spacing={0.75} alignItems="center" sx={(t) => ({ border: `1px solid ${t.tx.line}`, borderRadius: '8px', px: 1, py: 0.5, color: 'text.secondary', fontSize: 13, whiteSpace: 'nowrap' })}>
         <HourglassIcon sx={{ fontSize: 15 }} />
-        <span>Duration: {durationText(c)}</span>
+        <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{durationText(c)}</Box>
         <Box sx={{ flexGrow: 1 }} />
         <Typography component="span" sx={{ fontWeight: 800, fontSize: 13, color: c.price ? 'text.primary' : 'error.main' }}>
           {c.price ? fmt(c.price) : 'FREE'}
@@ -80,7 +80,8 @@ export const NumberedCourse = memo(function NumberedCourse({ c, n, index = 0, ac
 
 export function NumberedGrid({ courses, start = 1, action }: { courses: Course[]; start?: number; action?: (c: Course) => void }) {
   return (
-    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' } }}>
+    // Columns fit the space the grid actually has (it sits in narrow dashboard columns too), never below 236px a card.
+    <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 236px), 1fr))', '& > *': { minWidth: 0 } }}>
       {courses.map((c, i) => (
         <NumberedCourse key={c.id} c={c} n={start + i} index={i} action={action} />
       ))}

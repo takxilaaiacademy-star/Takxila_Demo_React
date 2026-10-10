@@ -74,6 +74,13 @@ export const prefetch = (srcs: string[]) => {
   else setTimeout(run, 200);
 };
 
+/** True when src is already fetched and decoded, so it paints in the first frame. */
+export const isReady = (src: string) => ready.has(src);
+
+/** Resolves when every src is ready, or after cap ms, whichever comes first. */
+export const whenReady = (srcs: string[], cap: number) =>
+  Promise.race([Promise.all(srcs.map((s) => blobUrl(s))).then(() => undefined), new Promise<void>((r) => setTimeout(r, cap))]);
+
 /** Returns a blob: URL for src (undefined while it loads). */
 export function useBlobUrl(src: string | undefined): string | undefined {
   const [url, setUrl] = useState(() => (src ? ready.get(src) : undefined));

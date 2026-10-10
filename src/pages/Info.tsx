@@ -6,12 +6,16 @@ import PublicIcon from '@mui/icons-material/Public';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import PhoneIcon from '@mui/icons-material/WhatsApp';
+import CallIcon from '@mui/icons-material/PhoneOutlined';
 import PlaceIcon from '@mui/icons-material/PlaceOutlined';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Faq from '../components/Faq';
 import { Heading, Page } from '../components/Section';
 import { useUser } from '../context/AuthContext';
 import { useStore } from '../context/StoreContext';
+import { SUPPORT_EMAIL, SUPPORT_PHONE } from '../components/Footer';
+import { WHATSAPP_DISPLAY } from '../utils/contact';
+import { mailtoHref, sendMail } from '../utils/mail';
 import { load, save } from '../utils/storage';
 import type { ContactMessage } from '../types';
 
@@ -71,17 +75,30 @@ export function Contact() {
   const user = useUser();
   const { toast } = useStore();
   const [f, setF] = useState({ name: user.name, email: user.email, message: '' });
-  const send = (e: FormEvent<HTMLFormElement>) => {
+  const [busy, setBusy] = useState(false);
+  const send = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!f.message.trim()) return toast('Please write a message first.');
-    // Demo: messages are kept in the browser (tx_messages) until a backend exists.
+    // A copy stays in the browser (tx_messages); the message itself is emailed to the academy inbox.
     save('messages', load<ContactMessage[]>('messages', []).concat({ ...f, at: new Date().toISOString() }));
+    const subject = `Website contact: ${f.name}`;
+    const fields = { Name: f.name, Email: f.email, Message: f.message };
+    setBusy(true);
+    try {
+      await sendMail(subject, { ...fields, _replyto: f.email });
+      toast('Message sent. We will reply to ' + f.email + '.');
+    } catch {
+      window.location.href = mailtoHref(subject, fields);
+      toast('Your email app is open with the message. Press Send to reach us.');
+    } finally {
+      setBusy(false);
+    }
     setF({ ...f, message: '' });
-    toast('Message sent. We will get back to you.');
   };
   const info: [SvgIconComponent, string][] = [
-    [EmailIcon, '[SUPPORT EMAIL]'],
-    [PhoneIcon, '[PHONE / WHATSAPP NUMBER]'],
+    [EmailIcon, SUPPORT_EMAIL],
+    [CallIcon, SUPPORT_PHONE],
+    [PhoneIcon, 'WhatsApp ' + WHATSAPP_DISPLAY],
     [PlaceIcon, '[OFFICE ADDRESS]'],
   ];
   return (
@@ -104,8 +121,8 @@ export function Contact() {
               <TextField label="Your name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} required />
               <TextField label="Email" type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} required />
               <TextField label="Message" multiline minRows={5} value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })} required />
-              <Button type="submit" variant="contained" size="large">
-                Send message
+              <Button type="submit" variant="contained" size="large" disabled={busy}>
+                {busy ? 'Sending…' : 'Send message'}
               </Button>
             </Stack>
           </Card>

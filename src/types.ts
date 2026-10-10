@@ -74,6 +74,8 @@ export interface StoredUser {
   avatar?: string;
   /** Referral code entered at sign-up */
   refBy?: string;
+  /** Set when the account was created with Google, Facebook or Microsoft */
+  provider?: 'google' | 'facebook' | 'microsoft';
 }
 export type User = Omit<StoredUser, 'passHash'>;
 
@@ -88,7 +90,7 @@ export interface Profile {
   at: string;
 }
 
-export type Lang = 'en' | 'hi';
+export type Lang = 'en' | 'hi' | 'bn' | 'mr' | 'gu' | 'ta' | 'te' | 'kn' | 'ml' | 'pa';
 
 export interface Preferences {
   autoplay: boolean;

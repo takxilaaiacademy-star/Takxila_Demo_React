@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { flushSync } from 'react-dom';
 import { CssBaseline, GlobalStyles, ThemeProvider, type PaletteMode } from '@mui/material';
 import { createAppTheme } from '../theme/theme';
 import { load, save } from '../utils/storage';
@@ -36,6 +37,9 @@ const motion = {
   '@keyframes txbeam': { '0%': { strokeDashoffset: 1000 }, '100%': { strokeDashoffset: 0 } },
   '@keyframes txtwinkle': { '0%,100%': { opacity: 0.15, transform: 'scale(.6)' }, '50%': { opacity: 1, transform: 'scale(1)' } },
   '@keyframes txlamp': { from: { opacity: 0.4, width: '30%' }, to: { opacity: 1, width: '70%' } },
+  '@keyframes txring': { from: { opacity: 0.7, transform: 'scale(.9)' }, to: { opacity: 0, transform: 'scale(1.35)' } },
+  // While the theme switches, skip every colour transition so the new theme paints in one go.
+  '.tx-theming *, .tx-theming *::before, .tx-theming *::after': { transition: 'none !important' },
   '.tx-reduce *, .tx-reduce *::before, .tx-reduce *::after': { animation: 'none !important', transition: 'none !important' },
 };
 
@@ -44,8 +48,22 @@ const ThemeModeContext = createContext<ThemeModeValue | null>(null);
 export function ThemeModeProvider({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<PaletteMode>(() => (load<string>('theme', 'dark') === 'light' ? 'light' : 'dark'));
   useEffect(() => save('theme', mode), [mode]);
-  const theme = useMemo(() => createAppTheme(mode), [mode]);
-  const value = useMemo<ThemeModeValue>(() => ({ mode, toggleMode: () => setMode((m) => (m === 'dark' ? 'light' : 'dark')) }), [mode]);
+  // Both themes are built once, so switching only swaps which one is used.
+  const themes = useMemo(() => ({ dark: createAppTheme('dark'), light: createAppTheme('light') }), []);
+  const theme = themes[mode];
+  const value = useMemo<ThemeModeValue>(
+    () => ({
+      mode,
+      toggleMode: () => {
+        const root = document.documentElement;
+        const next: PaletteMode = mode === 'dark' ? 'light' : 'dark';
+        root.classList.add('tx-theming');
+        flushSync(() => setMode(next));
+        requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('tx-theming')));
+      },
+    }),
+    [mode],
+  );
   return (
     <ThemeModeContext.Provider value={value}>
       <ThemeProvider theme={theme}>

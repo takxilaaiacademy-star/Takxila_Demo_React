@@ -1,37 +1,10 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Box, type SxProps, type Theme } from '@mui/material';
 
-/** Fades and lifts its children in the first time they scroll into view. */
+/** Fades its children in once when the page opens. Content is never hidden by scrolling. */
 export function Reveal({ children, delay = 0, sx }: { children: ReactNode; delay?: number; sx?: SxProps<Theme> }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (!('IntersectionObserver' in window)) return setShown(true);
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setShown(true);
-          io.disconnect();
-        }
-      },
-      { rootMargin: '0px 0px -8% 0px' },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  return (
-    <Box
-      ref={ref}
-      sx={[
-        { opacity: shown ? 1 : 0, transform: shown ? 'none' : 'translateY(36px)', transition: `opacity .7s ease ${delay}ms, transform .8s cubic-bezier(.2,.8,.2,1) ${delay}ms` },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
-    >
-      {children}
-    </Box>
-  );
+  // Content is always visible; it only fades in once when the page opens (no hiding while scrolling).
+  return <Box sx={[{ animation: `txfade .5s ease ${delay}ms both` }, ...(Array.isArray(sx) ? sx : [sx])]}>{children}</Box>;
 }
 
 /** Counts up to `value` once on mount (numbers in stat tiles). */

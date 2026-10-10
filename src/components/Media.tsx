@@ -5,7 +5,7 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { decoded, useBlobUrl } from '../utils/media';
 
-const shimmer = (t: Theme) => ({
+export const shimmer = (t: Theme) => ({
   background: `linear-gradient(90deg, ${t.tx.surface} 0%, ${t.tx.line} 50%, ${t.tx.surface} 100%)`,
   backgroundSize: '800px 100%',
   animation: 'txshimmer 1.3s linear infinite',

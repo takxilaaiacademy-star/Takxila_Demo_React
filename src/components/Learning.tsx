@@ -1,6 +1,7 @@
 // Learner widgets: dashboard side menu, streaks, calendar, leaderboard and enrolled course cards.
 import { memo, useMemo, useState, type ReactNode } from 'react';
 import { Avatar, Box, Button, IconButton, LinearProgress, Stack, ToggleButton, ToggleButtonGroup, Tooltip, Typography } from '@mui/material';
+import SchoolIcon from '@mui/icons-material/SchoolOutlined';
 import DashboardIcon from '@mui/icons-material/SpaceDashboardOutlined';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremiumOutlined';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcardOutlined';
@@ -32,6 +33,7 @@ const SIDE: [StrKey, string, typeof DashboardIcon][] = [
   ['refer', '/refer', CardGiftcardIcon],
   ['resume', '/resume', DescriptionIcon],
   ['leaderboard', '/leaderboard', LeaderboardIcon],
+  ['mentorship', '/mentorship', SchoolIcon],
   ['purchases', '/purchases', ReceiptIcon],
 ];
 
