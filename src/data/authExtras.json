@@ -1,0 +1,23 @@
+{
+  "socialProviders": [
+    {
+      "id": "google",
+      "label": "Login with Gmail to Takxila AI Academy"
+    },
+    {
+      "id": "facebook",
+      "label": "Facebook"
+    },
+    {
+      "id": "microsoft",
+      "label": "Microsoft"
+    }
+  ],
+  "calendar": {
+    "weekdays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+  },
+  "visitorCounter": {
+    "startDate": "18 August 2026",
+    "minDigits": 4
+  }
+}

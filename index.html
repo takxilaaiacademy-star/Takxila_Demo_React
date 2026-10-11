@@ -1,40 +1,95 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="description" content="Takxila AI Academy: practical, hands-on AI courses." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-    />
-    <title>Takxila AI Academy</title>
-    <style>
-      .tx-boot { position: fixed; inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #0a1022; color: #c0c7de; }
-      html[data-theme='light'] .tx-boot { background: #eef1fb; color: #4b5470; }
-      .tx-boot-bar { position: fixed; top: 0; left: 0; height: 3px; width: 40%; background: #f5b93f; animation: txbootbar 1.1s ease-in-out infinite; }
-      .tx-boot-ring { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; border: 3px solid rgba(245, 185, 63, 0.2); border-top-color: #f5b93f; animation: txbootspin 0.9s linear infinite; }
-      .tx-boot-ring img { animation: txbootspin 0.9s linear infinite reverse; }
-      .tx-boot p { margin: 0; font-weight: 600; }
-      @keyframes txbootspin { to { transform: rotate(360deg); } }
-      @keyframes txbootbar { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
-    </style>
-    <script>
-      try { if (JSON.parse(localStorage.getItem('tx_theme')) === 'light') document.documentElement.dataset.theme = 'light'; } catch (e) {}
-    </script>
-  </head>
-  <body>
-    <!-- Shown until the app starts; React replaces it. -->
-    <div id="root">
-      <div class="tx-boot" role="status" aria-label="Loading">
-        <div class="tx-boot-bar"></div>
-        <div class="tx-boot-ring"><img src="/assets/logo-mark-dark.webp" alt="" width="40" height="32" /></div>
-        <p>Loading Takxila AI Academy…</p>
-      </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <meta name="description" content="Takxila AI Academy: practical, hands-on AI courses." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+  <title>Takxila AI Academy</title>
+  <style>
+    .tx-boot {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-content: center;
+      justify-items: center;
+      gap: 14px;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: #0a1022;
+      color: #c0c7de;
+    }
+
+    html[data-theme='light'] .tx-boot {
+      background: #eef1fb;
+      color: #4b5470;
+    }
+
+    .tx-boot-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 40%;
+      background: #f5b93f;
+      animation: txbootbar 1.1s ease-in-out infinite;
+    }
+
+    .tx-boot-ring {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      border: 3px solid rgba(245, 185, 63, 0.2);
+      border-top-color: #f5b93f;
+      animation: txbootspin 0.9s linear infinite;
+    }
+
+    .tx-boot-ring img {
+      animation: txbootspin 0.9s linear infinite reverse;
+    }
+
+    .tx-boot p {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    @keyframes txbootspin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes txbootbar {
+      from {
+        transform: translateX(-100%);
+      }
+
+      to {
+        transform: translateX(260%);
+      }
+    }
+  </style>
+  <script>
+    try { if (JSON.parse(localStorage.getItem('tx_theme')) === 'light') document.documentElement.dataset.theme = 'light'; } catch (e) { }
+  </script>
+</head>
+
+<body>
+  <!-- Shown until the app starts; React replaces it. -->
+  <div id="root">
+    <div class="tx-boot" role="status" aria-label="Loading">
+      <div class="tx-boot-bar"></div>
+      <div class="tx-boot-ring"><img src="/assets/logo-mark-dark.webp" alt="" width="40" height="32" /></div>
+      <p>Loading Takxila AI Academy…</p>
     </div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  </div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

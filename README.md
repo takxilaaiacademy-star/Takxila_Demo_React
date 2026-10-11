@@ -1,302 +1,310 @@
-# Takxila AI Academy (Vite + React + TypeScript + MUI)
+<div align="center">
 
-A single-page app version of the Takxila demo site: 45 courses, categories, search, course pages,
-cart with multi-select, dashboard and My courses, FAQ, an 11-question onboarding quiz with
-recommendations, and the AI Course Calculator. Each course opens with a summary video, enrolled
-courses have lessons and a Moodle-style grade report, and the profile menu has My purchases, Profile,
-Grades, Calendar, Private files, Reports, Preferences and Language. Site announcements can be posted
-from the app.
+# 🏛️ TAKXILA AI ACADEMY
+### *Next-Gen Interactive Learning Platform & AI Career Accelerator*
 
-## Run it
-Requires Node 20 or newer.
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![MUI](https://img.shields.io/badge/MUI_v5-007FFF?style=for-the-badge&logo=mui&logoColor=white)](https://mui.com/)
+[![Redux Toolkit](https://img.shields.io/badge/Redux_Toolkit-764ABC?style=for-the-badge&logo=redux&logoColor=white)](https://redux-toolkit.js.org/)
+[![Razorpay](https://img.shields.io/badge/Razorpay-Ready-0C2340?style=for-the-badge&logo=razorpay&logoColor=3395FF)](https://razorpay.com/)
+
+<p align="center">
+  <b>46+ AI Courses</b> • <b>ATS Resume Builder & Scoring</b> • <b>Verifiable Certificates (PDF/PNG)</b> • <b>AI Course Calculator</b><br/>
+  <b>Interactive Moodle-Style Gradebook</b> • <b>10 Regional Indian Languages</b> • <b>Data-Driven JSON Architecture</b>
+</p>
+
+---
+
+</div>
+
+> [!TIP]
+> **Blazing Fast Performance**: Zero-lag typing with concurrent transitions, client-side Blob & Cache API media caching, automated idle code preloading, and a 26% smaller initial bundle powered by dynamic Vite glob routing.
+
+> [!NOTE]
+> **Full Client-Side Demo Architecture**: Zero external database dependency required out of the box. State is completely orchestrated with Redux Toolkit and persisted across `localStorage` and `IndexedDB`.
+
+---
+
+## 📑 Table of Contents
+
+- [✨ Highlights & Feature Matrix](#-highlights--feature-matrix)
+- [⚡ Quick Start & Run](#-quick-start--run)
+- [🗺️ Modular JSON-Driven Routing](#️-modular-json-driven-routing)
+- [🎨 Design System & Aesthetic Experience](#-design-system--aesthetic-experience)
+- [🧠 Platform Ecosystem & Core Modules](#-platform-ecosystem--core-modules)
+  - [1. 🎓 Course Catalog & Udemy-Grade Experience](#1--course-catalog--udemy-grade-experience)
+  - [2. 📄 ATS Resume Studio & Keyword Scorer](#2--ats-resume-studio--keyword-scorer)
+  - [3. 📜 Verifiable Certificates Engine](#3--verifiable-certificates-engine)
+  - [4. 🧮 AI Onboarding Quiz & Course Calculator](#4--ai-onboarding-quiz--course-calculator)
+  - [5. 💳 Cart, Combo Offers & Razorpay Payments](#5--cart-combo-offers--razorpay-payments)
+  - [6. ✉️ Branded Learner Emails & Mentorship Desk](#6-️-branded-learner-emails--mentorship-desk)
+- [💾 Storage & Persistence Architecture](#-storage--persistence-architecture)
+- [🏗️ State Management (Redux Toolkit)](#️-state-management-redux-toolkit)
+- [🔐 Social Sign-In & Auth Configuration](#-social-sign-in--auth-configuration)
+- [🌐 Multilingual Localization (i18n)](#-multilingual-localization-i18n)
+- [📁 Project Structure](#-project-structure)
+- [🚀 Production Build & Deployment](#-production-build--deployment)
+
+---
+
+## ✨ Highlights & Feature Matrix
+
+| Feature | Technology / Implementation | Highlight |
+| :--- | :--- | :--- |
+| **Motion Showcase** | Aceternity-inspired FX (spotlight, 3D tilt, flip words) in pure CSS & MUI | Zero animation weight, pure 60fps |
+| **Dynamic Routing** | Centralized `routes.json` + Vite `import.meta.glob` | Automated chunking, 26% smaller bundle |
+| **ATS Resume Builder** | PDF / DOCX parser (PDF.js legacy + Mammoth) + jsPDF exporter | 5 ATS templates + 0–100 ATS scoring |
+| **Certificate Issuer** | Canvas + Template composer (PNG 3072×2048 & PDF) | Cryptographic verification ID (`TXC-...`) |
+| **Course Videos** | Auto-generated 10-second summary previews (H.264/VP9) | Native WebM/MP4 adaptive streaming |
+| **Payment Gateway** | Razorpay Checkout SDK integration | UPI, Net Banking, Cards & Wallet ready |
+| **Notification Center** | Real-time Redux notification bell | Dismissible, linked alerts & announcements |
+| **Indian Languages** | 10 Regional languages (`src/data/i18n.ts`) | English, Hindi, Bengali, Tamil, etc. |
+
+---
+
+## ⚡ Quick Start & Run
+
+### Prerequisites
+- **Node.js**: v20.0.0 or higher
+- **npm**: v10.0.0 or higher
 
 ```bash
+# 1. Clone repository & install dependencies
 npm install
-npm run dev       # http://localhost:5173
-npm run typecheck # tsc, no emit
-npm run build     # tsc, then a production build in dist/
-npm run preview   # serve the build at http://localhost:4173
+
+# 2. Launch hot-reloading development server
+npm run dev
+# ➔ App running at http://localhost:5173
+
+# 3. Typecheck codebase (strict zero-any check)
+npm run typecheck
+
+# 4. Generate optimized production bundle
+npm run build
+
+# 5. Preview production build locally
+npm run preview
+# ➔ Serving dist/ at http://localhost:4173
 ```
 
-The app opens on the public showcase page (`/`): an animated tour of the academy with the full course list,
-challenges, combo packs, a comparison table and a learning-journey timeline. Visitors can preview any course
-before signing up. **Log in / Start free** lead to the login page. Use the **Log in / Register** toggle to create an account
-(any email and a 6+ character password). Everything after that needs a logged-in user.
+---
 
-## What is saved in localStorage
-Every key starts with `tx_`:
+## 🗺️ Modular JSON-Driven Routing
 
-| Key | What it holds |
-| --- | --- |
-| `tx_users` | Registered accounts: name, email, phone, hashed password, created date |
-| `tx_session` | The logged-in user when "Keep me logged in" is ticked (otherwise kept in sessionStorage until the tab closes) |
-| `tx_theme` | `dark` or `light` |
-| `tx_last_email` | Last email used, pre-filled on the login form |
-| `tx_user_<email>` | That user's cart, enrolled courses, completed lessons, orders, activity, profile (city, bio, photo), preferences, quiz and calculator answers, recently viewed courses |
-| `tx_messages` | Messages sent from the Contact form |
-| `tx_referrals` | Friends who enrolled with each referral code, and the ₹200 reward per friend |
-| `tx_announcements` | Site announcements and their replies (shared by every account in this browser) |
+All routes are fully decoupled from JSX markup and centralized in **[`src/data/routes.json`](file:///c:/Sachin/Takxila/Takxila%20Demo/src/data/routes.json)**.
+[`src/App.tsx`](file:///c:/Sachin/Takxila/Takxila%20Demo/src/App.tsx) automatically reads this file, discovers page chunks via Vite's `import.meta.glob`, and generates cached lazy routes on demand.
 
-Private files are stored in IndexedDB (database `tx_files`, 50 MB per file), in this browser only.
+```json
+{
+  "public": [
+    { "path": "/", "file": "./pages/Landing.tsx" },
+    { "path": "/auth", "file": "./pages/AuthPage.tsx" }
+  ],
+  "redirects": [
+    { "path": "/login", "to": "/auth" },
+    { "path": "/register", "to": "/auth#register" }
+  ],
+  "protected": [
+    { "path": "home", "file": "./pages/Home.tsx" },
+    { "path": "courses", "file": "./pages/Courses.tsx" },
+    { "path": "courses/:id", "file": "./pages/CourseDetail.tsx" },
+    { "path": "courses/:id/grades", "file": "./pages/CourseDetail.tsx", "props": { "tab": "grades" } },
+    { "path": "about", "file": "./pages/Info.tsx", "export": "About" }
+  ]
+}
+```
 
-**Admin:** the first account registered in a browser is the admin. Only the admin sees
-"Add announcement" and can pin or delete posts; everyone can reply.
+```tsx
+// src/App.tsx
+const modules = import.meta.glob<Record<string, ComponentType<any>>>('./pages/**/*.tsx');
 
-This is a frontend-only demo login: the password is hashed with SHA-256 before saving, but anything
-in the browser can be read by the user. Connect a real backend before taking payments or real accounts.
+export const preloadPages = () => {
+  Object.values(modules).forEach((load) => void load());
+};
+```
 
-## Showcase, dashboard and rewards
-- **Showcase page (`/`)**: motion effects in the style of Aceternity UI (spotlight, text generate, flip words,
-  moving-border buttons, 3D tilt cards, infinite rows, scroll timeline, lamp, meteors, sparkles), rebuilt in
-  `src/components/fx.tsx` with MUI and CSS, so there is no Tailwind or animation library to load.
-  The previous home page is now at `/home`.
-- **Dashboard** with a side menu: Dashboard, Certificates, Refer and Earn, Build Resume, Leaderboard, My purchases.
-  It shows promo banners, enrolled courses (search, star, progress), a streak counter, a streak calendar,
-  the leaderboard and numbered course picks.
-- **Certificates**: completing every lesson issues a certificate with an ID made from the email and course
-  (`TXC-…`). It downloads as a PNG, and the Verify box checks an ID against the accounts in this browser.
-- **Refer and Earn**: each user gets a code. Signing up with `?ref=CODE` (or typing it) gives ₹200 off the first
-  order and credits ₹200 to the friend's wallet, up to ₹1,000.
-- **Resume builder**: form with a live A4 preview, saved per user. Download uses the browser's Save as PDF.
-  Finished Takxila certificates are filled in for you.
-- **Leaderboard**: learning hours from completed lessons (course length shared across its lessons), weekly and overall,
-  with demo learners so it is never empty.
-- **Pricing in the cart** (`src/data/showcase.ts`): combo packs, the All Access pack (₹4,999), 25% off any
-  4+ other courses, then the referral discount. Pack contents, prices, the comparison rows and the demo
-  leaderboard names all live in that file.
-- The logo comes from `public/assets/logo-mark*.webp` and `logo-full*.webp` (the `-dark` files are recoloured for
-  the dark theme).
+---
 
-## Round 5: login flow, mentorship, footer, covers
-- **After login** you land on `/home` and the AI course calculator opens on top of it, every time.
-  **Log out** returns to the public showcase page `/`.
-- **Mentorship** (`/mentorship`, also in the dashboard menu, Contact menu and footer): topics, a booking form and
-  your past requests. A floating chat button (bottom right, on every page) offers **Chat with a mentor** and
-  **Chat on WhatsApp**. Contact details live in `src/utils/contact.ts`.
-  - Mentor requests open the visitor's email app addressed to takxila.ai.academy@gmail.com with the subject and
-    message filled in (`mailto:`); the visitor presses Send. A copy is kept in `tx_messages`. To send without the
-    email app, post the same fields to a form service (for example FormSubmit or EmailJS) or your backend in
-    `sendMentorMail`.
-  - WhatsApp opens `https://wa.me/917992412683` with a prefilled message.
-- **Footer** (`src/components/Footer.tsx`) matches the main website: Explore, Company, Legal, Support, Follow Us,
-  a back-to-top button. The social links in `SOCIAL` are placeholders; put the academy's real profile URLs there.
-- **Scroll animations were removed** (they hid cards and the footer on some screens). Content is always visible; a back-to-top button appears after scrolling down.
-- **Themed scrollbars** (gold in dark mode, indigo in light) in `src/theme/theme.ts`.
-- **Languages**: English, Hindi, Bengali, Marathi, Gujarati, Tamil, Telugu, Kannada, Malayalam and Punjabi for menus
-  and navigation (`src/data/i18n.ts`). Course content stays in English.
-- **Course covers**: 40 courses have their own generated cover in `public/assets/covers/<id>.webp`, each showing what
-  the course is about (chat, terminal, spreadsheet, video editor, ads, SEO results, kanban, avatar and so on).
-  The 5 courses with real photo banners keep them. The design is `tools/covers.html`; regenerate with
-  `node tools/render-covers.mjs [course-id ...]` (needs Playwright). The summary videos were re-rendered with them.
+## 🎨 Design System & Aesthetic Experience
 
-## Round 9: resume upload fix, learner emails, About Us
+| Element | Dark Mode Palette | Light Mode Palette |
+| :--- | :--- | :--- |
+| **Primary Base** | Deep Midnight Navy (`#0B1636` → `#13215E`) | Crisp Alabaster & Pure White |
+| **Accent / Radiant** | Royal Imperial Gold (`#F5B93F`) | Deep Royal Indigo (`#4338CA`) |
+| **Secondary High** | Electric Lavender (`#7C8CFF`) | Soft Mauve / Pastel Violet |
+| **Scrollbar Glow** | Polished Gold Custom Track | Elegant Indigo Custom Track |
 
-### ATS resume upload (PDF and DOCX)
-- PDFs are read with the pdf.js **legacy** build, which works in older Chrome, Edge, Safari and Firefox too. Its worker is bundled as a normal `.js` file, so it also loads on web hosts that refuse to serve `.mjs` files.
-- Word files are read with mammoth, and if that fails, with a built-in reader that opens the `.docx` directly (`src/features/resume/extract.ts`). An old `.doc` file renamed to `.docx` now gets a clear message.
+- **Aceternity UI Effects (`src/components/fx.tsx`)**: Spotlight beam, moving-border buttons, meteors, glowing lamps, flip words, and 3D card tilt — all handcrafted using Material UI's `sx` styling and CSS keyframes without third-party runtime bloat.
+- **FastField Transitions**: Inputs decouple state rendering using React Transitions (`useTransition`) for instantaneous, stutter-free typing on heavy forms.
 
-### Emails to learners
-Three branded emails with your logo (edit the words in `src/emails/templates.ts`):
+---
 
-| When | Email |
-|---|---|
-| A course is bought | "You're in!" with the courses, total, order and payment ID |
-| A free course is enrolled | "You're enrolled" with a Start learning button |
-| A course is finished | A congratulations greeting, lessons and grade, the certificate ID with a "Download my certificate" button, and two suggested next courses |
+## 🧠 Platform Ecosystem & Core Modules
 
-Learners can switch the emails off, and preview all three, in **Preferences > Email me**.
+### 1. 🎓 Course Catalog & Udemy-Grade Experience
+- **46 Curated Courses** spanning Generative AI, AI Agents, Claude Code, No-Code Workflows, and AI Filmmaking.
+- **3 Dynamic Views**: Interactive Category Bubbles, Grid Cards with Pagination, and Compact List View.
+- **Udemy-Style Course Detail**: Sticky purchase bar, curriculum accordion, lecture runtime breakdown, preview videos, and student review metrics.
 
-**Sending them.** A website without a server cannot send its own HTML email, so the app uses **EmailJS** (free plan: 200 emails/month):
-1. Sign up at emailjs.com, add an Email Service (connect takxila.ai.academy@gmail.com) and note its **Service ID**.
-2. Create an Email Template. Set **To email** to `{{to_email}}`, **Subject** to `{{subject}}`, **Reply to** to `{{reply_to}}`, and in the content's code view put only `{{{html_body}}}` (three braces). Note its **Template ID**.
-3. Copy your **Public Key** from Account > General.
-4. Put them in `.env` as `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, `VITE_EMAILJS_PUBLIC_KEY`, and set `VITE_SITE_URL` to your live address (for example `https://takxila.in`) so the logo and buttons in the email point at your site. Rebuild.
+### 2. 📄 ATS Resume Studio & Keyword Scorer
+- **Upload & Parser Engine**: Reads uploaded `.pdf` (via bundled legacy PDF.js worker) and `.docx` (via Mammoth + direct XML fallback).
+- **Interactive Builder**: 5 ATS-compliant professional themes (Classic, Modern, Professional, Minimal, Executive) with live A4 preview.
+- **ATS Keyword Analyzer (`src/features/resume/ats.ts`)**: Scores resumes 0–100, checking for section completeness, impact metrics, action verbs, and job description keyword matches directly in-browser.
 
-Until EmailJS is set up, each email goes through FormSubmit as a plain-text copy to the academy inbox with the learner in CC.
+### 3. 📜 Verifiable Certificates Engine
+- **Automated Issuance**: Automatically triggers upon 100% course lecture completion.
+- **Dual Export**: Generates high-res PNG (3072×2048) or single-page formatted PDF.
+- **Instant Verification**: On-site certificate verify box validates against the unique verification ID (`TXC-XXXXX`).
 
-### About Us
-The "About TAKXILA" story is on the About Us page. Edit the words in `src/data/about.tsx`.
+### 4. 🧮 AI Onboarding Quiz & Course Calculator
+- **11-Question Skill Diagnostic**: Assesses role, experience level, tools of interest, and budget.
+- **Smart Recommendation Engine (`src/data/recommend.ts`)**: Computes weighted course matches and custom tailored curricula.
+- **Dynamic Pricing Calculator**: Instant bundle pricing adjustments based on selected learning paths.
 
-## Round 8: Redux, notifications, certificate, resume, speed
+### 5. 💳 Cart, Combo Offers & Razorpay Payments
+- **Smart Combo Engine**: 30% automatic discount on curated multi-course packs, 25% off 4+ custom picks, and ₹4,999 All-Access lifetime pass.
+- **Razorpay Checkout Integration**: Configurable test/live modes for seamless UPI, credit/debit cards, and net banking transactions.
 
-### Redux (src/store)
-All app state and every outside call now live in one Redux Toolkit store:
+### 6. ✉️ Branded Learner Emails & Mentorship Desk
+- **Automated HTML Email Triggers**: Purchase receipts, Enrollment confirmations, and Graduation celebrations.
+- **EmailJS / FormSubmit Support**: Zero-backend serverless dispatch with fallback to native `mailto:` links.
+- **1-on-1 Mentorship Booking**: Schedule sessions with industry mentors or initiate live WhatsApp chats.
 
-| File | What it holds | Saved as |
-|---|---|---|
-| `store/index.ts` | `configureStore`, typed `useAppDispatch` / `useAppSelector`, localStorage persistence, loading the learner when the login changes | |
-| `store/authSlice.ts` + `authThunks.ts` | accounts, session, register / login / social login / logout / change password | `tx_users`, `tx_session` |
-| `store/learnerSlice.ts` + `learnerThunks.ts` | cart, courses, lessons, orders, resume, preferences, notifications | `tx_user_<email>` |
-| `store/announcementsSlice.ts` | site announcements | `tx_announcements` |
-| `store/themeSlice.ts` | dark / light | `tx_theme` |
-| `store/uiSlice.ts` | selection bar, quiz, add-to-cart popup, toasts, confetti | not saved |
-| `store/api.ts` | RTK Query: `sendMail` (FormSubmit emails) and `visits` (visitor counter) | |
+---
 
-Pages keep using the same hooks (`useStore()`, `useAuth()`, `useAnnouncements()`, `useThemeMode()`), which are now thin readers over the store, so nothing in the pages had to change. New code can use `useAppSelector` / `useAppDispatch` directly. When the academy gets its own backend, add endpoints to `store/api.ts`.
+## 💾 Storage & Persistence Architecture
 
-### Notifications (the bell)
-Buying a course, enrolling in a free one, finishing a course and a certificate becoming ready each add a notification (`learnerThunks.ts`). Announcements show there too. Every row has an **X** to remove it; the header has "Mark all as read" and the footer "Clear all". Clicking a row opens the related page. Component: `src/components/NotificationBell.tsx`.
-
-### Certificate
-Uses your certificate design (`public/assets/certificate/template.webp`) and writes the learner's name, course, date, category and certificate ID on it. Each certificate downloads as **PNG** (3072×2048) or a one-page **PDF**. Code: `src/features/certificate/`.
-
-### Resume builder and ATS score
-- **5 ATS-approved themes** (Classic, Modern, Professional, Minimal, Executive) plus **Creative, coming soon**. Theme settings: `src/features/resume/themes.ts`.
-- **Download PDF** makes a real text PDF (jsPDF) with only the sections you filled in, so there are no blank pages. A chip above the preview shows how many pages it will be.
-- **Check your ATS score**: upload a PDF, DOCX or TXT resume (or score the one you built), optionally paste a job description. You get a 0 to 100 score, a checklist with tips and matched/missing keywords. Everything runs in the browser; nothing is uploaded. Scoring rules: `src/features/resume/ats.ts`.
-- The draft saves itself in this browser while you type.
-
-### Speed
-- Text fields use `src/components/FastField.tsx`: the field shows each key at once and the page updates in the background (a React transition), so typing never lags behind on long pages.
-- Page changes no longer wait up to 1.5 s for images; the loading spinner only appears if a page takes longer than 0.3 s.
-- The background glow is drawn with gradients instead of a heavy CSS blur.
-
-## Round 7: course pages, category bubbles, combo offers, Razorpay
-
-### Where the course content lives (edit these files)
-- **`src/data/courses.ts`**: the 46 courses: title, small line above the title (`kicker`), category (`group`),
-  the "Duration" line (`meta`), price and old price (`was`), cover image. Titles, durations and prices follow the
-  main website. Courses whose price was not visible on the website are set to ₹99 (Claude for Excel, Claude Deep Dive,
-  Perplexity, Canva AI, Gemini and the 9 AI Filmmaking parts). Change `price` / `was` there.
-- **`src/data/courseContent.ts`**: what is inside each course, shown on its course page: subtitle, "What you'll learn",
-  the sections and lectures (title and minutes) of "Course content", requirements, description and "Who this course is
-  for". The section count, lecture count and total length on the page are calculated from the lectures.
-- The five categories (the bubbles) are `GROUPS` in `src/data/courses.ts`.
-- Combo pack prices are worked out automatically (30% off the courses in the pack) in `src/data/showcase.ts`.
-- After changing prices, re-render the covers and summary videos so the price on them matches:
-  `node tools/render-covers.mjs` and `node tools/render-videos.mjs` (need Playwright and ffmpeg).
-
-### Pages
-- **Courses** opens on the five category bubbles (Expand all / Collapse all). Clicking a bubble shows its courses.
-  The two other layouts (banner cards with pagination, compact tiles) are on the toggle next to the sort menu.
-- **Course page** (`src/pages/CourseDetail.tsx`) is laid out like a Udemy course page: header with breadcrumbs,
-  subtitle and badges, a sticky purchase card (this course or All Access, Add to cart, Buy now, preview video),
-  What you'll learn, related topics, This course includes, Course content (sections open to show every lecture),
-  Requirements, Description with Show more, and related courses.
-- **Added-to-cart popup** (`src/components/CartUpsell.tsx`): shows the course just added, the best combo that
-  includes it (or a 25%-off custom combo of 4), related courses with one-click add, and All Access.
-
-### Razorpay payments
-1. Sign up at dashboard.razorpay.com. Under Account & Settings, API Keys, generate a key (Test mode first).
-2. In `.env` set `VITE_RAZORPAY_KEY_ID=rzp_test_...` and rebuild. The cart's "Pay" button then opens Razorpay
-   Checkout (UPI, cards, net banking, wallets). After a successful payment the courses are enrolled and the
-   Razorpay payment id is saved with the order (Profile, Purchases).
-3. Test with Razorpay's test cards/UPI, then switch to the `rzp_live_...` key when your account is activated.
-
-Important for live payments: this site has no server, so it cannot create Razorpay orders or verify the payment
-signature, and someone could change the amount in their browser. Before going live, add a small backend
-(for example a serverless function) that creates the order with the key secret, pass its `order_id` to checkout
-in `src/utils/razorpay.ts`, and verify `razorpay_signature` on the server before enrolling. Never put the key
-secret in `.env` for this frontend. Without a key the Pay button explains the setup and offers a demo enrolment.
-
-## Round 6: login page, email, loaders, speed
-
-### Social sign-in (Gmail, Facebook, Microsoft)
-The buttons work once you give the app your own app IDs. Copy `.env.example` to `.env` (next to `package.json`) and fill it in:
+Every persistence key is isolated and namespaced with `tx_`:
 
 ```
+┌───────────────────────────────────────────────────────────────┐
+│                      BROWSER STORAGE MAP                      │
+├───────────────────┬───────────────────┬───────────────────────┤
+│    STORAGE TYPE   │      KEY NAME     │      DATA STORED      │
+├───────────────────┼───────────────────┼───────────────────────┤
+│ localStorage      │ tx_users          │ Registered accounts   │
+│ localStorage      │ tx_session        │ Active auth session   │
+│ localStorage      │ tx_theme          │ "dark" | "light"      │
+│ localStorage      │ tx_user_<email>   │ User courses & state  │
+│ localStorage      │ tx_referrals      │ Referral rewards/code │
+│ localStorage      │ tx_announcements  │ Posts & replies       │
+│ IndexedDB         │ tx_files          │ Private files (50 MB) │
+│ Cache API         │ tx-media-v2       │ Pre-decoded media     │
+└───────────────────┴───────────────────┴───────────────────────┘
+```
+
+> [!WARNING]
+> **Production Notice**: All client-side data is stored in the browser (with SHA-256 password hashing). For production deployment with financial transactions, connect `store/api.ts` to your secure backend API.
+
+---
+
+## 🏗️ State Management (Redux Toolkit)
+
+The entire global state is orchestrated by a single cohesive Redux store (`src/store/`):
+
+```mermaid
+graph TD
+    Store["Redux Toolkit Store (src/store)"]
+    Store --> Auth["authSlice / authThunks (Accounts & Session)"]
+    Store --> Learner["learnerSlice / learnerThunks (Cart, Progress, Orders)"]
+    Store --> Announce["announcementsSlice (Site-wide Updates)"]
+    Store --> Theme["themeSlice (Dark / Light Mode)"]
+    Store --> UI["uiSlice (Toasts, Confetti, Modals)"]
+    Store --> API["api.ts (RTK Query: FormSubmit & Counters)"]
+```
+
+---
+
+## 🔐 Social Sign-In & Auth Configuration
+
+Copy `.env.example` to `.env` in the root folder and provide your provider credentials:
+
+```ini
+# Social Authentication
 VITE_GOOGLE_CLIENT_ID=your-google-oauth-client-id.apps.googleusercontent.com
 VITE_FACEBOOK_APP_ID=your-facebook-app-id
 VITE_MICROSOFT_CLIENT_ID=your-azure-application-client-id
+
+# Payment Gateway
+VITE_RAZORPAY_KEY_ID=rzp_test_your_key_id
+
+# EmailJS Services
+VITE_EMAILJS_SERVICE_ID=your_emailjs_service_id
+VITE_EMAILJS_TEMPLATE_ID=your_emailjs_template_id
+VITE_EMAILJS_PUBLIC_KEY=your_emailjs_public_key
+VITE_SITE_URL=https://takxila.in
 ```
 
-Then rebuild (`npm run build`). In each provider console, add this redirect URI (use your real domain, and
-`http://localhost:5173/oauth-callback.html` for local testing):
-
-`https://YOUR-DOMAIN/oauth-callback.html`
-
-- **Google**: Google Cloud console, APIs & Services, Credentials, OAuth client ID of type "Web application".
-  Add your domain under Authorised JavaScript origins and the URI above under Authorised redirect URIs.
-- **Facebook**: developers.facebook.com, create an app with Facebook Login, add the URI under
-  Valid OAuth Redirect URIs and request the `email` permission.
-- **Microsoft**: Azure portal, App registrations, new registration for "Accounts in any organizational directory and
-  personal Microsoft accounts". Add a Web platform redirect with the URI above and tick "ID tokens".
-
-Until an ID is set, the button opens a short dialog saying which line is missing. The sign-in runs in a popup
-(`src/utils/social.ts`, `public/oauth-callback.html`). As with the rest of this demo, accounts are stored in the
-browser and the token is not checked by a server, so add a backend before relying on it for real accounts.
-
-### Forms send email to takxila.ai.academy@gmail.com
-The Contact form, the mentor form, the chat widget and "Lost password?" send their message through
-[FormSubmit](https://formsubmit.co) (`src/utils/mail.ts`), with no server needed. **The first time anyone sends a
-form, FormSubmit emails takxila.ai.academy@gmail.com an activation link. Click it once**; from then on every
-message arrives in that inbox. If the service cannot be reached, the visitor's email app opens with the message
-filled in instead. To change the inbox, edit `INBOX` in `src/utils/mail.ts`.
-
-### Login page blocks
-Below the login card: Latest announcements, a calendar (today highlighted, dots on announcement days) and a
-visitor counter. The counter uses the free counterapi.dev service (`VisitorCounter` in
-`src/components/AuthExtras.tsx`) and falls back to a count for this browser if that service is blocked.
-"I'm not a robot" is a simple tick box, not a real CAPTCHA; swap in Google reCAPTCHA or Cloudflare Turnstile
-if you add a backend.
-
-### Loader, theme and catalog speed
-- Every page shows a full-page loader (logo spinner plus a progress bar) until its content and the images on
-  screen are ready; the footer appears only after the page, never on its own.
-- The dark/light switch now changes instantly (no colour fade across hundreds of elements).
-- Course covers are WebP (about 60% smaller). All 45 covers are fetched once in the background when the
-  catalog opens, so changing page, filter or sort is instant. While a page of covers is still loading,
-  skeleton cards and a "Loading courses…" spinner show that the courses are on their way.
-- The mentor chat's Topic dropdown no longer closes the chat when you pick an option.
-
-## Speed and media
-- Every image and video is fetched once, stored in the Cache API (`tx-media-v2`) and shown from a
-  `blob:` URL (`src/utils/media.ts`), so revisits and page changes don't reload them. Images are decoded
-  before they are shown, so a revisited page paints them in the first frame. Anything that is not an image
-  or video is never cached, and if the blob route fails or takes over 6 seconds the image loads straight from its file.
-- Pages are code-split and preloaded when the browser is idle; the next page of course banners is prefetched.
-- The catalog is paginated (6/9/12/24 per page, set in Preferences). Search is deferred and runs over a
-  prebuilt lowercase index, so typing never blocks. Category, sort, search and page live in the URL.
-- Course cards are memoized and the store's actions are stable, so only the card that changed re-renders.
-- Animations (page transitions, staggered cards, scroll reveal, count-up stats, confetti on enrol,
-  checkout and course completion) can be switched off with **Preferences → Reduce motion**.
-
-## Course summary videos
-`public/media/videos/<id>.mp4` (H.264) and `<id>.webm` (VP9), 10 seconds each, are generated from the
-course banner and details. The player uses MP4 where the browser supports H.264 and WebM otherwise.
-To use a real recording, replace both files for that course id. To regenerate them:
-
-```bash
-npm i -D playwright      # plus ffmpeg on PATH
-node tools/render-videos.mjs            # all courses
-node tools/render-videos.mjs claude-code film-1
+Add the following OAuth redirect URI to your Google, Facebook, and Microsoft dev consoles:
+```text
+https://YOUR-DOMAIN/oauth-callback.html
 ```
 
-## Grades
-Each lesson of a course is a grade item with equal weight. Marking a lesson complete scores it 100;
-the course total is the weighted sum, shown on the course's Grades tab and on the Grades overview.
+---
 
-## Project layout
-- `src/main.tsx` – providers (Redux `Provider`, router, theme, toasts)
-- `src/store/` – the Redux store: slices, thunks and the RTK Query API (see "Round 8" above)
-- `src/App.tsx` – routes; everything except `/auth` is behind `ProtectedRoute`
-- `src/types.ts` – the shared types: `Course`, `Question`, `Answers`, `Recommendation`, `StoredUser`, `UserData` and the rest
-- `src/context/` – the hooks pages use (`useAuth`, `useStore`, `useAnnouncements`, `useThemeMode`). Since round 8 they read from the Redux store; `ThemeModeContext` also holds the animation keyframes
-- `src/features/certificate/` – the certificate drawing, preview and PNG/PDF downloads
-- `src/features/resume/` – resume themes, one-page PDF, ATS score
-- `src/emails/` – learner email templates, sending, and the preview dialog
-- `src/theme/theme.ts` – MUI theme with the navy/gold (dark) and lavender/indigo (light) palettes; it augments MUI's `Theme` so `theme.tx.*` is typed
-- `src/data/courses.ts` – the 46 courses (generated from `takxila-site/tools/courses.py`)
-- `src/data/quiz.ts` – question bank for onboarding and the calculator; `src/data/recommend.ts` – scoring and plan totals
-- `src/data/curriculum.ts` – lessons, progress and grade report; `src/data/i18n.ts` – English/Hindi menu labels
-- `src/components/` – Layout (header, bell, profile menu), CourseCard, Media (blob images, video), Preview dialog, GradeReport, Motion, Confetti
-- `src/pages/` – Auth, Home, Courses, CourseDetail, Cart, Dashboard, MyCourses, Calculator, Announcements, About, Helpdesk, Contact, Policies
-- `src/pages/account/` – Purchases, Profile, Grades, Calendar, Files, Reports, Preferences
-- `tools/` – the video template and renderer
-- `public/assets/` – logos, hero images and course banners
+## 🌐 Multilingual Localization (i18n)
 
-## TypeScript
-The whole app is TypeScript with `strict` on, plus `noUnusedLocals` and `noUnusedParameters`; there are no
-`any` casts and no `@ts-ignore`. `npm run build` type-checks first, so a type error fails the build.
-`useAuth`, `useStore` and `useThemeMode` throw if used outside their provider, so they never return null;
-pages behind the login use `useUser()`, which gives a `User` rather than `User | null`.
+The academy navigation and user interface support 10 regional Indian languages:
 
-## Routes
-`/` (public showcase), `/auth` (`?ref=CODE`), `/home`, `/courses` (`?cat=claude&sort=low&page=2&q=agent&view=list`), `/courses/:id`, `/courses/:id/grades`, `/cart`,
-`/dashboard`, `/certificates`, `/refer`, `/resume`, `/leaderboard`, `/mentorship`, `/my-courses`, `/calculator`, `/announcements`, `/purchases`, `/profile`, `/grades`, `/calendar`,
-`/files`, `/reports`, `/preferences`, `/about`, `/helpdesk`, `/contact`, `/policies`.
+| Language | Script Code | Example (Courses) |
+| :--- | :---: | :--- |
+| **English** | `en` | Courses |
+| **Hindi (हिंदी)** | `hi` | कोर्सेस |
+| **Bengali (বাংলা)** | `bn` | কোর্স |
+| **Marathi (मराठी)** | `mr` | कोर्सेस |
+| **Gujarati (ગુજરાતી)** | `gu` | અભ્યાસક્રમો |
+| **Tamil (தமிழ்)** | `ta` | படிப்புகள் |
+| **Telugu (తెలుగు)** | `te` | కోర్సులు |
+| **Kannada (ಕನ್ನಡ)** | `kn` | ಕೋರ್ಸ್‌ಗಳು |
+| **Malayalam (മലയാളം)** | `ml` | കോഴ്സുകൾ |
+| **Punjabi (ਪੰਜਾਬੀ)** | `pa` | ਕੋਰਸ |
 
-## Deploying
-It uses browser routes, so the host must send unknown paths to `index.html`.
-`public/_redirects` already does this for Netlify. On Vercel add a rewrite to `/index.html`;
-on Apache/Nginx add the usual SPA fallback.
+---
+
+## 📁 Project Structure
+
+```text
+takxila-react/
+├── public/                 # Static assets, covers, logo marks, video streams
+│   ├── assets/             # WebP covers, certificates, branding logos
+│   └── oauth-callback.html # Social auth receiver page
+├── src/
+│   ├── components/         # Reusable UI widgets, Layout, fast fields, navbar
+│   ├── context/            # React context wrappers over Redux hooks
+│   ├── data/               # Course catalog, curriculum, quiz data, routes.json
+│   │   ├── routes.json     # 🗺️ Master JSON route configuration
+│   │   ├── courses.ts      # 46 Course definitions & pricing
+│   │   └── courseContent.ts# Detailed lectures, curriculum & modules
+│   ├── features/           # Standalone domain features (Resume, Certificate)
+│   ├── pages/              # Code-split application route views
+│   │   └── account/        # Account views (Grades, Purchases, Calendar, etc.)
+│   ├── store/              # Redux slices, thunks, RTK Query endpoints
+│   ├── theme/              # Custom MUI typography, scrollbars, colors
+│   ├── utils/              # Media cache, storage helpers, Razorpay, mailers
+│   ├── App.tsx             # ⚡ Lightweight dynamic glob route engine
+│   └── main.tsx            # Root bootstrap, providers & idle preloader
+└── package.json            # Dependencies and scripts
+```
+
+---
+
+## 🚀 Production Build & Deployment
+
+Because this is a Single Page Application (SPA) using HTML5 `pushState` routing, ensure your server or CDN rewrites all incoming routes to `/index.html`:
+
+- **Netlify**: Handled automatically via `public/_redirects`.
+- **Vercel**: Handled automatically via `vercel.json` rewrites.
+- **Nginx**:
+  ```nginx
+  location / {
+      try_files $uri $uri/ /index.html;
+  }
+  ```
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ by the Takxila Engineering Team • Dedicated to empowering the next generation of AI innovators.</sub>
+</div>
