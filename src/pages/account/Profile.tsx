@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from 'react';
-import { Alert, Avatar, Badge, Box, Button, Card, Chip, Grid, IconButton, LinearProgress, Stack, TextField, Tooltip, Typography } from '@mui/material';
+import { Alert, Avatar, Badge, Box, Button, Card, Chip, Grid, IconButton, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { Link as RouterLink } from 'react-router-dom';
 import { Page } from '../../components/Section';
@@ -8,6 +8,7 @@ import { useStore } from '../../context/StoreContext';
 import { courseById } from '../../data/recommend';
 import { resizeImage } from '../../utils/image';
 import { profileLine } from '../../data/recommend';
+import FastField from '../../components/FastField';
 
 export default function Profile() {
   const user = useUser();
@@ -98,13 +99,13 @@ export default function Profile() {
               Edit profile
             </Typography>
             <Stack spacing={2}>
-              <TextField label="Full name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
-              <TextField label="Email" value={user.email} disabled helperText="Your email is your login and cannot be changed." />
+              <FastField label="Full name" value={f.name} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, name: v })); }} />
+              <FastField label="Email" value={user.email} disabled helperText="Your email is your login and cannot be changed." />
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                <TextField fullWidth label="Phone / WhatsApp" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} />
-                <TextField fullWidth label="City" value={f.city} onChange={(e) => setF({ ...f, city: e.target.value })} />
+                <FastField fullWidth label="Phone / WhatsApp" value={f.phone} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, phone: v })); }} />
+                <FastField fullWidth label="City" value={f.city} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, city: v })); }} />
               </Stack>
-              <TextField label="About me" multiline minRows={3} value={f.bio} onChange={(e) => setF({ ...f, bio: e.target.value })} />
+              <FastField label="About me" multiline minRows={3} value={f.bio} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, bio: v })); }} />
               <Box>
                 <Button type="submit" variant="contained">
                   Save profile
@@ -122,8 +123,8 @@ export default function Profile() {
               </Alert>
             )}
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-              <TextField fullWidth type="password" label="Current password" value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} autoComplete="current-password" />
-              <TextField fullWidth type="password" label="New password" value={pw.next} onChange={(e) => setPw({ ...pw, next: e.target.value })} autoComplete="new-password" />
+              <FastField fullWidth type="password" label="Current password" value={pw.current} onChange={(e) => { const v = e.target.value; setPw((s) => ({ ...s, current: v })); }} autoComplete="current-password" />
+              <FastField fullWidth type="password" label="New password" value={pw.next} onChange={(e) => { const v = e.target.value; setPw((s) => ({ ...s, next: v })); }} autoComplete="new-password" />
             </Stack>
             <Button type="submit" variant="outlined" sx={{ mt: 2 }} disabled={!pw.current || !pw.next}>
               Change password

@@ -1,4 +1,6 @@
-import { Alert, Button, Card, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Alert, Button, Card, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
+import LockIcon from '@mui/icons-material/LockOutlined';
 import LocalOfferIcon from '@mui/icons-material/LocalOfferOutlined';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import { useNavigate } from 'react-router-dom';
@@ -8,10 +10,15 @@ import { useStore } from '../context/StoreContext';
 import { courseById, priceText } from '../data/recommend';
 import type { Course } from '../types';
 import { CUSTOM_MIN, PACKS, priceCart } from '../data/showcase';
+import { useUser } from '../context/AuthContext';
+import { isTestKey, payWithRazorpay, razorpayReady } from '../utils/razorpay';
 
 export default function Cart() {
   const nav = useNavigate();
-  const { cart, owned, removeFromCart, checkout, referralOpen, addMany } = useStore();
+  const user = useUser();
+  const { cart, owned, removeFromCart, checkout, referralOpen, addMany, toast } = useStore();
+  const [paying, setPaying] = useState(false);
+  const [setup, setSetup] = useState(false);
   const items = cart.map(courseById).filter((c): c is Course => !!c);
   const was = items.reduce((a, c) => a + (c.was || c.price), 0);
   const priced = priceCart(cart, owned, referralOpen);
@@ -21,6 +28,31 @@ export default function Cart() {
     .filter((x) => x.missing.length > 0 && x.missing.length < x.p.courses.length - 1 && x.missing.length <= 2)
     .sort((a, b) => a.missing.length - b.missing.length)[0];
   const packed = priced.lines.some((l) => /pack/i.test(l.label));
+
+  const done = (paymentId?: string) => {
+    checkout(paymentId);
+    nav('/my-courses');
+  };
+  const pay = async () => {
+    if (total <= 0) return done();
+    if (!razorpayReady) return setSetup(true);
+    setPaying(true);
+    try {
+      const id = await payWithRazorpay({
+        amount: total,
+        description: items.length === 1 ? items[0].title : items.length + ' courses',
+        name: user.name,
+        email: user.email,
+        notes: { courses: priced.ids.join(',') },
+      });
+      done(id);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      if (msg !== 'dismissed') toast('Payment did not go through: ' + msg);
+    } finally {
+      setPaying(false);
+    }
+  };
 
   return (
     <Page maxWidth="md">
@@ -108,20 +140,45 @@ export default function Cart() {
                 fullWidth
                 variant="contained"
                 size="large"
-                onClick={() => {
-                  checkout();
-                  nav('/my-courses');
-                }}
+                disabled={paying}
+                startIcon={paying ? <CircularProgress size={18} color="inherit" /> : <LockIcon />}
+                onClick={pay}
               >
-                Checkout and enroll
+                {paying ? 'Opening Razorpay…' : total > 0 ? 'Pay ₹' + total + ' securely' : 'Enroll now'}
               </Button>
-              <Typography variant="caption" color="text.secondary" component="p" sx={{ mt: 1.5 }}>
-                Demo checkout: no payment is taken. Courses move straight to My courses.
+              <Typography variant="caption" color="text.secondary" component="p" sx={{ mt: 1.5, textAlign: 'center' }}>
+                Payments by Razorpay: UPI, cards, net banking and wallets.{isTestKey ? ' Test mode: no real money is charged.' : ''}
               </Typography>
             </Card>
           </Grid>
         </Grid>
       )}
+      <Dialog open={setup} onClose={() => setSetup(false)} maxWidth="xs" fullWidth>
+        <DialogTitle>Razorpay is not connected yet</DialogTitle>
+        <DialogContent>
+          <Typography sx={{ mb: 1.5 }}>
+            Add your Razorpay key to the <code>.env</code> file and rebuild the site to take real payments:
+          </Typography>
+          <Typography component="pre" sx={(t) => ({ p: 1.5, borderRadius: '8px', fontSize: 13, background: t.tx.surface, border: `1px solid ${t.tx.line}`, overflowX: 'auto' })}>
+            VITE_RAZORPAY_KEY_ID=rzp_test_xxxxxxxx
+          </Typography>
+          <Typography color="text.secondary" sx={{ fontSize: 14, mt: 1.5 }}>
+            Until then you can enroll in demo mode, without paying.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSetup(false)}>Cancel</Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setSetup(false);
+              done();
+            }}
+          >
+            Enroll in demo mode
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Page>
   );
 }

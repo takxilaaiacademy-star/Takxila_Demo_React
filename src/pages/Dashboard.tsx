@@ -1,5 +1,5 @@
 import { useDeferredValue, useMemo, useRef, useState } from 'react';
-import { Box, Button, Grid, IconButton, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, IconButton, InputAdornment, Stack, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -17,6 +17,7 @@ import { COURSES } from '../data/courses';
 import { courseById, profileLine, recommend } from '../data/recommend';
 import { ALL_ACCESS_PRICE, CUSTOM_MIN, listPrice, PAID } from '../data/showcase';
 import type { Course } from '../types';
+import FastField from '../components/FastField';
 
 function Promo({ title, hl, price, was, note, cta, onClick, dark, icons }: { title: string; hl: string; price: string; was?: string; note: string; cta: string; onClick: () => void; dark?: boolean; icons: string[] }) {
   return (
@@ -31,7 +32,7 @@ function Promo({ title, hl, price, was, note, cta, onClick, dark, icons }: { tit
         '&:hover .tx-orbit': { transform: 'rotate(25deg) scale(1.06)' },
       })}
     >
-      <Box sx={{ position: 'relative', zIndex: 1, maxWidth: '64%' }}>
+      <Box sx={{ position: 'relative', zIndex: 1, maxWidth: { xs: '60%', md: '62%' } }}>
         <Typography sx={{ fontWeight: 800, fontSize: { xs: 17, md: 19 }, lineHeight: 1.2 }}>
           {title}{' '}
           <Box component="span" sx={{ color: dark ? '#F5B93F' : 'secondary.main' }}>
@@ -46,7 +47,8 @@ function Promo({ title, hl, price, was, note, cta, onClick, dark, icons }: { tit
           {cta}
         </Button>
       </Box>
-      <Box className="tx-orbit" sx={{ position: 'absolute', right: -10, top: '50%', mt: '-70px', width: 140, height: 140, transition: 'transform .6s cubic-bezier(.2,.8,.2,1)' }}>
+      {/* The icon ring sits fully inside the card, with breathing room from its edge. */}
+      <Box className="tx-orbit" sx={{ position: 'absolute', right: { xs: 12, md: 24 }, top: '50%', mt: '-70px', width: 140, height: 140, transition: 'transform .6s cubic-bezier(.2,.8,.2,1)' }}>
         {icons.map((id, i) => {
           const c = courseById(id);
           const a = (i / icons.length) * Math.PI * 2;
@@ -143,7 +145,7 @@ export default function Dashboard() {
                 <Typography variant="h5" sx={{ flexGrow: 1 }}>
                   Enrolled courses
                 </Typography>
-                <TextField
+                <FastField
                   size="small"
                   placeholder="Search courses…"
                   value={q}

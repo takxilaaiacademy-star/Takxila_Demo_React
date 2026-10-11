@@ -53,7 +53,14 @@ export default function Purchases() {
               <TableBody>
                 {orders.map((o, i) => (
                   <TableRow key={o.id} hover sx={{ animation: `txfade .4s ${i * 50}ms both`, verticalAlign: 'top' }}>
-                    <TableCell sx={{ fontWeight: 700 }}>{o.id}</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>
+                      {o.id}
+                      {o.paymentId && (
+                        <Typography component="div" color="text.secondary" sx={{ fontSize: 12, fontWeight: 400 }}>
+                          Razorpay {o.paymentId}
+                        </Typography>
+                      )}
+                    </TableCell>
                     <TableCell>{new Date(o.at).toLocaleString()}</TableCell>
                     <TableCell>
                       {o.items.map((it) => (

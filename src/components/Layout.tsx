@@ -1,29 +1,28 @@
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import type { Theme } from '@mui/material/styles';
 import {
   AppBar, Avatar, Badge, Box, Button, CircularProgress, Container, Divider, Drawer, IconButton, LinearProgress, List, ListItemButton,
-  ListItemIcon, ListItemText, ListSubheader, Menu, MenuItem, Popover, Stack, Toolbar, Tooltip, Typography, useMediaQuery,
+  ListItemText, ListSubheader, Menu, MenuItem, Stack, Toolbar, Tooltip, Typography, useMediaQuery,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import DarkModeIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeIcon from '@mui/icons-material/LightModeOutlined';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
-import NotificationsIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import CampaignIcon from '@mui/icons-material/CampaignOutlined';
 import { Link as RouterLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth, useUser } from '../context/AuthContext';
-import { useAnnouncements } from '../context/AnnouncementsContext';
 import { useStore } from '../context/StoreContext';
 import { useThemeMode } from '../context/ThemeModeContext';
-import { CAT_PILLS } from '../data/courses';
+import { GROUP_PILLS } from '../data/courses';
 import { LANGS, translate, type StrKey } from '../data/i18n';
 import Background from './Background';
 import Footer from './Footer';
 import Logo from './Logo';
 import ChatWidget from './ChatWidget';
+import CartUpsell from './CartUpsell';
+import NotificationBell from './NotificationBell';
 import { useBackToTop } from '../utils/scrollFx';
 import { PreviewProvider } from './Preview';
 import QuizDialog from './QuizDialog';
@@ -40,7 +39,7 @@ const NAV: NavItem[] = [
   { key: 'home', to: '/home' },
   {
     key: 'courses', to: '/courses',
-    subs: [['All courses', '/courses'], ...CAT_PILLS.map(([id, l]): [string, string] => [l, '/courses?cat=' + id]), ['Free courses', '/courses?cat=free']],
+    subs: [['All courses', '/courses'], ...GROUP_PILLS.map(([id, l]): [string, string] => [l, '/courses?cat=' + id]), ['Free courses', '/courses?cat=free']],
   },
   { key: 'dashboard', to: '/dashboard' },
   { key: 'myCourses', to: '/my-courses' },
@@ -65,7 +64,8 @@ export function PageLoader({ full = false }: { full?: boolean }) {
     <>
       <LinearProgress color="secondary" sx={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 2000, height: 3 }} />
       {full && (
-        <Box role="status" aria-live="polite" sx={{ minHeight: '70vh', display: 'grid', placeItems: 'center', position: 'relative', zIndex: 1 }}>
+        // The spinner only fades in if the page takes more than 300 ms, so quick page changes show no flash.
+        <Box role="status" aria-live="polite" sx={{ minHeight: '70vh', display: 'grid', placeItems: 'center', position: 'relative', zIndex: 1, animation: 'txfade .2s .3s both' }}>
           <Stack alignItems="center" spacing={2}>
             <Box sx={{ position: 'relative', width: 72, height: 72, display: 'grid', placeItems: 'center' }}>
               <CircularProgress color="secondary" size={72} thickness={2.5} sx={{ position: 'absolute', inset: 0 }} />
@@ -101,8 +101,7 @@ function waitForVisibleImages(root: HTMLElement | null, max: number): Promise<vo
 export default function Layout() {
   const user = useUser();
   const { logout } = useAuth();
-  const { cart, ready, openQuiz, prefs, setPrefs, annSeen, markAnnouncementsSeen } = useStore();
-  const { items: anns } = useAnnouncements();
+  const { cart, ready, openQuiz, prefs, setPrefs } = useStore();
   const { mode, toggleMode } = useThemeMode();
   const nav = useNavigate();
   const loc = useLocation();
@@ -112,27 +111,24 @@ export default function Layout() {
   const [menu, setMenu] = useState<{ anchor: HTMLElement; item: NavItem } | null>(null);
   const [userMenu, setUserMenu] = useState<HTMLElement | null>(null);
   const [langMenu, setLangMenu] = useState<HTMLElement | null>(null);
-  const [bell, setBell] = useState<HTMLElement | null>(null);
   const t = (k: StrKey) => translate(prefs.lang, k);
   const mainRef = useRef<HTMLDivElement>(null);
   const [readyPath, setReadyPath] = useState('');
   const loading = readyPath !== loc.pathname;
   const markReady = () => {
     const path = loc.pathname;
-    void waitForVisibleImages(mainRef.current, 1500).then(() => setReadyPath(path));
+    void waitForVisibleImages(mainRef.current, 250).then(() => setReadyPath(path));
   };
-  // Safety net: never keep a page hidden for more than 4 seconds.
+  // Safety net: never keep a page hidden for more than 2.5 seconds.
   useEffect(() => {
     if (!loading) return;
     const path = loc.pathname;
-    const tm = setTimeout(() => setReadyPath(path), 4000);
+    const tm = setTimeout(() => setReadyPath(path), 2500);
     return () => clearTimeout(tm);
   }, [loading, loc.pathname]);
 
-  const unread = useMemo(() => (prefs.notify ? anns.filter((a) => !annSeen || a.at > annSeen).length : 0), [anns, annSeen, prefs.notify]);
-
   useEffect(() => {
-    if (!loc.hash) window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!loc.hash) window.scrollTo({ top: 0, behavior: 'instant' });
   }, [loc.pathname, loc.hash]);
 
   // Right after login: open the AI course calculator on top of Home, then clear the flag so a refresh doesn't reopen it.
@@ -153,7 +149,6 @@ export default function Layout() {
     setMenu(null);
     setUserMenu(null);
     setDrawer(false);
-    setBell(null);
     nav(to);
   };
   const doLogout = () => {
@@ -216,13 +211,7 @@ export default function Layout() {
                   </Badge>
                 </IconButton>
               </Tooltip>
-              <Tooltip title={t('notifications')}>
-                <IconButton onClick={(e) => setBell(e.currentTarget)}>
-                  <Badge badgeContent={unread} color="error" sx={{ '& .MuiBadge-badge': unread ? { animation: 'txpulse 1.8s ease-out infinite' } : {} }}>
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
-              </Tooltip>
+              <NotificationBell label={t('notifications')} empty={t('noNotifications')} seeAll={t('seeAll')} onGo={go} />
               <Button onClick={(e) => setUserMenu(e.currentTarget)} color="inherit" endIcon={<KeyboardArrowDownIcon />} sx={{ p: 0.5, minWidth: 0, borderRadius: 99, '& .MuiButton-endIcon': { ml: 0.25, display: { xs: 'none', sm: 'inherit' } } }} aria-label="Account menu">
                 <Avatar src={user.avatar} sx={{ width: 38, height: 38, bgcolor: 'primary.main', color: 'primary.contrastText', fontWeight: 800, fontSize: 15, border: 2, borderColor: 'secondary.main' }}>
                   {initials(user.name)}
@@ -240,35 +229,6 @@ export default function Layout() {
           ))}
         </Menu>
 
-        <Popover
-          open={!!bell}
-          anchorEl={bell}
-          onClose={() => {
-            setBell(null);
-            markAnnouncementsSeen();
-          }}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          PaperProps={{ sx: { width: 340, maxWidth: 'calc(100vw - 24px)', borderRadius: '16px', mt: 1 } }}
-        >
-          <Typography sx={{ fontWeight: 800, px: 2, pt: 1.5, pb: 1 }}>{t('notifications')}</Typography>
-          <Divider />
-          {unread === 0 && <Typography color="text.secondary" sx={{ px: 2, py: 1.5, fontSize: 14 }}>{t('noNotifications')}</Typography>}
-          <List dense disablePadding>
-            {anns.slice(0, 4).map((a) => (
-              <ListItemButton key={a.id} onClick={() => go('/announcements#' + a.id)} sx={{ alignItems: 'flex-start' }}>
-                <ListItemIcon sx={{ minWidth: 36, mt: 0.5 }}>
-                  <CampaignIcon color={!annSeen || a.at > annSeen ? 'secondary' : 'disabled'} />
-                </ListItemIcon>
-                <ListItemText primary={a.title} secondary={a.author + ' · ' + new Date(a.at).toLocaleDateString()} primaryTypographyProps={{ fontWeight: !annSeen || a.at > annSeen ? 700 : 500 }} />
-              </ListItemButton>
-            ))}
-          </List>
-          <Divider />
-          <Button fullWidth onClick={() => go('/announcements')} sx={{ borderRadius: 0 }}>
-            {t('seeAll')}
-          </Button>
-        </Popover>
 
         <Menu
           anchorEl={userMenu}
@@ -352,7 +312,7 @@ export default function Layout() {
         {/* The page and footer appear together once the page has loaded; until then a loader shows. */}
         <Box component="main" ref={mainRef} sx={{ flexGrow: 1, position: 'relative', zIndex: 1 }}>
           {loading && <PageLoader full />}
-          <Box key={loc.pathname} sx={loading ? { position: 'absolute', inset: 0, opacity: 0, pointerEvents: 'none', overflow: 'hidden' } : { animation: 'txfade .35s ease both' }}>
+          <Box key={loc.pathname} sx={loading ? { position: 'absolute', inset: 0, opacity: 0, pointerEvents: 'none', overflow: 'hidden' } : { animation: 'txfade .18s ease both' }}>
             <Suspense fallback={null}>
               <Outlet />
               <PageReady key={loc.pathname} onReady={markReady} />
@@ -366,6 +326,7 @@ export default function Layout() {
         <QuizDialog />
         <SelectionBar />
         <ChatWidget />
+        <CartUpsell />
       </Box>
     </PreviewProvider>
   );

@@ -1,9 +1,14 @@
 export type CatId = 'challenge' | 'agents' | 'claude' | 'tools' | 'creative' | 'nocode' | 'business' | 'career' | 'film';
-export type CatFilter = CatId | 'all' | 'free';
+export type GroupId = 'challenge' | 'agents' | 'toolkit' | 'career' | 'film';
+export type CatFilter = GroupId | 'all' | 'free';
 
 export interface CourseData {
   id: string;
   cat: CatId;
+  /** One of the five website categories */
+  group: GroupId;
+  /** Small line above the title on the card */
+  kicker: string;
   title: string;
   short: string;
   desc: string;
@@ -98,6 +103,8 @@ export interface Preferences {
   pageSize: number;
   lang: Lang;
   notify: boolean;
+  /** Send emails about purchases, enrolments and completed courses */
+  emails: boolean;
 }
 
 export interface PriceLine {
@@ -112,6 +119,8 @@ export interface Order {
   total: number;
   subtotal?: number;
   discounts?: PriceLine[];
+  /** Razorpay payment id, when the order was paid through Razorpay */
+  paymentId?: string;
 }
 
 export interface ResumeEntry {
@@ -179,6 +188,23 @@ export interface UserData {
   withdrawals: { at: string; amount: number }[];
   /** The ₹200 friend discount from a referral code has been used */
   refUsed: boolean;
+  /** Bell notifications: purchases, enrolments, completed courses, certificates */
+  notifications: AppNotification[];
+  /** Announcements this user removed from the bell */
+  dismissedAnns: string[];
+}
+
+export type NotificationKind = 'purchase' | 'enroll' | 'complete' | 'certificate' | 'info';
+
+export interface AppNotification {
+  id: string;
+  kind: NotificationKind;
+  title: string;
+  body: string;
+  at: string;
+  read: boolean;
+  /** Page to open when the notification is clicked */
+  to?: string;
 }
 
 export interface Reply {

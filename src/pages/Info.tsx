@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import type { SvgIconComponent } from '@mui/icons-material';
-import { Box, Button, Card, Grid, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
 import BuildIcon from '@mui/icons-material/Construction';
 import PublicIcon from '@mui/icons-material/Public';
 import ScheduleIcon from '@mui/icons-material/Schedule';
@@ -18,6 +18,61 @@ import { WHATSAPP_DISPLAY } from '../utils/contact';
 import { mailtoHref, sendMail } from '../utils/mail';
 import { load, save } from '../utils/storage';
 import type { ContactMessage } from '../types';
+import FastField from '../components/FastField';
+import { ABOUT_SIGNOFF, ABOUT_STORY, ABOUT_TAGLINE } from '../data/about';
+
+/** The "About TAKXILA" story. Words live in src/data/about.tsx. */
+function AboutStory() {
+  return (
+    <Card sx={{ mb: 4, overflow: 'hidden' }}>
+      <Box
+        sx={{
+          position: 'relative', px: { xs: 2.5, md: 5 }, py: { xs: 3.5, md: 5 }, color: '#fff', overflow: 'hidden',
+          background: 'linear-gradient(120deg, #0B1636 0%, #13215e 55%, #2a2f8f 100%)',
+          '&::after': { content: '""', position: 'absolute', right: -80, top: -80, width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(245,185,63,.35), transparent 70%)' },
+        }}
+      >
+        <Typography variant="overline" sx={{ color: '#F5B93F', letterSpacing: 3, fontWeight: 800 }}>
+          OUR STORY
+        </Typography>
+        <Typography component="h2" sx={{ fontWeight: 800, fontSize: { xs: 30, md: 42 }, lineHeight: 1.1, mt: 0.5 }}>
+          About TAKXILA
+        </Typography>
+        <Typography sx={{ mt: 1.5, fontSize: { xs: 16, md: 19 }, opacity: 0.9, maxWidth: 720 }}>{ABOUT_TAGLINE}</Typography>
+      </Box>
+      <Box sx={{ px: { xs: 2.5, md: 5 }, py: { xs: 3, md: 4 }, '& b': { color: 'text.primary', fontWeight: 700 } }}>
+        {ABOUT_STORY.map((blk, i) => (
+          <Box key={i} sx={{ mb: 3 }}>
+            {blk.heading && (
+              <Typography component="h3" sx={{ fontWeight: 800, fontSize: { xs: 21, md: 25 }, mb: 1.5, mt: i ? 1.5 : 0 }}>
+                {blk.heading}
+              </Typography>
+            )}
+            {blk.paras.map((para, j) => (
+              <Typography key={j} color="text.secondary" sx={{ mb: 1.5, lineHeight: 1.75, fontSize: 15.5 }}>
+                {para}
+              </Typography>
+            ))}
+            {blk.quote && (
+              <Box
+                sx={(t) => ({
+                  my: 2.5, px: 2.5, py: 2, borderRadius: '12px', borderLeft: `4px solid ${t.palette.secondary.main}`,
+                  background: t.palette.mode === 'dark' ? 'rgba(245,185,63,.08)' : 'rgba(245,185,63,.12)',
+                })}
+              >
+                <Typography sx={{ fontWeight: 800, fontSize: { xs: 16, md: 18 } }}>{blk.quote}</Typography>
+              </Box>
+            )}
+          </Box>
+        ))}
+        <Box sx={(t) => ({ pt: 2.5, borderTop: `1px solid ${t.tx.line}` })}>
+          <Typography sx={{ fontWeight: 800, fontSize: { xs: 24, md: 28 } }}>{ABOUT_SIGNOFF.brand}</Typography>
+          <Typography sx={{ fontWeight: 700, color: 'secondary.main' }}>{ABOUT_SIGNOFF.line}</Typography>
+        </Box>
+      </Box>
+    </Card>
+  );
+}
 
 export function About() {
   const nav = useNavigate();
@@ -34,9 +89,7 @@ export function About() {
         hl="real people."
         sub="Takxila AI Academy teaches practical AI: agents, automation and everyday AI skills, for working professionals, business owners and kids aged 8 to 12."
       />
-      <Card sx={{ p: 3, mb: 4 }}>
-        <Typography color="text.secondary">[YOUR STORY: WHO FOUNDED TAKXILA, WHEN, AND WHY]</Typography>
-      </Card>
+      <AboutStory />
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {pillars.map(([Icon, t, d]) => (
           <Grid item xs={12} md={4} key={t}>
@@ -118,9 +171,9 @@ export function Contact() {
         <Grid item xs={12} md={7}>
           <Card component="form" onSubmit={send} sx={{ p: { xs: 3, md: 4 } }}>
             <Stack spacing={2}>
-              <TextField label="Your name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} required />
-              <TextField label="Email" type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} required />
-              <TextField label="Message" multiline minRows={5} value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })} required />
+              <FastField label="Your name" value={f.name} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, name: v })); }} required />
+              <FastField label="Email" type="email" value={f.email} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, email: v })); }} required />
+              <FastField label="Message" multiline minRows={5} value={f.message} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, message: v })); }} required />
               <Button type="submit" variant="contained" size="large" disabled={busy}>
                 {busy ? 'Sending…' : 'Send message'}
               </Button>

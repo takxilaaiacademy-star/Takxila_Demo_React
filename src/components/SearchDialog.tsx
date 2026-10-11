@@ -1,10 +1,11 @@
 import { useDeferredValue, useMemo, useState } from 'react';
-import { Dialog, DialogContent, InputAdornment, List, ListItemAvatar, ListItemButton, ListItemText, TextField, Typography } from '@mui/material';
+import { Dialog, DialogContent, InputAdornment, List, ListItemAvatar, ListItemButton, ListItemText, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import { COURSES } from '../data/courses';
 import { priceText } from '../data/recommend';
 import { BlobImg } from './Media';
+import FastField from './FastField';
 
 export default function SearchDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [q, setQ] = useState('');
@@ -22,7 +23,7 @@ export default function SearchDialog({ open, onClose }: { open: boolean; onClose
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" PaperProps={{ sx: { alignSelf: 'flex-start', mt: { xs: 2, md: 10 } } }}>
       <DialogContent>
-        <TextField
+        <FastField
           autoFocus
           fullWidth
           placeholder="Search 45 courses: Claude, n8n, Midjourney, ads…"

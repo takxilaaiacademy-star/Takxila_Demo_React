@@ -1,20 +1,31 @@
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import { Alert, Snackbar } from '@mui/material';
-import { useAuth } from './AuthContext';
+import { shallowEqual } from 'react-redux';
 import { courseById } from '../data/recommend';
-import { lessonsFor, pctOf } from '../data/curriculum';
-import { load, save } from '../utils/storage';
-import type { Activity, Answers, Preferences, QuizMode, QuizState, ReferralRec, Resume, UserData } from '../types';
-import { dayKey, priceCart, REFERRAL_REWARD } from '../data/showcase';
+import { pctOf } from '../data/curriculum';
+import { useAppDispatch, useAppSelector } from '../store';
+import { learnerActions as L } from '../store/learnerSlice';
+import { uiActions as U } from '../store/uiSlice';
+import * as T from '../store/learnerThunks';
+import type { Answers, Preferences, QuizMode, QuizState, Resume, UserData } from '../types';
 import Confetti from '../components/Confetti';
 
+export { DEFAULT_PREFS } from '../store/learnerSlice';
+
+/**
+ * useStore() is the learner's data plus every learner action, read from the Redux store
+ * (src/store/learnerSlice.ts, uiSlice.ts, learnerThunks.ts). It keeps the same shape the
+ * pages used before Redux, so nothing else had to change.
+ */
 interface StoreActions {
   toast: (message: string) => void;
   celebrate: () => void;
   addToCart: (id: string) => void;
   addMany: (ids: string[]) => void;
   removeFromCart: (id: string) => void;
-  checkout: () => void;
+  checkout: (paymentId?: string) => void;
+  /** Close the "added to cart" popup */
+  closeUpsell: () => void;
   toggleFavorite: (id: string) => void;
   saveResume: (r: Resume) => void;
   withdraw: (amount: number) => void;
@@ -29,11 +40,19 @@ interface StoreActions {
   openQuiz: (mode: QuizMode) => void;
   setQuiz: (quiz: QuizState | null) => void;
   closeQuiz: () => void;
+  /** Bell notifications */
+  removeNotification: (id: string) => void;
+  dismissAnnouncement: (id: string) => void;
+  readNotification: (id: string) => void;
+  readAllNotifications: () => void;
+  clearNotifications: (announcementIds: string[]) => void;
 }
 
 interface StoreValue extends UserData, StoreActions {
   sel: string[];
   quiz: QuizState | null;
+  /** Course just added to the cart: the popup with related courses and combos shows for it */
+  upsell: string | null;
   ready: boolean;
   /** Progress per course in %, derived from completed lessons */
   prog: Record<string, number>;
@@ -41,224 +60,105 @@ interface StoreValue extends UserData, StoreActions {
   referralOpen: boolean;
 }
 
-export const DEFAULT_PREFS: Preferences = { autoplay: true, reduceMotion: false, pageSize: 9, lang: 'en', notify: true };
-const EMPTY: UserData = {
-  cart: [], owned: [], lessons: {}, enrolledAt: {}, profile: null, calc: null, recent: [],
-  orders: [], activity: [], prefs: DEFAULT_PREFS, annSeen: null,
-  favorites: [], visits: [], resume: null, withdrawals: [], refUsed: false,
-};
-
-// Older saves kept progress as a % in `prog`; turn that into completed lessons.
-function migrate(raw: Partial<UserData> & { prog?: Record<string, number> }): UserData {
-  const d: UserData = { ...EMPTY, ...raw, prefs: { ...DEFAULT_PREFS, ...raw.prefs } };
-  if (raw.prog && !raw.lessons) {
-    d.lessons = {};
-    Object.entries(raw.prog).forEach(([id, pct]) => {
-      const c = courseById(id);
-      if (c) d.lessons[id] = Math.round((pct / 100) * lessonsFor(c).length);
-    });
-  }
-  delete (d as { prog?: unknown }).prog;
-  return d;
-}
-
-const StoreContext = createContext<StoreValue | null>(null);
 const now = () => new Date().toISOString();
 
-// Per-user learning data, saved to localStorage under tx_user_<email>.
-export function StoreProvider({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
-  const email = user?.email || null;
-  const [data, setData] = useState<UserData>(EMPTY);
-  const [loadedFor, setLoadedFor] = useState<string | null>(null);
-  const [sel, setSel] = useState<string[]>([]);
-  const [quiz, setQuiz] = useState<QuizState | null>(null);
-  const [toastMsg, setToastMsg] = useState<{ m: string; k: number } | null>(null);
-  const [party, setParty] = useState(0);
-
-  useEffect(() => {
-    const d = email ? migrate(load<Partial<UserData>>('user_' + email, {})) : EMPTY;
-    const today = dayKey(new Date());
-    // Every day the app is opened counts towards the learning streak.
-    setData(email && !d.visits.includes(today) ? { ...d, visits: [...d.visits, today].slice(-400) } : d);
-    setSel([]);
-    setQuiz(null);
-    setLoadedFor(email);
-  }, [email]);
-
-  useEffect(() => {
-    if (email && loadedFor === email) save('user_' + email, data);
-  }, [data, email, loadedFor]);
-
-  // Actions read the latest state through a ref, so they never change identity
-  // and memoised components (course cards) do not re-render because of them.
-  const live = useRef({ data, sel, user });
-  live.current = { data, sel, user };
-
-  const actions = useMemo<StoreActions>(() => {
-    const toast = (m: string) => setToastMsg({ m, k: Date.now() });
-    const patch = (p: (d: UserData) => Partial<UserData>) => setData((d) => ({ ...d, ...p(d) }));
-    const log = (d: UserData, items: Activity[]) => [...items, ...d.activity].slice(0, 400);
-    const enroll = (d: UserData, ids: string[]): Partial<UserData> => {
-      const fresh = ids.filter((id) => !d.owned.includes(id));
-      const at = now();
-      return {
-        owned: d.owned.concat(fresh),
-        enrolledAt: { ...d.enrolledAt, ...Object.fromEntries(fresh.map((id) => [id, at])) },
-        activity: log(d, fresh.map((courseId) => ({ type: 'enroll' as const, courseId, at }))),
-      };
-    };
-
-    return {
-      toast,
-      celebrate: () => setParty((n) => n + 1),
-      addToCart: (id) => {
-        const c = courseById(id);
-        const { owned, cart } = live.current.data;
-        if (!c) return;
-        if (owned.includes(id)) return toast('You are already enrolled in this course.');
-        if (c.price === 0) {
-          patch((d) => enroll(d, [id]));
-          setParty((n) => n + 1);
-          return toast('Enrolled. Find it in My courses.');
-        }
-        if (cart.includes(id)) return toast('Already in your cart.');
-        patch((d) => ({ cart: d.cart.concat(id) }));
-        toast('Added to cart.');
-      },
-      // Paid courses go to the cart, free ones enroll straight away.
-      addMany: (ids) => {
-        const { owned, cart } = live.current.data;
-        const fresh = ids.filter((id) => !owned.includes(id) && !cart.includes(id));
-        const free = fresh.filter((id) => courseById(id)?.price === 0);
-        const paid = fresh.filter((id) => !free.includes(id));
-        patch((d) => ({ ...enroll(d, free), cart: d.cart.concat(paid) }));
-        setSel([]);
-        toast(
-          paid.length
-            ? paid.length + (paid.length > 1 ? ' courses' : ' course') + ' added to cart' + (free.length ? ' + free course enrolled' : '')
-            : free.length
-              ? 'Free course enrolled. Find it in My courses.'
-              : 'Already in your cart or courses.',
-        );
-      },
-      removeFromCart: (id) => patch((d) => ({ cart: d.cart.filter((x) => x !== id) })),
-      checkout: () => {
-        const { data: d0, user: u } = live.current;
-        const referral = !!u?.refBy && !d0.refUsed && !d0.orders.length;
-        const priced = priceCart(d0.cart, d0.owned, referral);
-        const usedRef = priced.lines.some((l) => l.label === 'Referral discount');
-        const order = {
-          id: 'TX' + Date.now().toString(36).toUpperCase(), at: now(),
-          items: priced.ids.map((id) => ({ id, price: courseById(id)?.price ?? 0 })),
-          subtotal: priced.subtotal, discounts: priced.lines, total: priced.total,
-        };
-        if (usedRef && u?.refBy) {
-          // Credit the friend who shared the code.
-          const all = load<Record<string, ReferralRec[]>>('referrals', {});
-          const rec: ReferralRec = { name: u.name, email: u.email, courses: priced.ids, at: order.at, reward: REFERRAL_REWARD };
-          save('referrals', { ...all, [u.refBy]: [...(all[u.refBy] || []), rec] });
-        }
-        patch((d) => {
-          const e = enroll(d, priced.ids);
-          return {
-            ...e, cart: [], orders: [order, ...d.orders], refUsed: d.refUsed || usedRef,
-            activity: [{ type: 'purchase', courseId: priced.ids[0] ?? '', at: order.at, detail: order.id }, ...(e.activity ?? d.activity)],
-          };
-        });
-        setParty((n) => n + 1);
-        toast('Enrolled! Your courses are ready.');
-      },
-      toggleFavorite: (id) => patch((d) => ({ favorites: d.favorites.includes(id) ? d.favorites.filter((x) => x !== id) : [...d.favorites, id] })),
+/** All learner actions. They only depend on dispatch, so they never change identity. */
+export function useStoreActions(): StoreActions {
+  const dispatch = useAppDispatch();
+  return useMemo<StoreActions>(
+    () => ({
+      toast: (m) => dispatch(U.toastShown(m)),
+      celebrate: () => dispatch(U.celebrated()),
+      closeUpsell: () => dispatch(U.upsellSet(null)),
+      addToCart: (id) => dispatch(T.addToCart(id)),
+      addMany: (ids) => dispatch(T.addMany(ids)),
+      removeFromCart: (id) => dispatch(L.cartRemoved(id)),
+      checkout: (paymentId) => dispatch(T.checkout(paymentId)),
+      toggleFavorite: (id) => dispatch(L.favoriteToggled(id)),
       saveResume: (r) => {
-        patch(() => ({ resume: r }));
-        toast('Resume saved.');
+        dispatch(L.resumeSaved(r));
+        dispatch(U.toastShown('Resume saved.'));
       },
       withdraw: (amount) => {
-        patch((d) => ({ withdrawals: [...d.withdrawals, { at: now(), amount }] }));
-        toast('Withdrawal of ₹' + amount + ' requested.');
+        dispatch(L.withdrawn({ at: now(), amount }));
+        dispatch(U.toastShown('Withdrawal of ₹' + amount + ' requested.'));
       },
-      completeLesson: (id) => {
-        const c = courseById(id);
-        if (!c) return;
-        const total = lessonsFor(c).length;
-        const done = live.current.data.lessons[id] || 0;
-        if (done >= total) return;
-        const n = done + 1;
-        const at = now();
-        patch((d) => ({
-          lessons: { ...d.lessons, [id]: n },
-          activity: log(d, [
-            ...(n >= total ? [{ type: 'complete' as const, courseId: id, at }] : []),
-            { type: 'lesson', courseId: id, at, detail: lessonsFor(c)[done] },
-          ]),
-        }));
-        if (n >= total) setParty((p) => p + 1);
-        toast(n >= total ? 'Course completed! Your grade is 100%.' : `Lesson ${n} of ${total} done. Progress ${pctOf(c, n)}%`);
-      },
-      markViewed: (id) => patch((d) => ({ recent: [id].concat(d.recent.filter((x) => x !== id)).slice(0, 6) })),
-      toggleSel: (id) => {
-        if (live.current.data.owned.includes(id)) return toast('You are already enrolled in this course.');
-        setSel((s) => (s.includes(id) ? s.filter((x) => x !== id) : s.concat(id)));
-      },
-      clearSel: () => setSel([]),
-      saveProfile: (ans) => patch(() => ({ profile: { ans, at: now() } })),
-      saveCalc: (ans) => patch(() => ({ calc: ans })),
-      setPrefs: (p) => patch((d) => ({ prefs: { ...d.prefs, ...p } })),
-      markAnnouncementsSeen: () => patch(() => ({ annSeen: now() })),
-      openQuiz: (mode) => {
-        const d = live.current.data;
-        setQuiz({ mode, step: 0, ans: (mode === 'onboard' ? d.profile?.ans : d.calc) || {} });
-      },
-      setQuiz,
-      closeQuiz: () => setQuiz(null),
-    };
-  }, []);
+      completeLesson: (id) => dispatch(T.completeLesson(id)),
+      markViewed: (id) => dispatch(L.viewed(id)),
+      toggleSel: (id) => dispatch(T.toggleSel(id)),
+      clearSel: () => dispatch(U.selCleared()),
+      saveProfile: (ans) => dispatch(L.profileSaved({ ans, at: now() })),
+      saveCalc: (ans) => dispatch(L.calcSaved(ans)),
+      setPrefs: (p) => dispatch(L.prefsChanged(p)),
+      markAnnouncementsSeen: () => dispatch(L.announcementsSeen(now())),
+      openQuiz: (mode) => dispatch(T.openQuiz(mode)),
+      setQuiz: (q) => dispatch(U.quizSet(q)),
+      closeQuiz: () => dispatch(U.quizSet(null)),
+      removeNotification: (id) => dispatch(L.notificationRemoved(id)),
+      dismissAnnouncement: (id) => dispatch(L.announcementDismissed(id)),
+      readNotification: (id) => dispatch(L.notificationRead(id)),
+      readAllNotifications: () => dispatch(L.notificationsAllRead(now())),
+      clearNotifications: (ids) => dispatch(L.notificationsCleared(ids)),
+    }),
+    [dispatch],
+  );
+}
 
-  const prog = useMemo(() => {
+/** Progress % per owned course. */
+export function useProgress(): Record<string, number> {
+  const { owned, lessons } = useAppSelector((s) => ({ owned: s.learner.data.owned, lessons: s.learner.data.lessons }), shallowEqual);
+  return useMemo(() => {
     const out: Record<string, number> = {};
-    data.owned.forEach((id) => {
+    owned.forEach((id) => {
       const c = courseById(id);
-      if (c) out[id] = pctOf(c, data.lessons[id] || 0);
+      if (c) out[id] = pctOf(c, lessons[id] || 0);
     });
     return out;
-  }, [data.owned, data.lessons]);
-
-  const value = useMemo<StoreValue>(
-    () => ({
-      ...data, ...actions, prog, sel, quiz, ready: !!email && loadedFor === email,
-      referralOpen: !!user?.refBy && !data.refUsed && !data.orders.length,
-    }),
-    [data, actions, prog, sel, quiz, email, loadedFor, user?.refBy],
-  );
-
-  // Reduced motion: honour the preference and the OS setting.
-  useEffect(() => {
-    document.documentElement.classList.toggle('tx-reduce', data.prefs.reduceMotion);
-  }, [data.prefs.reduceMotion]);
-
-  return (
-    <StoreContext.Provider value={value}>
-      {children}
-      {party > 0 && !data.prefs.reduceMotion && <Confetti key={party} />}
-      <Snackbar
-        key={toastMsg?.k}
-        open={!!toastMsg}
-        autoHideDuration={2800}
-        onClose={(_, r) => r !== 'clickaway' && setToastMsg(null)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        sx={{ bottom: { xs: sel.length ? 96 : 24 } }}
-      >
-        <Alert severity="success" variant="filled" onClose={() => setToastMsg(null)} sx={{ fontWeight: 600 }}>
-          {toastMsg?.m}
-        </Alert>
-      </Snackbar>
-    </StoreContext.Provider>
-  );
+  }, [owned, lessons]);
 }
 
 export function useStore(): StoreValue {
-  const ctx = useContext(StoreContext);
-  if (!ctx) throw new Error('useStore must be used inside StoreProvider');
-  return ctx;
+  const data = useAppSelector((s) => s.learner.data);
+  const { sel, quiz, upsell } = useAppSelector((s) => ({ sel: s.ui.sel, quiz: s.ui.quiz, upsell: s.ui.upsell }), shallowEqual);
+  const ready = useAppSelector((s) => !!s.learner.email && s.learner.email === s.auth.session?.email);
+  const refBy = useAppSelector((s) => s.auth.users.find((u) => u.email === s.learner.email)?.refBy);
+  const actions = useStoreActions();
+  const prog = useProgress();
+  return useMemo<StoreValue>(
+    () => ({ ...data, ...actions, prog, sel, quiz, upsell, ready, referralOpen: !!refBy && !data.refUsed && !data.orders.length }),
+    [data, actions, prog, sel, quiz, upsell, ready, refBy],
+  );
+}
+
+/** Screen-wide extras driven by the store: toasts, confetti and the reduce-motion class. */
+export function StoreProvider({ children }: { children: ReactNode }) {
+  const dispatch = useAppDispatch();
+  const toast = useAppSelector((s) => s.ui.toast);
+  const party = useAppSelector((s) => s.ui.party);
+  const hasSel = useAppSelector((s) => s.ui.sel.length > 0);
+  const reduce = useAppSelector((s) => s.learner.data.prefs.reduceMotion);
+
+  // Reduced motion: honour the preference and the OS setting.
+  useEffect(() => {
+    document.documentElement.classList.toggle('tx-reduce', reduce);
+  }, [reduce]);
+
+  return (
+    <>
+      {children}
+      {party > 0 && !reduce && <Confetti key={party} />}
+      <Snackbar
+        key={toast?.key}
+        open={!!toast}
+        autoHideDuration={2800}
+        onClose={(_, r) => r !== 'clickaway' && dispatch(U.toastHidden())}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{ bottom: { xs: hasSel ? 96 : 24 } }}
+      >
+        <Alert severity="success" variant="filled" onClose={() => dispatch(U.toastHidden())} sx={{ fontWeight: 600 }}>
+          {toast?.message}
+        </Alert>
+      </Snackbar>
+    </>
+  );
 }

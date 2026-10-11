@@ -1,3 +1,4 @@
+// Public showcase page: the first thing a visitor sees, before logging in.
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Box, Button, Chip, Container, Drawer, Grid, IconButton, LinearProgress, List, ListItemButton, ListItemText, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -19,11 +20,11 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEventsOutlined';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useThemeMode } from '../context/ThemeModeContext';
-import { CAT_PILLS, COURSES } from '../data/courses';
+import { GROUP_PILLS, COURSES } from '../data/courses';
 import { lessonsFor } from '../data/curriculum';
 import { courseById } from '../data/recommend';
 import { hoursOf, LEADERS, PAID } from '../data/showcase';
-import type { CatId } from '../types';
+import type { GroupId } from '../types';
 import Background from '../components/Background';
 import { CourseIcon } from '../components/CourseIcon';
 import { BlobImg, CourseVideo } from '../components/Media';
@@ -167,7 +168,7 @@ function Hero() {
           <Grid item xs={12} md={7}>
             <Chip
               icon={<SchoolIcon />}
-              label={`${COURSES.length} courses · ${CAT_PILLS.length} tracks · ${TOTAL_LESSONS}+ lessons`}
+              label={`${COURSES.length} courses · ${GROUP_PILLS.length} tracks · ${TOTAL_LESSONS}+ lessons`}
               variant="outlined"
               sx={(t) => ({ mb: 3, fontWeight: 700, borderColor: t.tx.line, background: t.tx.surface, backdropFilter: 'blur(10px)', animation: 'txblurin .6s both' })}
             />
@@ -366,16 +367,16 @@ function Bento() {
 }
 
 function CourseShowcase() {
-  const [cat, setCat] = useState<CatId | 'all'>('all');
+  const [cat, setCat] = useState<GroupId | 'all'>('all');
   const [all, setAll] = useState(false);
-  const list = useMemo(() => COURSES.filter((c) => cat === 'all' || c.cat === cat), [cat]);
+  const list = useMemo(() => COURSES.filter((c) => cat === 'all' || c.group === cat), [cat]);
   const shown = all ? list : list.slice(0, 12);
   useEffect(() => prefetch(list.slice(0, 12).map((c) => c.img)), [list]);
   return (
     <>
       <Stack direction="row" gap={1} flexWrap="wrap" justifyContent="center" sx={{ mb: 3 }}>
         <Chip label={'All (' + COURSES.length + ')'} clickable color={cat === 'all' ? 'primary' : 'default'} variant={cat === 'all' ? 'filled' : 'outlined'} onClick={() => setCat('all')} />
-        {CAT_PILLS.map(([id, label]) => (
+        {GROUP_PILLS.map(([id, label]) => (
           <Chip key={id} label={label} clickable color={cat === id ? 'primary' : 'default'} variant={cat === id ? 'filled' : 'outlined'} onClick={() => setCat(id)} />
         ))}
       </Stack>

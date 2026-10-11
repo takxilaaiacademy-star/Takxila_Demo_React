@@ -85,7 +85,7 @@ export const CourseCardView = memo(function CourseCardView({ c, index, isOwned, 
       </Box>
       <CardContent sx={{ flexGrow: 1, pb: 1 }}>
         <Typography variant="body2" color="text.secondary" noWrap>
-          {c.title.split(':')[0]}
+          {c.kicker}
         </Typography>
         <Typography variant="h6" onClick={open} sx={{ cursor: 'pointer', lineHeight: 1.25, my: 0.5, color: 'secondary.main', fontSize: 18, '&:hover': { textDecoration: 'underline' } }}>
           {c.title}

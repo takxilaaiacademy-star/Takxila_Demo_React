@@ -1,7 +1,7 @@
 // Pieces of the login page, laid out like the academy's Moodle sidebar:
 // social sign-in buttons, a human check, "Lost password?", latest announcements, a calendar and a visitor counter.
 import { useEffect, useMemo, useState } from 'react';
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Link, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Link, Stack, Typography } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CheckIcon from '@mui/icons-material/Check';
@@ -10,6 +10,8 @@ import { useStore } from '../context/StoreContext';
 import { dayKey } from '../data/showcase';
 import { mailtoHref, sendMail } from '../utils/mail';
 import { isConfigured, providerEnvKey, providerLabel, type Provider } from '../utils/social';
+import { useVisitsQuery } from '../store/api';
+import FastField from './FastField';
 
 // ---------- Social sign-in ----------
 
@@ -166,7 +168,7 @@ export function LostPasswordDialog({ open, onClose, email: initial }: { open: bo
         <Typography color="text.secondary" sx={{ mb: 2 }}>
           Enter your email and we&apos;ll send you help to reset your password.
         </Typography>
-        <TextField fullWidth label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
+        <FastField fullWidth label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
@@ -265,49 +267,22 @@ export function MiniCalendar() {
   );
 }
 
-// Counts visits with a free public counter (counterapi.dev). If it can't be reached, the count from this
-// browser is shown instead. Swap COUNTER_URL for your own analytics or backend when you have one.
-const COUNTER_URL = 'https://api.counterapi.dev/v1/takxila-ai-academy/visits';
+// Visits are counted with a free public counter (counterapi.dev), with a count kept in this browser as fallback.
 const STARTED = '18 August 2026';
 
+// Count this visit once per browser session (the RTK Query `visits` endpoint in src/store/api.ts).
+const countThisVisit = (() => {
+  try {
+    const first = sessionStorage.getItem('tx_visit_counted') !== '1';
+    sessionStorage.setItem('tx_visit_counted', '1');
+    return first;
+  } catch {
+    return false;
+  }
+})();
+
 export function VisitorCounter() {
-  const [count, setCount] = useState<number | null>(null);
-  useEffect(() => {
-    let alive = true;
-    let counted = false;
-    try {
-      counted = sessionStorage.getItem('tx_visit_counted') === '1';
-    } catch {
-      /* ignore */
-    }
-    const local = () => {
-      let n = 0;
-      try {
-        n = Number(localStorage.getItem('tx_visits') || 0) + (counted ? 0 : 1);
-        localStorage.setItem('tx_visits', String(n));
-      } catch {
-        n = 1;
-      }
-      return n;
-    };
-    fetch(counted ? COUNTER_URL : COUNTER_URL + '/up', { signal: AbortSignal.timeout(5000) })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('counter'))))
-      .then((d: { count?: number }) => {
-        if (typeof d.count !== 'number') throw new Error('counter');
-        if (alive) setCount(d.count);
-      })
-      .catch(() => alive && setCount(local()))
-      .finally(() => {
-        try {
-          sessionStorage.setItem('tx_visit_counted', '1');
-        } catch {
-          /* ignore */
-        }
-      });
-    return () => {
-      alive = false;
-    };
-  }, []);
+  const count = useVisitsQuery({ count: countThisVisit }).data?.count ?? null;
   return (
     <Block title="Visitor counter">
       <Stack direction="row" spacing={0.5} sx={{ mb: 1 }}>

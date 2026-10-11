@@ -3,21 +3,24 @@ import { Box, Chip, CircularProgress, InputAdornment, MenuItem, Pagination, Stac
 import SearchIcon from '@mui/icons-material/Search';
 import ViewModuleIcon from '@mui/icons-material/ViewModuleOutlined';
 import AppsIcon from '@mui/icons-material/Apps';
+import ViewAgendaIcon from '@mui/icons-material/ViewAgendaOutlined';
+import CategoryBubbles from '../components/CategoryBubbles';
 import { NumberedGrid } from '../components/Showcase';
 import { useSearchParams } from 'react-router-dom';
 import { CourseGrid, CourseGridSkeleton } from '../components/CourseCard';
 import { Heading, Page } from '../components/Section';
 import { useStore } from '../context/StoreContext';
-import { CAT_PILLS, COURSES } from '../data/courses';
+import { GROUP_PILLS, COURSES } from '../data/courses';
 import { isReady, prefetch, whenReady } from '../utils/media';
 import type { CatFilter, Course } from '../types';
+import FastField from '../components/FastField';
 
 type SortKey = 'popular' | 'low' | 'high' | 'az';
 const SORTS: Record<SortKey, string> = { popular: 'Most popular', low: 'Price: low to high', high: 'Price: high to low', az: 'Title: A to Z' };
-const PILLS: [CatFilter, string][] = [['all', 'All Courses (' + COURSES.length + ')'], ...CAT_PILLS, ['free', 'Free']];
+const PILLS: [CatFilter, string][] = [['all', 'All Courses (' + COURSES.length + ')'], ...GROUP_PILLS, ['free', 'Free']];
 
 // Counts per category, computed once.
-const COUNTS = COURSES.reduce<Record<string, number>>((a, c) => ({ ...a, [c.cat]: (a[c.cat] || 0) + 1, ...(c.price === 0 && { free: (a.free || 0) + 1 }) }), {});
+const COUNTS = COURSES.reduce<Record<string, number>>((a, c) => ({ ...a, [c.group]: (a[c.group] || 0) + 1, ...(c.price === 0 && { free: (a.free || 0) + 1 }) }), {});
 
 const SORTERS: Record<SortKey, (a: Course, b: Course) => number> = {
   popular: (a, b) => Number(b.featured) - Number(a.featured),
@@ -32,14 +35,15 @@ export default function Courses() {
   const cat = (params.get('cat') || 'all') as CatFilter;
   const sort = (params.get('sort') || 'popular') as SortKey;
   const page = Math.max(1, Number(params.get('page')) || 1);
-  const view = params.get('view') === 'list' ? 'list' : 'cards';
+  // Default view: the five category bubbles, as on the main website.
+  const view = (['list', 'cards'] as const).find((v) => v === params.get('view')) ?? 'groups';
   const [q, setQ] = useState(params.get('q') || '');
   // Typing stays instant; the list filters on a deferred copy of the query.
   const dq = useDeferredValue(q.toLowerCase().trim());
 
   const list = useMemo(() => {
     const words = dq.split(/\s+/).filter(Boolean);
-    return COURSES.filter((c) => (cat === 'all' || (cat === 'free' ? c.price === 0 : c.cat === cat)) && words.every((w) => c.search.includes(w))).sort(SORTERS[sort] ?? SORTERS.popular);
+    return COURSES.filter((c) => (cat === 'all' || (cat === 'free' ? c.price === 0 : c.group === cat)) && words.every((w) => c.search.includes(w))).sort(SORTERS[sort] ?? SORTERS.popular);
   }, [cat, sort, dq]);
 
   const size = prefs.pageSize;
@@ -52,7 +56,7 @@ export default function Courses() {
 
   // While this page's banners are still loading, show skeleton cards so it is clear the courses are on their way.
   const gridKey = [cat, sort, dq, cur, view, size].join('|');
-  const allReady = view === 'list' || shown.every((c) => isReady(c.img));
+  const allReady = view !== 'cards' || shown.every((c) => isReady(c.img));
   const [doneKey, setDoneKey] = useState('');
   const loadingCards = !allReady && doneKey !== gridKey;
   useEffect(() => {
@@ -93,7 +97,7 @@ export default function Courses() {
         ))}
       </Stack>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 3 }} alignItems={{ sm: 'center' }}>
-        <TextField
+        <FastField
           size="small"
           placeholder="Search courses, tools or skills"
           value={q}
@@ -108,7 +112,12 @@ export default function Courses() {
             </MenuItem>
           ))}
         </TextField>
-        <ToggleButtonGroup size="small" exclusive value={view} onChange={(_, v) => v && setParam({ view: v === 'cards' ? null : v })} aria-label="Layout">
+        <ToggleButtonGroup size="small" exclusive value={view} onChange={(_, v) => v && setParam({ view: v === 'groups' ? null : v, page: null })} aria-label="Layout">
+          <ToggleButton value="groups" aria-label="By category">
+            <Tooltip title="By category">
+              <ViewAgendaIcon fontSize="small" />
+            </Tooltip>
+          </ToggleButton>
           <ToggleButton value="cards" aria-label="Banner cards">
             <Tooltip title="Banner cards">
               <ViewModuleIcon fontSize="small" />
@@ -123,11 +132,13 @@ export default function Courses() {
         <Typography color="text.secondary" sx={{ ml: { sm: 'auto !important' }, display: 'flex', alignItems: 'center', gap: 1 }}>
           {loadingCards && <CircularProgress size={16} aria-label="Loading courses" />}
           {loadingCards ? 'Loading courses… ' : ''}
-          {list.length ? `Showing ${(cur - 1) * size + 1}–${Math.min(cur * size, list.length)} of ${list.length}` : '0 courses'}
+          {view === 'groups' ? `${list.length} courses` : list.length ? `Showing ${(cur - 1) * size + 1}–${Math.min(cur * size, list.length)} of ${list.length}` : '0 courses'}
         </Typography>
       </Stack>
       <Box key={cat + sort + dq + cur + view} sx={{ opacity: q.toLowerCase().trim() !== dq ? 0.6 : 1, transition: 'opacity .2s' }}>
-        {view === 'list' ? (
+        {view === 'groups' ? (
+          <CategoryBubbles courses={list} open={cat !== 'all' && cat !== 'free' ? [cat] : dq ? GROUP_PILLS.map(([g]) => g) : []} />
+        ) : view === 'list' ? (
           <NumberedGrid courses={shown} start={(cur - 1) * size + 1} />
         ) : loadingCards ? (
           <CourseGridSkeleton count={shown.length} />
@@ -140,7 +151,7 @@ export default function Courses() {
           <Typography color="text.secondary">No courses match that search yet.</Typography>
         </Box>
       )}
-      {pages > 1 && (
+      {pages > 1 && view !== 'groups' && (
         <Stack alignItems="center" sx={{ mt: 5 }}>
           <Pagination
             count={pages}

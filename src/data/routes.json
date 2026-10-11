@@ -1,0 +1,38 @@
+{
+  "public": [
+    { "path": "/", "file": "./pages/Landing.tsx" },
+    { "path": "/auth", "file": "./pages/AuthPage.tsx" }
+  ],
+  "redirects": [
+    { "path": "/login", "to": "/auth" },
+    { "path": "/register", "to": "/auth#register" }
+  ],
+  "protected": [
+    { "path": "home", "file": "./pages/Home.tsx" },
+    { "path": "courses", "file": "./pages/Courses.tsx" },
+    { "path": "courses/:id", "file": "./pages/CourseDetail.tsx" },
+    { "path": "courses/:id/grades", "file": "./pages/CourseDetail.tsx", "props": { "tab": "grades" } },
+    { "path": "cart", "file": "./pages/Cart.tsx" },
+    { "path": "dashboard", "file": "./pages/Dashboard.tsx" },
+    { "path": "certificates", "file": "./pages/Certificates.tsx" },
+    { "path": "refer", "file": "./pages/Refer.tsx" },
+    { "path": "resume", "file": "./pages/Resume.tsx" },
+    { "path": "mentorship", "file": "./pages/Mentorship.tsx" },
+    { "path": "leaderboard", "file": "./pages/Leaderboard.tsx" },
+    { "path": "my-courses", "file": "./pages/MyCourses.tsx" },
+    { "path": "calculator", "file": "./pages/Calculator.tsx" },
+    { "path": "announcements", "file": "./pages/Announcements.tsx" },
+    { "path": "purchases", "file": "./pages/account/Purchases.tsx" },
+    { "path": "profile", "file": "./pages/account/Profile.tsx" },
+    { "path": "grades", "file": "./pages/account/Grades.tsx" },
+    { "path": "calendar", "file": "./pages/account/Calendar.tsx" },
+    { "path": "files", "file": "./pages/account/Files.tsx" },
+    { "path": "reports", "file": "./pages/account/Reports.tsx" },
+    { "path": "preferences", "file": "./pages/account/Preferences.tsx" },
+    { "path": "about", "file": "./pages/Info.tsx", "export": "About" },
+    { "path": "helpdesk", "file": "./pages/Info.tsx", "export": "Helpdesk" },
+    { "path": "contact", "file": "./pages/Info.tsx", "export": "Contact" },
+    { "path": "policies", "file": "./pages/Info.tsx", "export": "Policies" },
+    { "path": "*", "file": "./pages/Info.tsx", "export": "NotFound" }
+  ]
+}

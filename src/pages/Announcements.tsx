@@ -14,6 +14,7 @@ import { useStore } from '../context/StoreContext';
 import { COURSES } from '../data/courses';
 import { courseById } from '../data/recommend';
 import type { Announcement } from '../types';
+import FastField from '../components/FastField';
 
 // Turns **bold**, course links (/courses/<id>) and web links into elements.
 function inline(text: string): ReactNode[] {
@@ -133,7 +134,7 @@ function Post({ a, highlight }: { a: Announcement; highlight: boolean }) {
                 </Box>
               ))}
               <Stack direction="row" spacing={1}>
-                <TextField size="small" fullWidth placeholder="Write a reply" value={text} onChange={(e) => setText(e.target.value)} />
+                <FastField size="small" fullWidth placeholder="Write a reply" value={text} onChange={(e) => setText(e.target.value)} />
                 <Button
                   variant="contained"
                   disabled={!text.trim()}
@@ -174,8 +175,8 @@ function NewAnnouncement({ open, onClose }: { open: boolean; onClose: () => void
       <DialogTitle sx={{ fontWeight: 800 }}>Add a new announcement</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ pt: 1 }}>
-          <TextField label="Subject" value={title} onChange={(e) => setTitle(e.target.value)} autoFocus required />
-          <TextField
+          <FastField label="Subject" value={title} onChange={(e) => setTitle(e.target.value)} autoFocus required />
+          <FastField
             label="Message"
             value={body}
             onChange={(e) => setBody(e.target.value)}

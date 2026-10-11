@@ -1,25 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import App, { preloadPages } from './App';
-import { AnnouncementsProvider } from './context/AnnouncementsContext';
-import { AuthProvider } from './context/AuthContext';
 import { StoreProvider } from './context/StoreContext';
 import { ThemeModeProvider } from './context/ThemeModeContext';
+import { store } from './store';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <ThemeModeProvider>
-        <AuthProvider>
-          <AnnouncementsProvider>
-            <StoreProvider>
-              <App />
-            </StoreProvider>
-          </AnnouncementsProvider>
-        </AuthProvider>
-      </ThemeModeProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ThemeModeProvider>
+          <StoreProvider>
+            <App />
+          </StoreProvider>
+        </ThemeModeProvider>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
 );
 

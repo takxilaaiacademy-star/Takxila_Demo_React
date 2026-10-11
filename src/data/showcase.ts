@@ -49,17 +49,20 @@ export interface Pack {
   rating: number;
 }
 
-export const PACKS: Pack[] = [
-  { id: 'agent-builder', title: 'AI Agent Builder', group: 'build', courses: ['agentic', 'wa-mastery', 'claude-code', 'job-agent'], price: 1199, rating: 4.9 },
-  { id: 'claude-pro', title: 'Claude Pro', group: 'build', courses: ['claude-master', 'claude-code', 'claude-deep', 'claude-excel'], price: 1099, rating: 4.8 },
-  { id: 'nocode-founder', title: 'No-Code Founder', group: 'build', courses: ['lovable', 'nocode-web', 'wa-mastery', 'ai-pm'], price: 1199, rating: 4.7 },
-  { id: 'content-creator', title: 'AI Content Creator', group: 'create', courses: ['omni-master', 'mj-advanced', 'kling-master', 'canva-ai'], price: 999, rating: 4.8 },
-  { id: 'filmmaker', title: 'AI Filmmaker', group: 'create', courses: ['film-1', 'film-2', 'film-3', 'film-4', 'film-5', 'film-6', 'film-7', 'film-8', 'film-9'], price: 1799, rating: 4.9 },
-  { id: 'marketer', title: 'AI Marketer', group: 'market', courses: ['ai-marketing', 'meta-ads', 'gads-mastery', 'ai-seo'], price: 1199, rating: 4.7 },
-  { id: 'business', title: 'AI for Business', group: 'market', courses: ['ai-finance', 'ai-pm', 'ai-projects', 'claude-excel'], price: 1199, rating: 4.6 },
-  { id: 'power-user', title: 'AI Power User', group: 'career', courses: ['chatgpt-deep', 'gemini', 'perplexity', 'deepseek', 'genai-complete'], price: 1199, rating: 4.8 },
-  { id: 'career-starter', title: 'Career Starter', group: 'career', courses: ['portfolio', 'job-agent', 'ready', 'chatgpt-deep'], price: 999, rating: 4.7 },
-];
+/** Pack price: 30% off the courses' own prices, ending in 9 (so it always beats the 25% customized pack). */
+const packPrice = (ids: string[]) => Math.round((ids.reduce((a, id) => a + (courseById(id)?.price ?? 0), 0) * 0.7) / 10) * 10 - 1;
+
+export const PACKS: Pack[] = ([
+  { id: 'agent-builder', title: 'AI Agent Builder', group: 'build', courses: ['agentic', 'wa-mastery', 'claude-code', 'job-agent'], rating: 4.9 },
+  { id: 'claude-pro', title: 'Claude Pro', group: 'build', courses: ['claude-master', 'claude-code', 'claude-deep', 'claude-excel'], rating: 4.8 },
+  { id: 'nocode-founder', title: 'No-Code Founder', group: 'build', courses: ['lovable', 'nocode-web', 'wa-mastery', 'ai-pm'], rating: 4.7 },
+  { id: 'content-creator', title: 'AI Content Creator', group: 'create', courses: ['omni-master', 'mj-advanced', 'kling-master', 'canva-ai'], rating: 4.8 },
+  { id: 'filmmaker', title: 'AI Filmmaker', group: 'create', courses: ['film-1', 'film-2', 'film-3', 'film-4', 'film-5', 'film-6', 'film-7', 'film-8', 'film-9'], rating: 4.9 },
+  { id: 'marketer', title: 'AI Marketer', group: 'market', courses: ['ai-marketing', 'meta-ads', 'gads-mastery', 'ai-seo'], rating: 4.7 },
+  { id: 'business', title: 'AI for Business', group: 'market', courses: ['ai-finance', 'ai-pm', 'ai-projects', 'claude-excel'], rating: 4.6 },
+  { id: 'power-user', title: 'AI Power User', group: 'career', courses: ['chatgpt-deep', 'gemini', 'perplexity', 'deepseek', 'genai-complete'], rating: 4.8 },
+  { id: 'career-starter', title: 'Career Starter', group: 'career', courses: ['portfolio', 'job-agent', 'ready', 'chatgpt-deep'], rating: 4.7 },
+] as Omit<Pack, 'price'>[]).map((p) => ({ ...p, price: packPrice(p.courses) }));
 
 export const packById = (id: string) => PACKS.find((p) => p.id === id);
 export const PAID = COURSES.filter((c) => c.price > 0);
@@ -118,7 +121,7 @@ export function priceCart(cart: string[], owned: string[], referral: boolean) {
 // ---------- Comparison table ----------
 
 export const COMPARE_COLS = ['Takxila', 'YouTube', 'Other platforms'] as const;
-export const COMPARE_PRICE = ['₹99 – ₹499', 'FREE', '₹10K – 50K'];
+export const COMPARE_PRICE = ['₹99 – ₹399', 'FREE', '₹10K – 50K'];
 export const COMPARE_ROWS: [feature: string, takxila: boolean, youtube: boolean, others: boolean][] = [
   ['Affordable for everyone', true, true, false],
   ['Step-by-step structured path', true, false, true],

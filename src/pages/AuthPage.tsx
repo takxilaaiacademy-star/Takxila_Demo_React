@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import {
-  Alert, Box, Button, Card, Checkbox, FormControlLabel, Grid, IconButton, InputAdornment, Link, Stack, Tab, Tabs, TextField, Tooltip, Typography, type TextFieldProps,
+  Alert, Box, Button, Card, Checkbox, FormControlLabel, Grid, IconButton, InputAdornment, Link, Stack, Tab, Tabs, Tooltip, Typography, type TextFieldProps,
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -17,6 +17,7 @@ import { GradientText, GridBackdrop } from '../components/fx';
 import { HumanCheck, LatestAnnouncements, LostPasswordDialog, MiniCalendar, SocialButtons, VisitorCounter } from '../components/AuthExtras';
 import { socialSignIn, type Provider } from '../utils/social';
 import { useBlobUrl } from '../utils/media';
+import FastField from '../components/FastField';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -40,7 +41,7 @@ interface LocationState {
 function PasswordField(props: TextFieldProps) {
   const [show, setShow] = useState(false);
   return (
-    <TextField
+    <FastField
       {...props}
       type={show ? 'text' : 'password'}
       InputProps={{
@@ -206,18 +207,18 @@ export default function AuthPage() {
 
             <Stack component="form" spacing={2} onSubmit={submit} noValidate>
               {tab === 'register' && (
-                <TextField label="Full name" value={f.name} onChange={set('name')} error={!!err.name} helperText={err.name} autoComplete="name" autoFocus />
+                <FastField label="Full name" value={f.name} onChange={set('name')} error={!!err.name} helperText={err.name} autoComplete="name" autoFocus />
               )}
-              <TextField label={tab === 'login' ? 'Username / email' : 'Email'} type="email" value={f.email} onChange={set('email')} error={!!err.email} helperText={err.email} autoComplete="email" autoFocus={tab === 'login'} />
+              <FastField label={tab === 'login' ? 'Username / email' : 'Email'} type="email" value={f.email} onChange={set('email')} error={!!err.email} helperText={err.email} autoComplete="email" autoFocus={tab === 'login'} />
               {tab === 'register' && (
-                <TextField label="Phone / WhatsApp (optional)" value={f.phone} onChange={set('phone')} error={!!err.phone} helperText={err.phone} autoComplete="tel" />
+                <FastField label="Phone / WhatsApp (optional)" value={f.phone} onChange={set('phone')} error={!!err.phone} helperText={err.phone} autoComplete="tel" />
               )}
               <PasswordField label="Password" value={f.password} onChange={set('password')} error={!!err.password} helperText={err.password || (tab === 'register' ? 'At least 6 characters.' : '')} autoComplete={tab === 'login' ? 'current-password' : 'new-password'} />
               {tab === 'register' && (
                 <PasswordField label="Confirm password" value={f.confirm} onChange={set('confirm')} error={!!err.confirm} helperText={err.confirm} autoComplete="new-password" />
               )}
               {tab === 'register' && (
-                <TextField label="Referral code (optional)" value={f.refBy} onChange={set('refBy')} helperText={f.refBy ? 'Your friend gets ₹200 when you enroll, and you get ₹200 off your first order.' : 'Got a code from a friend? You get ₹200 off your first order.'} inputProps={{ style: { textTransform: 'uppercase', letterSpacing: '.12em' } }} />
+                <FastField label="Referral code (optional)" value={f.refBy} onChange={set('refBy')} helperText={f.refBy ? 'Your friend gets ₹200 when you enroll, and you get ₹200 off your first order.' : 'Got a code from a friend? You get ₹200 off your first order.'} inputProps={{ style: { textTransform: 'uppercase', letterSpacing: '.12em' } }} />
               )}
               <FormControlLabel control={<Checkbox checked={f.remember} onChange={set('remember')} />} label="Keep me logged in" />
               {tab === 'register' && (

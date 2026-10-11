@@ -1,8 +1,9 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { CssBaseline, GlobalStyles, ThemeProvider, type PaletteMode } from '@mui/material';
 import { createAppTheme } from '../theme/theme';
-import { load, save } from '../utils/storage';
+import { store, useAppSelector } from '../store';
+import { themeActions } from '../store/themeSlice';
 
 interface ThemeModeValue {
   mode: PaletteMode;
@@ -43,40 +44,30 @@ const motion = {
   '.tx-reduce *, .tx-reduce *::before, .tx-reduce *::after': { animation: 'none !important', transition: 'none !important' },
 };
 
-const ThemeModeContext = createContext<ThemeModeValue | null>(null);
+// Both themes are built once, so switching only swaps which one is used.
+const themes = { dark: createAppTheme('dark'), light: createAppTheme('light') };
+
+/** Dark / light switch. The mode lives in the Redux store (src/store/themeSlice.ts). */
+function toggleMode() {
+  const root = document.documentElement;
+  const next: PaletteMode = store.getState().theme.mode === 'dark' ? 'light' : 'dark';
+  root.classList.add('tx-theming');
+  flushSync(() => store.dispatch(themeActions.modeSet(next)));
+  requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('tx-theming')));
+}
 
 export function ThemeModeProvider({ children }: { children: ReactNode }) {
-  const [mode, setMode] = useState<PaletteMode>(() => (load<string>('theme', 'dark') === 'light' ? 'light' : 'dark'));
-  useEffect(() => save('theme', mode), [mode]);
-  // Both themes are built once, so switching only swaps which one is used.
-  const themes = useMemo(() => ({ dark: createAppTheme('dark'), light: createAppTheme('light') }), []);
-  const theme = themes[mode];
-  const value = useMemo<ThemeModeValue>(
-    () => ({
-      mode,
-      toggleMode: () => {
-        const root = document.documentElement;
-        const next: PaletteMode = mode === 'dark' ? 'light' : 'dark';
-        root.classList.add('tx-theming');
-        flushSync(() => setMode(next));
-        requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('tx-theming')));
-      },
-    }),
-    [mode],
-  );
+  const mode = useAppSelector((s) => s.theme.mode);
   return (
-    <ThemeModeContext.Provider value={value}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <GlobalStyles styles={motion} />
-        {children}
-      </ThemeProvider>
-    </ThemeModeContext.Provider>
+    <ThemeProvider theme={themes[mode]}>
+      <CssBaseline />
+      <GlobalStyles styles={motion} />
+      {children}
+    </ThemeProvider>
   );
 }
 
 export function useThemeMode(): ThemeModeValue {
-  const ctx = useContext(ThemeModeContext);
-  if (!ctx) throw new Error('useThemeMode must be used inside ThemeModeProvider');
-  return ctx;
+  const mode = useAppSelector((s) => s.theme.mode);
+  return useMemo(() => ({ mode, toggleMode }), [mode]);
 }

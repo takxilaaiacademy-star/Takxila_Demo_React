@@ -1,9 +1,11 @@
-import { Card, Divider, FormControlLabel, MenuItem, Stack, Switch, TextField, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Button, Card, Divider, FormControlLabel, MenuItem, Stack, Switch, TextField, Typography } from '@mui/material';
 import { Heading, Page } from '../../components/Section';
 import { useStore } from '../../context/StoreContext';
 import { useThemeMode } from '../../context/ThemeModeContext';
 import { LANGS } from '../../data/i18n';
 import type { Lang } from '../../types';
+import EmailPreview from '../../emails/EmailPreview';
 
 function Row({ title, sub, children }: { title: string; sub: string; children: React.ReactNode }) {
   return (
@@ -22,6 +24,7 @@ function Row({ title, sub, children }: { title: string; sub: string; children: R
 export default function Preferences() {
   const { prefs, setPrefs, toast } = useStore();
   const { mode, toggleMode } = useThemeMode();
+  const [preview, setPreview] = useState(false);
   const set = (p: Parameters<typeof setPrefs>[0]) => {
     setPrefs(p);
     toast('Preference saved.');
@@ -65,7 +68,17 @@ export default function Preferences() {
         <Row title="Announcement notifications" sub="Show a count on the bell when there is a new announcement.">
           <FormControlLabel control={<Switch checked={prefs.notify} onChange={(e) => set({ notify: e.target.checked })} />} label="" />
         </Row>
+        <Divider />
+        <Row title="Email me" sub="A confirmation when you buy or enroll in a course, and a congratulations email with your certificate when you finish one.">
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Button size="small" onClick={() => setPreview(true)}>
+              Preview
+            </Button>
+            <FormControlLabel control={<Switch checked={prefs.emails} onChange={(e) => set({ emails: e.target.checked })} />} label="" />
+          </Stack>
+        </Row>
       </Card>
+      {preview && <EmailPreview open onClose={() => setPreview(false)} />}
     </Page>
   );
 }

@@ -19,6 +19,7 @@ import { useStore } from '../context/StoreContext';
 import type { ContactMessage } from '../types';
 import { MENTOR_EMAIL, MENTOR_TOPICS, WHATSAPP_DISPLAY, sendMentorMail, whatsappLink } from '../utils/contact';
 import { load } from '../utils/storage';
+import FastField from '../components/FastField';
 
 const AREAS: [title: string, body: string, Icon: typeof RouteIcon][] = [
   ['Learning path', 'Not sure which course comes next? Get a plan built around your goal and weekly time.', RouteIcon],
@@ -153,14 +154,14 @@ export default function Mentorship() {
                 Book a session
               </Typography>
               <Box component="form" noValidate onSubmit={submit} sx={{ display: 'grid', gap: 2 }}>
-                <TextField select label="Topic" value={f.topic} onChange={(e) => setF({ ...f, topic: e.target.value })}>
+                <TextField select label="Topic" value={f.topic} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, topic: v })); }}>
                   {MENTOR_TOPICS.map((x) => (
                     <MenuItem key={x} value={x}>
                       {x}
                     </MenuItem>
                   ))}
                 </TextField>
-                <TextField label="Preferred date and time" type="datetime-local" value={f.slot} onChange={(e) => setF({ ...f, slot: e.target.value })} InputLabelProps={{ shrink: true }} />
+                <TextField label="Preferred date and time" type="datetime-local" value={f.slot} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, slot: v })); }} InputLabelProps={{ shrink: true }} />
                 <ToggleButtonGroup exclusive fullWidth size="small" color="secondary" value={f.mode} onChange={(_, v) => v && setF({ ...f, mode: v })}>
                   {MODES.map((m) => (
                     <ToggleButton key={m} value={m} sx={{ textTransform: 'none', fontWeight: 600 }}>
@@ -168,7 +169,7 @@ export default function Mentorship() {
                     </ToggleButton>
                   ))}
                 </ToggleButtonGroup>
-                <TextField label="What would you like help with?" multiline minRows={4} value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })} />
+                <FastField label="What would you like help with?" multiline minRows={4} value={f.message} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, message: v })); }} />
                 <Button type="submit" variant="contained" size="large" endIcon={<SendIcon />} disabled={busy}>
                   {busy ? 'Sending…' : 'Request a mentor'}
                 </Button>

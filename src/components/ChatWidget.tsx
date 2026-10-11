@@ -11,6 +11,7 @@ import { useAuth } from '../context/AuthContext';
 import { useStore } from '../context/StoreContext';
 import { translate } from '../data/i18n';
 import { MENTOR_TOPICS, WHATSAPP_DISPLAY, sendMentorMail, whatsappLink } from '../utils/contact';
+import FastField from './FastField';
 
 const WA_GREEN = '#25D366';
 
@@ -102,8 +103,8 @@ export default function ChatWidget() {
               <Box component="form" noValidate onSubmit={submit} sx={{ p: 2, display: 'grid', gap: 1.5 }}>
                 {!user && (
                   <>
-                    <TextField size="small" label="Your name" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
-                    <TextField size="small" label="Email" type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} />
+                    <FastField size="small" label="Your name" value={f.name} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, name: v })); }} />
+                    <FastField size="small" label="Email" type="email" value={f.email} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, email: v })); }} />
                   </>
                 )}
                 <TextField
@@ -111,7 +112,7 @@ export default function ChatWidget() {
                   select
                   label="Topic"
                   value={f.topic}
-                  onChange={(e) => setF({ ...f, topic: e.target.value })}
+                  onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, topic: v })); }}
                 >
                   {MENTOR_TOPICS.map((x) => (
                     <MenuItem key={x} value={x}>
@@ -119,7 +120,7 @@ export default function ChatWidget() {
                     </MenuItem>
                   ))}
                 </TextField>
-                <TextField size="small" label="Message" multiline minRows={3} value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })} autoFocus />
+                <FastField size="small" label="Message" multiline minRows={3} value={f.message} onChange={(e) => { const v = e.target.value; setF((s) => ({ ...s, message: v })); }} autoFocus />
                 {err && (
                   <Typography color="error" sx={{ fontSize: 13 }}>
                     {err}

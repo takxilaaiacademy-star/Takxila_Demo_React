@@ -89,6 +89,106 @@ in the browser can be read by the user. Connect a real backend before taking pay
   The 5 courses with real photo banners keep them. The design is `tools/covers.html`; regenerate with
   `node tools/render-covers.mjs [course-id ...]` (needs Playwright). The summary videos were re-rendered with them.
 
+## Round 9: resume upload fix, learner emails, About Us
+
+### ATS resume upload (PDF and DOCX)
+- PDFs are read with the pdf.js **legacy** build, which works in older Chrome, Edge, Safari and Firefox too. Its worker is bundled as a normal `.js` file, so it also loads on web hosts that refuse to serve `.mjs` files.
+- Word files are read with mammoth, and if that fails, with a built-in reader that opens the `.docx` directly (`src/features/resume/extract.ts`). An old `.doc` file renamed to `.docx` now gets a clear message.
+
+### Emails to learners
+Three branded emails with your logo (edit the words in `src/emails/templates.ts`):
+
+| When | Email |
+|---|---|
+| A course is bought | "You're in!" with the courses, total, order and payment ID |
+| A free course is enrolled | "You're enrolled" with a Start learning button |
+| A course is finished | A congratulations greeting, lessons and grade, the certificate ID with a "Download my certificate" button, and two suggested next courses |
+
+Learners can switch the emails off, and preview all three, in **Preferences > Email me**.
+
+**Sending them.** A website without a server cannot send its own HTML email, so the app uses **EmailJS** (free plan: 200 emails/month):
+1. Sign up at emailjs.com, add an Email Service (connect takxila.ai.academy@gmail.com) and note its **Service ID**.
+2. Create an Email Template. Set **To email** to `{{to_email}}`, **Subject** to `{{subject}}`, **Reply to** to `{{reply_to}}`, and in the content's code view put only `{{{html_body}}}` (three braces). Note its **Template ID**.
+3. Copy your **Public Key** from Account > General.
+4. Put them in `.env` as `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, `VITE_EMAILJS_PUBLIC_KEY`, and set `VITE_SITE_URL` to your live address (for example `https://takxila.in`) so the logo and buttons in the email point at your site. Rebuild.
+
+Until EmailJS is set up, each email goes through FormSubmit as a plain-text copy to the academy inbox with the learner in CC.
+
+### About Us
+The "About TAKXILA" story is on the About Us page. Edit the words in `src/data/about.tsx`.
+
+## Round 8: Redux, notifications, certificate, resume, speed
+
+### Redux (src/store)
+All app state and every outside call now live in one Redux Toolkit store:
+
+| File | What it holds | Saved as |
+|---|---|---|
+| `store/index.ts` | `configureStore`, typed `useAppDispatch` / `useAppSelector`, localStorage persistence, loading the learner when the login changes | |
+| `store/authSlice.ts` + `authThunks.ts` | accounts, session, register / login / social login / logout / change password | `tx_users`, `tx_session` |
+| `store/learnerSlice.ts` + `learnerThunks.ts` | cart, courses, lessons, orders, resume, preferences, notifications | `tx_user_<email>` |
+| `store/announcementsSlice.ts` | site announcements | `tx_announcements` |
+| `store/themeSlice.ts` | dark / light | `tx_theme` |
+| `store/uiSlice.ts` | selection bar, quiz, add-to-cart popup, toasts, confetti | not saved |
+| `store/api.ts` | RTK Query: `sendMail` (FormSubmit emails) and `visits` (visitor counter) | |
+
+Pages keep using the same hooks (`useStore()`, `useAuth()`, `useAnnouncements()`, `useThemeMode()`), which are now thin readers over the store, so nothing in the pages had to change. New code can use `useAppSelector` / `useAppDispatch` directly. When the academy gets its own backend, add endpoints to `store/api.ts`.
+
+### Notifications (the bell)
+Buying a course, enrolling in a free one, finishing a course and a certificate becoming ready each add a notification (`learnerThunks.ts`). Announcements show there too. Every row has an **X** to remove it; the header has "Mark all as read" and the footer "Clear all". Clicking a row opens the related page. Component: `src/components/NotificationBell.tsx`.
+
+### Certificate
+Uses your certificate design (`public/assets/certificate/template.webp`) and writes the learner's name, course, date, category and certificate ID on it. Each certificate downloads as **PNG** (3072×2048) or a one-page **PDF**. Code: `src/features/certificate/`.
+
+### Resume builder and ATS score
+- **5 ATS-approved themes** (Classic, Modern, Professional, Minimal, Executive) plus **Creative, coming soon**. Theme settings: `src/features/resume/themes.ts`.
+- **Download PDF** makes a real text PDF (jsPDF) with only the sections you filled in, so there are no blank pages. A chip above the preview shows how many pages it will be.
+- **Check your ATS score**: upload a PDF, DOCX or TXT resume (or score the one you built), optionally paste a job description. You get a 0 to 100 score, a checklist with tips and matched/missing keywords. Everything runs in the browser; nothing is uploaded. Scoring rules: `src/features/resume/ats.ts`.
+- The draft saves itself in this browser while you type.
+
+### Speed
+- Text fields use `src/components/FastField.tsx`: the field shows each key at once and the page updates in the background (a React transition), so typing never lags behind on long pages.
+- Page changes no longer wait up to 1.5 s for images; the loading spinner only appears if a page takes longer than 0.3 s.
+- The background glow is drawn with gradients instead of a heavy CSS blur.
+
+## Round 7: course pages, category bubbles, combo offers, Razorpay
+
+### Where the course content lives (edit these files)
+- **`src/data/courses.ts`**: the 46 courses: title, small line above the title (`kicker`), category (`group`),
+  the "Duration" line (`meta`), price and old price (`was`), cover image. Titles, durations and prices follow the
+  main website. Courses whose price was not visible on the website are set to ₹99 (Claude for Excel, Claude Deep Dive,
+  Perplexity, Canva AI, Gemini and the 9 AI Filmmaking parts). Change `price` / `was` there.
+- **`src/data/courseContent.ts`**: what is inside each course, shown on its course page: subtitle, "What you'll learn",
+  the sections and lectures (title and minutes) of "Course content", requirements, description and "Who this course is
+  for". The section count, lecture count and total length on the page are calculated from the lectures.
+- The five categories (the bubbles) are `GROUPS` in `src/data/courses.ts`.
+- Combo pack prices are worked out automatically (30% off the courses in the pack) in `src/data/showcase.ts`.
+- After changing prices, re-render the covers and summary videos so the price on them matches:
+  `node tools/render-covers.mjs` and `node tools/render-videos.mjs` (need Playwright and ffmpeg).
+
+### Pages
+- **Courses** opens on the five category bubbles (Expand all / Collapse all). Clicking a bubble shows its courses.
+  The two other layouts (banner cards with pagination, compact tiles) are on the toggle next to the sort menu.
+- **Course page** (`src/pages/CourseDetail.tsx`) is laid out like a Udemy course page: header with breadcrumbs,
+  subtitle and badges, a sticky purchase card (this course or All Access, Add to cart, Buy now, preview video),
+  What you'll learn, related topics, This course includes, Course content (sections open to show every lecture),
+  Requirements, Description with Show more, and related courses.
+- **Added-to-cart popup** (`src/components/CartUpsell.tsx`): shows the course just added, the best combo that
+  includes it (or a 25%-off custom combo of 4), related courses with one-click add, and All Access.
+
+### Razorpay payments
+1. Sign up at dashboard.razorpay.com. Under Account & Settings, API Keys, generate a key (Test mode first).
+2. In `.env` set `VITE_RAZORPAY_KEY_ID=rzp_test_...` and rebuild. The cart's "Pay" button then opens Razorpay
+   Checkout (UPI, cards, net banking, wallets). After a successful payment the courses are enrolled and the
+   Razorpay payment id is saved with the order (Profile, Purchases).
+3. Test with Razorpay's test cards/UPI, then switch to the `rzp_live_...` key when your account is activated.
+
+Important for live payments: this site has no server, so it cannot create Razorpay orders or verify the payment
+signature, and someone could change the amount in their browser. Before going live, add a small backend
+(for example a serverless function) that creates the order with the key secret, pass its `order_id` to checkout
+in `src/utils/razorpay.ts`, and verify `razorpay_signature` on the server before enrolling. Never put the key
+secret in `.env` for this frontend. Without a key the Pay button explains the setup and offers a demo enrolment.
+
 ## Round 6: login page, email, loaders, speed
 
 ### Social sign-in (Gmail, Facebook, Microsoft)
@@ -167,12 +267,16 @@ Each lesson of a course is a grade item with equal weight. Marking a lesson comp
 the course total is the weighted sum, shown on the course's Grades tab and on the Grades overview.
 
 ## Project layout
-- `src/main.tsx` – providers (router, theme, auth, store)
+- `src/main.tsx` – providers (Redux `Provider`, router, theme, toasts)
+- `src/store/` – the Redux store: slices, thunks and the RTK Query API (see "Round 8" above)
 - `src/App.tsx` – routes; everything except `/auth` is behind `ProtectedRoute`
 - `src/types.ts` – the shared types: `Course`, `Question`, `Answers`, `Recommendation`, `StoredUser`, `UserData` and the rest
-- `src/context/` – `AuthContext` (register, login, logout, change password, admin), `ThemeModeContext` (dark/light, animation keyframes), `StoreContext` (cart, courses, lessons, orders, preferences, quiz, toasts), `AnnouncementsContext`
+- `src/context/` – the hooks pages use (`useAuth`, `useStore`, `useAnnouncements`, `useThemeMode`). Since round 8 they read from the Redux store; `ThemeModeContext` also holds the animation keyframes
+- `src/features/certificate/` – the certificate drawing, preview and PNG/PDF downloads
+- `src/features/resume/` – resume themes, one-page PDF, ATS score
+- `src/emails/` – learner email templates, sending, and the preview dialog
 - `src/theme/theme.ts` – MUI theme with the navy/gold (dark) and lavender/indigo (light) palettes; it augments MUI's `Theme` so `theme.tx.*` is typed
-- `src/data/courses.ts` – the 45 courses (generated from `takxila-site/tools/courses.py`)
+- `src/data/courses.ts` – the 46 courses (generated from `takxila-site/tools/courses.py`)
 - `src/data/quiz.ts` – question bank for onboarding and the calculator; `src/data/recommend.ts` – scoring and plan totals
 - `src/data/curriculum.ts` – lessons, progress and grade report; `src/data/i18n.ts` – English/Hindi menu labels
 - `src/components/` – Layout (header, bell, profile menu), CourseCard, Media (blob images, video), Preview dialog, GradeReport, Motion, Confetti

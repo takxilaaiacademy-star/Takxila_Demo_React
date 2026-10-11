@@ -1,6 +1,12 @@
-import { useMemo, useState } from 'react';
-import { Alert, Box, Button, Grid, InputAdornment, LinearProgress, Stack, TextField, Typography } from '@mui/material';
-import DownloadIcon from '@mui/icons-material/Download';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  Alert, Box, Button, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton,
+  InputAdornment, LinearProgress, Stack, TextField, Tooltip, Typography, useMediaQuery, type Theme,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import ImageIcon from '@mui/icons-material/ImageOutlined';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdfOutlined';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import LockIcon from '@mui/icons-material/LockOutlined';
 import VerifiedIcon from '@mui/icons-material/Verified';
@@ -14,7 +20,7 @@ import { useStore } from '../context/StoreContext';
 import { courseById } from '../data/recommend';
 import { lessonsFor } from '../data/curriculum';
 import { certificateId } from '../data/showcase';
-import { blobUrl } from '../utils/media';
+import { CertificatePreview, downloadCertificate, idSuffix, issuedText, warmCertificate, type CertificateData, type CertificateFormat } from '../features/certificate';
 import { load } from '../utils/storage';
 import type { Course, UserData } from '../types';
 
@@ -24,123 +30,153 @@ interface Cert {
   at: string;
 }
 
-const dateText = (iso: string) => new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+const certData = (name: string, cert: Cert): CertificateData => ({
+  name,
+  course: cert.c.title,
+  category: cert.c.catLabel,
+  issuedAt: cert.at,
+  id: cert.id,
+});
 
-/** Draws the certificate on a canvas and saves it as a PNG. */
-async function downloadCert(name: string, cert: Cert) {
-  const W = 1600;
-  const H = 1130;
-  const cv = document.createElement('canvas');
-  cv.width = W;
-  cv.height = H;
-  const g = cv.getContext('2d');
-  if (!g) return;
-  await document.fonts?.ready;
-  const bg = g.createLinearGradient(0, 0, W, H);
-  bg.addColorStop(0, '#0A1022');
-  bg.addColorStop(1, '#1B2160');
-  g.fillStyle = bg;
-  g.fillRect(0, 0, W, H);
-  g.strokeStyle = '#F5B93F';
-  g.lineWidth = 6;
-  g.strokeRect(40, 40, W - 80, H - 80);
-  g.lineWidth = 1.5;
-  g.strokeRect(62, 62, W - 124, H - 124);
-  try {
-    const img = new Image();
-    img.src = await blobUrl('/assets/logo-mark-dark.webp');
-    await img.decode();
-    g.drawImage(img, W / 2 - 60, 110, 120, 132);
-  } catch {
-    /* the certificate still works without the logo */
-  }
-  g.textAlign = 'center';
-  const font = "'Plus Jakarta Sans', system-ui, sans-serif";
-  g.fillStyle = '#C0C7DE';
-  g.font = `700 26px ${font}`;
-  g.fillText('T A K X I L A   A I   A C A D E M Y', W / 2, 300);
-  g.fillStyle = '#F5B93F';
-  g.font = `800 64px ${font}`;
-  g.fillText('CERTIFICATE OF COMPLETION', W / 2, 400);
-  g.fillStyle = '#C0C7DE';
-  g.font = `500 28px ${font}`;
-  g.fillText('This certifies that', W / 2, 480);
-  g.fillStyle = '#FFFFFF';
-  g.font = `800 72px ${font}`;
-  g.fillText(name, W / 2, 575);
-  g.fillStyle = '#C0C7DE';
-  g.font = `500 28px ${font}`;
-  g.fillText('has successfully completed the course', W / 2, 650);
-  g.fillStyle = '#FFFFFF';
-  g.font = `800 ${cert.c.title.length > 44 ? 38 : 46}px ${font}`;
-  g.fillText(cert.c.title, W / 2, 725);
-  g.fillStyle = '#C0C7DE';
-  g.font = `500 24px ${font}`;
-  g.fillText(`${lessonsFor(cert.c).length} lessons · ${cert.c.meta.join(' · ')}`, W / 2, 780);
-  g.textAlign = 'left';
-  g.font = `600 24px ${font}`;
-  g.fillText('Date: ' + dateText(cert.at), 140, 960);
-  g.textAlign = 'right';
-  g.fillText('Certificate ID: ' + cert.id, W - 140, 960);
-  g.textAlign = 'center';
-  g.fillStyle = '#F5B93F';
-  g.font = `italic 600 26px ${font}`;
-  g.fillText('Master the AI frameworks. Own the AI future.', W / 2, 1030);
-  const blob = await new Promise<Blob | null>((r) => cv.toBlob(r, 'image/png'));
-  if (!blob) return;
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `Takxila-certificate-${cert.c.id}.png`;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 4000);
+/** Runs one certificate download at a time and reports which format is busy. */
+function useCertDownload(toast: (m: string) => void) {
+  const [busy, setBusy] = useState<CertificateFormat | null>(null);
+  const run = useCallback(
+    async (format: CertificateFormat, data: CertificateData, courseId: string) => {
+      setBusy(format);
+      try {
+        await downloadCertificate(format, data, courseId);
+        toast(`Certificate downloaded as ${format.toUpperCase()}`);
+      } catch {
+        toast('Could not create the certificate. Please try again.');
+      } finally {
+        setBusy(null);
+      }
+    },
+    [toast],
+  );
+  return { busy, run };
 }
 
-function CertCard({ name, cert, index, onCopy }: { name: string; cert: Cert; index: number; onCopy: (id: string) => void }) {
-  const [busy, setBusy] = useState(false);
+function DownloadButtons({ busy, onDownload, size = 'medium' }: { busy: CertificateFormat | null; onDownload: (f: CertificateFormat) => void; size?: 'small' | 'medium' | 'large' }) {
   return (
-    <Box sx={{ animation: `txrise .5s ${index * 70}ms both`, height: '100%' }}>
+    <Stack direction="row" spacing={1} sx={{ width: '100%' }}>
+      <Button
+        variant="contained"
+        size={size}
+        disabled={!!busy}
+        onClick={() => onDownload('png')}
+        startIcon={busy === 'png' ? <CircularProgress size={16} color="inherit" /> : <ImageIcon />}
+        sx={{ flex: 1, whiteSpace: 'nowrap' }}
+      >
+        {busy === 'png' ? 'Preparing…' : 'PNG'}
+      </Button>
+      <Button
+        variant="outlined"
+        size={size}
+        disabled={!!busy}
+        onClick={() => onDownload('pdf')}
+        startIcon={busy === 'pdf' ? <CircularProgress size={16} color="inherit" /> : <PictureAsPdfIcon />}
+        sx={{ flex: 1, whiteSpace: 'nowrap' }}
+      >
+        {busy === 'pdf' ? 'Preparing…' : 'PDF'}
+      </Button>
+    </Stack>
+  );
+}
+
+const CertCard = memo(function CertCard({ name, cert, index, onCopy, onView }: { name: string; cert: Cert; index: number; onCopy: (id: string) => void; onView: (cert: Cert) => void }) {
+  const { toast } = useStore();
+  const { busy, run } = useCertDownload(toast);
+  const data = useMemo(() => certData(name, cert), [name, cert]);
+  return (
+    <Panel sx={{ p: { xs: 1.5, sm: 2 }, height: '100%', display: 'flex', flexDirection: 'column', animation: `txrise .5s ${index * 70}ms both` }}>
       <Box
+        role="button"
+        tabIndex={0}
+        aria-label={`View certificate for ${cert.c.title}`}
+        onClick={() => onView(cert)}
+        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onView(cert)}
         sx={{
-          position: 'relative', borderRadius: '18px', p: 2.5, color: '#fff', overflow: 'hidden', aspectRatio: '1.42', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
-          background: 'linear-gradient(135deg, #0A1022, #1B2160)', border: '3px solid #F5B93F', boxShadow: 'inset 0 0 0 6px #0A1022, inset 0 0 0 7px rgba(245,185,63,.6)',
-          transition: 'transform .4s cubic-bezier(.2,.8,.2,1)', '&:hover': { transform: 'translateY(-6px) rotate(-.5deg)' },
-          '&::after': {
-            content: '""', position: 'absolute', top: 0, bottom: 0, width: '40%', left: '-60%',
-            background: 'linear-gradient(100deg, transparent, rgba(255,255,255,.18), transparent)', animation: 'txshine 4.5s ease-in-out infinite',
+          position: 'relative', cursor: 'zoom-in', borderRadius: 1.5, outline: 'none',
+          boxShadow: '0 10px 30px rgba(10,16,34,.18)', transition: 'transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s',
+          '@media (hover: hover)': {
+            '&:hover': { transform: 'translateY(-4px)', boxShadow: '0 18px 40px rgba(10,16,34,.28)' },
+            '&:hover .tx-zoom': { opacity: 1 },
           },
+          '&:focus-visible': { boxShadow: (t: Theme) => `0 0 0 3px ${t.palette.secondary.main}` },
+          '&:focus-visible .tx-zoom': { opacity: 1 },
         }}
       >
-        <Box component="img" src="/assets/logo-mark-dark.webp" alt="" sx={{ width: 34, mt: 0.5 }} />
-        <Typography sx={{ fontSize: { xs: 9, sm: 10 }, letterSpacing: '.3em', color: '#C0C7DE', mt: 0.5 }}>TAKXILA AI ACADEMY</Typography>
-        <Typography sx={{ fontWeight: 800, color: '#F5B93F', fontSize: { xs: 13, sm: 15 }, mt: 0.5 }}>CERTIFICATE OF COMPLETION</Typography>
-        <Typography sx={{ fontWeight: 800, fontSize: { xs: 18, sm: 22 }, mt: 'auto' }}>{name}</Typography>
-        <Typography sx={{ fontSize: 11, color: '#C0C7DE' }}>has completed</Typography>
-        <Typography sx={{ fontWeight: 700, fontSize: { xs: 12, sm: 13 }, lineHeight: 1.3, mb: 'auto', px: 1 }}>{cert.c.title}</Typography>
-        <Stack direction="row" justifyContent="space-between" sx={{ width: '100%', fontSize: 10, color: '#C0C7DE' }}>
-          <span>{dateText(cert.at)}</span>
-          <span>{cert.id}</span>
-        </Stack>
+        <CertificatePreview data={data} />
+        <Box className="tx-zoom" sx={{ position: 'absolute', inset: 0, borderRadius: 1.5, display: 'grid', placeItems: 'center', bgcolor: 'rgba(10,16,34,.35)', color: '#fff', opacity: 0, transition: 'opacity .25s' }}>
+          <Stack direction="row" spacing={0.75} alignItems="center" sx={{ fontWeight: 700 }}>
+            <ZoomInIcon />
+            <span>View</span>
+          </Stack>
+        </Box>
       </Box>
-      <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
-        <Button
-          variant="contained"
-          startIcon={<DownloadIcon />}
-          disabled={busy}
-          sx={{ flex: 1 }}
-          onClick={async () => {
-            setBusy(true);
-            await downloadCert(name, cert);
-            setBusy(false);
-          }}
-        >
-          Download PNG
-        </Button>
-        <Button variant="outlined" startIcon={<ContentCopyIcon />} onClick={() => onCopy(cert.id)}>
-          ID
-        </Button>
+      <Stack direction="row" spacing={1} alignItems="flex-start" sx={{ mt: 1.75, mb: 1.5 }}>
+        <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+          <Typography sx={{ fontWeight: 800, lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{cert.c.title}</Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.25 }}>
+            Issued {issuedText(cert.at)}
+          </Typography>
+        </Box>
+        <Tooltip title="Copy certificate ID">
+          <Chip size="small" icon={<ContentCopyIcon />} label={cert.id} onClick={() => onCopy(cert.id)} sx={{ fontFamily: 'monospace', fontWeight: 700, maxWidth: 150 }} />
+        </Tooltip>
       </Stack>
-    </Box>
+      <Box sx={{ mt: 'auto' }}>
+        <DownloadButtons busy={busy} onDownload={(f) => void run(f, data, cert.c.id)} />
+      </Box>
+    </Panel>
+  );
+});
+
+function CertDialog({ name, cert, onClose, onCopy }: { name: string; cert: Cert | null; onClose: () => void; onCopy: (id: string) => void }) {
+  const { toast } = useStore();
+  const { busy, run } = useCertDownload(toast);
+  const fullScreen = useMediaQuery((t: Theme) => t.breakpoints.down('sm'));
+  // Keep the last certificate while the dialog animates out.
+  const [shown, setShown] = useState<Cert | null>(cert);
+  useEffect(() => {
+    if (cert) setShown(cert);
+  }, [cert]);
+  const data = useMemo(() => (shown ? certData(name, shown) : null), [name, shown]);
+  return (
+    <Dialog open={!!cert} onClose={onClose} maxWidth="lg" fullWidth fullScreen={fullScreen}>
+      {shown && data && (
+        <>
+          <DialogTitle sx={{ pr: 7 }}>
+            <Typography component="span" variant="overline" color="text.secondary" sx={{ display: 'block' }}>
+              Certificate of completion
+            </Typography>
+            <Typography component="span" variant="h6" sx={{ display: 'block', lineHeight: 1.3 }}>
+              {shown.c.title}
+            </Typography>
+            <IconButton aria-label="Close" onClick={onClose} sx={{ position: 'absolute', right: 12, top: 12 }}>
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent dividers sx={{ bgcolor: 'action.hover', p: { xs: 1.5, sm: 3 }, display: 'flex', flexDirection: 'column' }}>
+            <CertificatePreview
+              data={data}
+              // Sized so the whole certificate fits on screen without scrolling.
+              sx={{ flexShrink: 0, my: 'auto', mx: 'auto', maxWidth: { sm: 'calc((100vh - 280px) * 1.5)' }, boxShadow: '0 16px 50px rgba(10,16,34,.25)', borderRadius: 1 }}
+            />
+          </DialogContent>
+          <DialogActions sx={{ px: { xs: 2, sm: 3 }, py: 2, flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'stretch', gap: 1.5 }}>
+            <Button startIcon={<ContentCopyIcon />} onClick={() => onCopy(shown.id)} sx={{ mr: { sm: 'auto' }, fontFamily: 'monospace' }}>
+              {shown.id}
+            </Button>
+            <Box sx={{ width: { xs: '100%', sm: 320 }, m: '0 !important' }}>
+              <DownloadButtons busy={busy} size="large" onDownload={(f) => void run(f, data, shown.c.id)} />
+            </Box>
+          </DialogActions>
+        </>
+      )}
+    </Dialog>
   );
 }
 
@@ -165,14 +201,21 @@ export default function Certificates() {
   );
   const locked = owned.filter((id) => (prog[id] || 0) < 100).map((id) => courseById(id)).filter((c): c is Course => !!c);
 
-  const copy = (id: string) => {
-    void navigator.clipboard?.writeText(id);
-    toast('Certificate ID copied: ' + id);
-  };
+  const [viewing, setViewing] = useState<Cert | null>(null);
+  useEffect(warmCertificate, []);
+
+  const copy = useCallback(
+    (id: string) => {
+      void navigator.clipboard?.writeText(id);
+      toast('Certificate ID copied: ' + id);
+    },
+    [toast],
+  );
 
   // Looks the ID up across every account saved in this browser.
   const verify = () => {
-    const id = check.trim().toUpperCase();
+    // Accept the ID as printed on the certificate too ("TKX-AIA·TXC-…").
+    const id = idSuffix(check.trim().toUpperCase());
     if (!id) return;
     for (const m of members) {
       const d = load<Partial<UserData>>('user_' + m.email, {});
@@ -196,14 +239,14 @@ export default function Certificates() {
             CERTIFICATES
           </Typography>
           <Typography variant="h4">Your certificates</Typography>
-          <Typography color="text.secondary">Complete every lesson of a course and its certificate appears here, with a unique ID anyone can verify.</Typography>
+          <Typography color="text.secondary">Complete every lesson of a course and its certificate appears here, with a unique ID anyone can verify. Download each one as a PNG image or a print-ready PDF.</Typography>
         </Box>
 
         {certs.length ? (
           <Grid container spacing={2.5} sx={{ mb: 4 }}>
             {certs.map((cert, i) => (
-              <Grid item xs={12} sm={6} lg={4} key={cert.id}>
-                <CertCard name={user.name} cert={cert} index={i} onCopy={copy} />
+              <Grid item xs={12} sm={6} xl={4} key={cert.id}>
+                <CertCard name={user.name} cert={cert} index={i} onCopy={copy} onView={setViewing} />
               </Grid>
             ))}
           </Grid>
@@ -281,6 +324,7 @@ export default function Certificates() {
             </Panel>
           </Grid>
         </Grid>
+        <CertDialog name={user.name} cert={viewing} onClose={() => setViewing(null)} onCopy={copy} />
       </DashShell>
     </Page>
   );
