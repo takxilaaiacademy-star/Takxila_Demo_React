@@ -1,0 +1,23 @@
+{
+  "_comment": "Words on the course promo cards (the black 'ENROLL NOW' card). 'byCategory' is the default for each category; 'byCourse' overrides one course. hook = the two big lines, flow = the steps line.",
+  "byCategory": {
+    "challenge": { "label": "AI CHALLENGE", "hook": ["ONE TOOL A DAY.", "REAL SKILLS IN WEEKS, NOT YEARS."] },
+    "agents": { "label": "AI AGENTS", "hook": ["STILL DOING IT BY HAND?", "LET AI AGENTS DO THE WORK."] },
+    "claude": { "label": "CLAUDE AI MASTERY", "hook": ["USING CLAUDE LIKE A SEARCH BOX?", "MAKE IT YOUR CO-WORKER."] },
+    "tools": { "label": "AI TOOL MASTERY", "hook": ["TOO MANY AI TOOLS?", "MASTER THE ONES THAT MATTER."] },
+    "creative": { "label": "AI CREATIVE MASTERY", "hook": ["HAVE A VISION?", "CREATE IT WITH AI TODAY."] },
+    "nocode": { "label": "AI TOOL MASTERY", "hook": ["HAVE AN APP IDEA?", "STOP WAITING. START BUILDING."] },
+    "business": { "label": "AI FOR BUSINESS", "hook": ["WANT MORE LEADS AND SALES?", "PUT AI TO WORK FOR YOUR BUSINESS."] },
+    "career": { "label": "AI CAREER ACCELERATOR", "hook": ["JOB HUNT FEELING SLOW?", "LET AI OPEN THE DOORS."] },
+    "film": { "label": "AI FILMMAKING", "hook": ["DREAM OF MAKING FILMS?", "YOUR STUDIO IS NOW AI."] }
+  },
+  "byCourse": {
+    "lovable": {
+      "label": "AI TOOL MASTERY",
+      "title": "LOVABLE DEEP DIVE",
+      "sub": "Turn Ideas Into Live Websites & MVPs",
+      "hook": ["HAVE AN APP IDEA?", "STOP WAITING. START BUILDING."],
+      "flow": ["IDEA", "PROMPT", "BUILD", "EDIT", "CONNECT", "PUBLISH"]
+    }
+  }
+}

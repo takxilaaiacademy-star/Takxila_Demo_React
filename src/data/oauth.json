@@ -1,0 +1,24 @@
+{
+  "_comment": "Public sign-in settings for Google, Facebook and Microsoft. Only public client IDs belong here; client secrets must never be put in website code. A value in .env (VITE_GOOGLE_CLIENT_ID, VITE_FACEBOOK_APP_ID, VITE_MICROSOFT_CLIENT_ID) overrides the one here.",
+  "redirectPath": "/oauth-callback.html",
+  "providers": {
+    "google": {
+      "label": "Google",
+      "clientId": "125782148071-8mkq9p4g7cu9sbdq788ts2f5npogcnnc.apps.googleusercontent.com",
+      "authUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+      "logoUrl": "https://accounts.google.com/favicon.ico"
+    },
+    "facebook": {
+      "label": "Facebook",
+      "clientId": "2088492579209696",
+      "authUrl": "https://www.facebook.com/v19.0/dialog/oauth",
+      "logoUrl": "https://static.facebook.com/images/logos/facebook_2x.png"
+    },
+    "microsoft": {
+      "label": "Microsoft",
+      "clientId": "8f014a78-4fc3-468f-b20e-d678378c1a5a",
+      "authUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+      "logoUrl": "https://www.microsoft.com/favicon.ico"
+    }
+  }
+}

@@ -6,6 +6,7 @@ import { load, save } from '../utils/storage';
 import type { AppThunk, RootState } from './index';
 import { learnerActions as L } from './learnerSlice';
 import { uiActions as U } from './uiSlice';
+import { openAcademyCheckout, syncAcademyAdd } from '../utils/academy';
 import { emailData, emailLearner, toEmailCourse } from '../emails/send';
 
 /**
@@ -42,6 +43,7 @@ export const addToCart = (id: string): AppThunk => (dispatch, getState) => {
   }
   if (cart.includes(id)) return dispatch(U.toastShown('Already in your cart.'));
   dispatch(L.cartAdded([id]));
+  syncAcademyAdd(id);
   dispatch(U.upsellSet(id));
 };
 
@@ -57,7 +59,10 @@ export const addMany = (ids: string[]): AppThunk => (dispatch, getState) => {
     const w = who(getState);
     dispatch(emailLearner('enroll', emailData('enroll', w.name, w.email, { ids: free })));
   }
-  if (paid.length) dispatch(L.cartAdded(paid));
+  if (paid.length) {
+    dispatch(L.cartAdded(paid));
+    paid.forEach(syncAcademyAdd);
+  }
   dispatch(U.selCleared());
   dispatch(
     U.toastShown(
@@ -147,4 +152,17 @@ export const toggleSel = (id: string): AppThunk => (dispatch, getState) => {
 export const openQuiz = (mode: QuizMode): AppThunk => (dispatch, getState) => {
   const d = getState().learner.data;
   dispatch(U.quizSet({ mode, step: 0, ans: (mode === 'onboard' ? d.profile?.ans : d.calc) || {} }));
+};
+
+/** Send the cart to the Moodle academy: adds each course to its cart and opens its checkout (Pay with Razorpay there). */
+export const checkoutOnAcademy = (): AppThunk<Promise<{ added: string[]; missing: string[] } | null>> => async (dispatch, getState) => {
+  try {
+    const res = await openAcademyCheckout(getState().learner.data.cart);
+    if (res.missing.length)
+      dispatch(U.toastShown(`${res.missing.length} course${res.missing.length > 1 ? 's are' : ' is'} not linked to the academy yet. Add ${res.missing.length > 1 ? 'them' : 'it'} there by hand.`));
+    return res;
+  } catch (e) {
+    dispatch(U.toastShown(e instanceof Error ? e.message : 'Could not open the academy.'));
+    return null;
+  }
 };

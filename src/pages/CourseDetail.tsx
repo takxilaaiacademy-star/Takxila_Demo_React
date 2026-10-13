@@ -34,6 +34,7 @@ import PhoneIphoneIcon from '@mui/icons-material/PhoneIphoneOutlined';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEventsOutlined';
 import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
 import LanguageIcon from '@mui/icons-material/Language';
+import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import UpdateIcon from '@mui/icons-material/Update';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremiumOutlined';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -51,6 +52,7 @@ import { lessonsFor } from '../data/curriculum';
 import { courseById, priceText } from '../data/recommend';
 import { ALL_ACCESS_PRICE, PAID } from '../data/showcase';
 import type { Course } from '../types';
+import CoursePromo from '../components/CoursePromo';
 
 /**
  * Consolidated JSON configuration holding repeated styling, badge themes,
@@ -210,6 +212,8 @@ export default function CourseDetail({ tab = 'course' }: { tab?: 'course' | 'gra
     [AssignmentIcon, 'Hands-on projects and practice tasks'],
     [AllInclusiveIcon, 'Learn at your own pace, anytime'],
   ] as const;
+  // Course sheets with their own "This course includes" list show it instead of the standard one
+  const features = content?.includes ? content.includes.map((text) => [CheckIcon, text] as const) : courseFeatures;
 
   return (
     <Box>
@@ -251,8 +255,13 @@ export default function CourseDetail({ tab = 'course' }: { tab?: 'course' | 'gra
                   <UpdateIcon /> Last updated {COURSE_CONFIG.lastUpdated}
                 </span>
                 <span>
-                  <LanguageIcon /> {c.id === 'junior' ? 'Regional language' : 'English'}
+                  <LanguageIcon /> {content?.language ?? (c.id === 'junior' ? 'Regional language' : 'English')}
                 </span>
+                {content?.level && (
+                  <span>
+                    <SignalCellularAltIcon /> {content.level}
+                  </span>
+                )}
                 <span>
                   <OndemandVideoIcon /> {c.meta[0]}
                 </span>
@@ -323,6 +332,9 @@ export default function CourseDetail({ tab = 'course' }: { tab?: 'course' | 'gra
               <Stack spacing={4}>
                 {isOwned && <MyLessons c={c} done={done} refs={lessonRefs} onComplete={() => completeLesson(c.id)} />}
 
+                {/* The academy's promo card for this course */}
+                {!isOwned && <CoursePromo c={c} onEnroll={() => addToCart(c.id)} />}
+
                 {content === undefined ? (
                   <ContentSkeleton />
                 ) : (
@@ -369,7 +381,7 @@ export default function CourseDetail({ tab = 'course' }: { tab?: 'course' | 'gra
                         This course includes:
                       </Typography>
                       <Grid container rowSpacing={1.25} columnSpacing={3} sx={{ '& svg': { fontSize: 20, color: 'text.secondary' } }}>
-                        {courseFeatures.map(([Icon, text]) => (
+                        {features.map(([Icon, text]) => (
                           <Grid item xs={12} sm={6} key={text}>
                             <Stack direction="row" spacing={1.5} alignItems="center">
                               <Icon />
@@ -655,7 +667,7 @@ function Description({ paragraphs, audience }: { paragraphs: string[]; audience:
         }}
       >
         {paragraphs.map((p, i) => (
-          <Typography key={i} sx={{ mb: 1.5, fontSize: 15, lineHeight: 1.7 }}>
+          <Typography key={i} sx={{ mb: p.startsWith('• ') ? 0.5 : 1.5, fontSize: 15, lineHeight: 1.7 }}>
             {p}
           </Typography>
         ))}

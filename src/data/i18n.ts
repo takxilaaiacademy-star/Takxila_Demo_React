@@ -1,18 +1,30 @@
 import type { Lang } from "../types";
+import { MORE_COLS, MORE_STRINGS } from "./i18n.more";
 
-// Interface labels (menus, buttons, footer). Course content stays in English.
-// Column order follows LANGS below.
+// Interface labels (menus, buttons, footer). The rest of the page is translated live into the chosen language
+// (src/utils/siteTranslate.ts). STRINGS columns follow BASE below; newer languages are in i18n.more.ts.
+const BASE: Lang[] = ["en", "hi", "bn", "mr", "gu", "ta", "te", "kn", "ml", "pa"];
+
+/** The language menu, in the order it is shown. */
 export const LANGS: [Lang, string][] = [
-  ["en", "English"],
-  ["hi", "हिन्दी"],
-  ["bn", "বাংলা"],
-  ["mr", "मराठी"],
-  ["gu", "ગુજરાતી"],
-  ["ta", "தமிழ்"],
-  ["te", "తెలుగు"],
-  ["kn", "ಕನ್ನಡ"],
-  ["ml", "മലയാളം"],
-  ["pa", "ਪੰਜਾਬੀ"],
+  ["en", "English (en)"],
+  ["es_ar", "Español - Argentina (es_ar)"],
+  ["es", "Español - Internacional (es)"],
+  ["fr_ca", "Français (Canada) (fr_ca)"],
+  ["fr", "Français (fr)"],
+  ["ta", "Tamil (ta)"],
+  ["ru", "Русский (ru)"],
+  ["mr", "मराठी (mr)"],
+  ["hi", "हिंदी (hi)"],
+  ["bn", "বাংলা (bn)"],
+  ["pa", "ਪੰਜਾਬੀ (pan)"],
+  ["te", "తెలుగు (te)"],
+  ["ml", "മലയാളം (ml)"],
+  ["gu", "ગુજરાતી (gu)"],
+  ["kn", "ಕನ್ನಡ (kn)"],
+  ["ko", "한국어 (ko)"],
+  ["ja", "日本語 (ja)"],
+  ["zh_cn", "简体中文 (zh_cn)"],
 ];
 
 type Row = [
@@ -512,8 +524,7 @@ const STRINGS = {
 } satisfies Record<string, Row>;
 
 export type StrKey = keyof typeof STRINGS;
-const COL: Record<Lang, number> = Object.fromEntries(
-  LANGS.map(([l], i) => [l, i]),
-) as Record<Lang, number>;
+const COL = Object.fromEntries(BASE.map((l, i) => [l, i])) as Partial<Record<Lang, number>>;
+const MORE_COL = Object.fromEntries(MORE_COLS.map((l, i) => [l, i])) as Partial<Record<Lang, number>>;
 export const translate = (lang: Lang, key: StrKey): string =>
-  STRINGS[key][COL[lang] ?? 0] || STRINGS[key][0];
+  (COL[lang] !== undefined ? STRINGS[key][COL[lang]!] : MORE_COL[lang] !== undefined ? MORE_STRINGS[key][MORE_COL[lang]!] : "") || STRINGS[key][0];

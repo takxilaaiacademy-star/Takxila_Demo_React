@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { shallowEqual } from 'react-redux';
 import type { StoredUser, User } from '../types';
 import { load } from '../utils/storage';
-import type { SocialProfile } from '../utils/social';
+import type { Provider, SocialProfile } from '../utils/social';
 import { useAppDispatch, useAppSelector } from '../store';
 import { authActions } from '../store/authSlice';
 import * as A from '../store/authThunks';
@@ -20,6 +20,10 @@ interface AuthValue {
   login: (input: A.LoginInput) => Promise<StoredUser>;
   /** Log in (or sign up on first use) with a Google, Facebook or Microsoft profile. */
   socialLogin: (profile: SocialProfile, remember: boolean) => StoredUser;
+  /** Popup sign-in with a provider, through Redux. Resolves true when signed in. */
+  signInWith: (provider: Provider, remember: boolean) => Promise<boolean>;
+  /** Provider whose popup is open, and the last sign-in error */
+  social: { busy: Provider | null; error: string };
   logout: () => void;
   updateUser: (patch: Partial<Omit<StoredUser, 'email' | 'id' | 'passHash'>>) => void;
   changePassword: (current: string, next: string) => Promise<void>;
@@ -32,7 +36,7 @@ interface AuthValue {
 
 export function useAuth(): AuthValue {
   const dispatch = useAppDispatch();
-  const { users, session } = useAppSelector((s) => ({ users: s.auth.users, session: s.auth.session }), shallowEqual);
+  const { users, session, social } = useAppSelector((s) => ({ users: s.auth.users, session: s.auth.session, social: s.auth.social }), shallowEqual);
 
   const stored = session ? users.find((x) => x.email === session.email) : undefined;
   const user = useMemo<User | null>(() => {
@@ -47,6 +51,7 @@ export function useAuth(): AuthValue {
       register: (i: A.RegisterInput) => dispatch(A.register(i)),
       login: (i: A.LoginInput) => dispatch(A.login(i)),
       socialLogin: (p: SocialProfile, remember: boolean) => dispatch(A.socialLogin(p, remember)),
+      signInWith: (p: Provider, remember: boolean) => dispatch(A.signInWithProvider(p, remember)),
       logout: () => dispatch(A.logout()),
       changePassword: (current: string, next: string) => dispatch(A.changePassword(current, next)),
     }),
@@ -56,7 +61,7 @@ export function useAuth(): AuthValue {
   const updateUser = useMemo<AuthValue['updateUser']>(() => (patch) => email && dispatch(authActions.userUpdated({ email, patch })), [dispatch, email]);
 
   return {
-    user, isAuthed: !!user, ...actions, updateUser,
+    user, isAuthed: !!user, ...actions, updateUser, social,
     isAdmin: !!user && users[0]?.email === user.email,
     lastEmail: load<string>('last_email', ''), members,
   };

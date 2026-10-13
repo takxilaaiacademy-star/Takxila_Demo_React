@@ -6,6 +6,10 @@ import App, { preloadPages } from './App';
 import { StoreProvider } from './context/StoreContext';
 import { ThemeModeProvider } from './context/ThemeModeContext';
 import { store } from './store';
+import { guardDomForTranslation } from './utils/siteTranslate';
+
+// The site can be translated live into the learner's language; keep React steady while that happens.
+guardDomForTranslation();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

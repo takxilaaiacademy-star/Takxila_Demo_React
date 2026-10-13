@@ -37,7 +37,7 @@ import {
   SocialButtons,
   VisitorCounter,
 } from "../components/AuthExtras";
-import { socialSignIn, type Provider } from "../utils/social";
+import type { Provider } from "../utils/social";
 import { useBlobUrl } from "../utils/media";
 import FastField from "../components/FastField";
 
@@ -84,7 +84,7 @@ function PasswordField(props: TextFieldProps) {
 }
 
 export default function AuthPage() {
-  const { isAuthed, login, register, socialLogin, lastEmail } = useAuth();
+  const { isAuthed, login, register, signInWith, social, lastEmail } = useAuth();
   const { mode, toggleMode } = useThemeMode();
   const heroUrl = useBlobUrl(
     mode === "dark" ? "/assets/3.jpg" : "/assets/1.jpg",
@@ -108,7 +108,6 @@ export default function AuthPage() {
     human: false,
   });
   const [lost, setLost] = useState(false);
-  const [social, setSocial] = useState<Provider | null>(null);
   const [err, setErr] = useState<FieldErrors>({});
   const [formErr, setFormErr] = useState("");
   const [busy, setBusy] = useState(false);
@@ -144,20 +143,10 @@ export default function AuthPage() {
     return !Object.keys(e).length;
   };
 
+  // Google / Facebook / Microsoft sign-in runs as a Redux thunk (src/store/authThunks.ts).
   const withProvider = async (p: Provider) => {
     setFormErr("");
-    setSocial(p);
-    try {
-      const profile = await socialSignIn(p);
-      socialLogin(profile, f.remember);
-      nav(from || "/home", { replace: true, state: { calc: true } });
-    } catch (e) {
-      setFormErr(
-        e instanceof Error ? e.message : "Sign-in failed. Please try again.",
-      );
-    } finally {
-      setSocial(null);
-    }
+    if (await signInWith(p, f.remember)) nav(from || "/home", { replace: true, state: { calc: true } });
   };
 
   const submit = async (ev: FormEvent<HTMLFormElement>) => {
@@ -314,9 +303,9 @@ export default function AuthPage() {
               <Tab value="register" label="Register" />
             </Tabs>
 
-            {formErr && (
+            {(formErr || social.error) && (
               <Alert severity="error" sx={{ mb: 2 }}>
-                {formErr}{" "}
+                {formErr || social.error}{" "}
                 {/No account/.test(formErr) && (
                   <Link
                     component="button"
@@ -462,7 +451,7 @@ export default function AuthPage() {
                   </Link>
                 </Stack>
               )}
-              <SocialButtons onPick={withProvider} busy={social} />
+              <SocialButtons onPick={withProvider} busy={social.busy} />
               <Typography
                 color="text.secondary"
                 sx={{

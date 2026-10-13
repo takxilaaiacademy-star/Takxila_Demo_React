@@ -1,7 +1,7 @@
 import { referralCode } from '../data/showcase';
 import type { Session, StoredUser } from '../types';
 import { hashPassword, remove, save } from '../utils/storage';
-import type { SocialProfile } from '../utils/social';
+import { socialSignIn, type Provider, type SocialProfile } from '../utils/social';
 import type { AppThunk } from './index';
 import { authActions as A } from './authSlice';
 
@@ -96,4 +96,20 @@ export const changePassword =
     if (!u) throw new Error('Please log in again.');
     if (u.passHash !== (await hashPassword(current))) throw new Error('Your current password is not right.');
     dispatch(A.userUpdated({ email: u.email, patch: { passHash: await hashPassword(next) } }));
+  };
+
+/** The whole "Log in with Google / Facebook / Microsoft" flow: popup, profile, account, session. Resolves true when signed in. */
+export const signInWithProvider =
+  (provider: Provider, remember: boolean): AppThunk<Promise<boolean>> =>
+  async (dispatch) => {
+    dispatch(A.socialStarted(provider));
+    try {
+      const profile = await socialSignIn(provider);
+      dispatch(socialLogin(profile, remember));
+      dispatch(A.socialFinished());
+      return true;
+    } catch (e) {
+      dispatch(A.socialFinished(e instanceof Error ? e.message : 'Sign-in failed. Please try again.'));
+      return false;
+    }
   };

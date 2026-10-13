@@ -42,6 +42,12 @@ const motion = {
   // While the theme switches, skip every colour transition so the new theme paints in one go.
   '.tx-theming *, .tx-theming *::before, .tx-theming *::after': { transition: 'none !important' },
   '.tx-reduce *, .tx-reduce *::before, .tx-reduce *::after': { animation: 'none !important', transition: 'none !important' },
+  // Live translation (src/utils/siteTranslate.ts): hide Google's toolbar and hover popups, keep the page where it is.
+  'iframe.goog-te-banner-frame, iframe.skiptranslate, .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .VIpgJd-ZVi9od-ORHb-OEVmcd, .VIpgJd-ZVi9od-aZ2wEe-wOHMyf, .VIpgJd-yAWNEb-L7lbkb':
+    { display: 'none !important' },
+  'body': { top: '0 !important' },
+  'font[style]': { background: 'none !important', boxShadow: 'none !important' },
+  '.goog-text-highlight': { background: 'none !important', boxShadow: 'none !important' },
 };
 
 // Both themes are built once, so switching only swaps which one is used.

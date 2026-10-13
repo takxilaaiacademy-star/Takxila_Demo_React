@@ -21,2920 +21,5620 @@ export interface CourseContent {
   requirements: string[];
   /** "Who this course is for" */
   audience: string[];
-  /** Paragraphs of the description */
+  /** Paragraphs of the description. A paragraph starting with "• " shows as a list line. */
   description: string[];
+  /** Optional "This course includes" lines; when set they replace the standard list on the course page */
+  includes?: string[];
+  /** Optional level shown under the title, e.g. "Beginner to Advanced" */
+  level?: string;
+  /** Optional language shown under the title, e.g. "English" */
+  language?: string;
 }
 
 export const CONTENT: Record<string, CourseContent> = {
   "claude-7": {
-    "subtitle": "Seven daily hands-on missions that take you from your first Claude chat to building a website and a working app with Claude Code.",
+    "subtitle": "Go from your first Claude conversation to building a real website and a working app in 7 days, one practical skill at a time. No coding experience needed.",
     "learn": [
-      "Write clear Claude prompts using role, context, task and output format",
-      "Use Claude's extended thinking to work through complex decisions step by step",
-      "Research current topics with Claude web search and check every cited source",
-      "Organise long-running work in Claude Projects with your own files and instructions",
-      "Analyse PDFs and spreadsheets and turn the findings into shareable artifacts",
-      "Delegate multi-step file and folder tasks to Claude Cowork safely",
-      "Build and refine a simple website with Claude Code from a plain-English brief",
-      "Plan, build and test a small functional app with Claude Code"
+      "Write prompts that get specific, useful answers using the simple Context, Role, Goal method",
+      "Improve answers through follow-up messages, and respond well when Claude asks you a question back",
+      "Fix your own writing: find exactly what's wrong, change the tone for a different audience, keep long documents consistent, and write sensitive messages with care",
+      "Choose the right mode for each task: plain Chat, Extended Thinking or Web Search, and check sources before trusting a research answer",
+      "Analyse real decisions using proven frameworks like SWOT and cost-benefit analysis, and combine them into one clear recommendation",
+      "Hand off complete tasks to Claude Cowork safely: decide what to delegate, write a clear task brief, check the first result, and schedule recurring work",
+      "Install Claude Code and build a real website just by describing it in plain English",
+      "Build a working ticket booking app with search, filters, bookings and dark mode, then improve it using an honest AI design review"
     ],
     "sections": [
       {
-        "title": "Day 1: Getting Started with Claude Chat",
+        "title": "Day 1: Meeting Claude",
         "lectures": [
-          ["Welcome and how the 7-day challenge works", 5],
-          ["Setting up Claude and touring the interface", 10],
-          ["Prompting basics: role, context, task and format", 15],
-          ["Mission 1: rewrite a real work email with Claude", 15]
+          ["Getting set up: create a free account, send your first message, choose a model", 8],
+          ["Context, Role, Goal: the one habit that turns generic answers into useful ones", 8],
+          ["Follow-ups: refine any answer without repeating yourself", 8],
+          ["Clarifying questions: what to do when Claude asks you something back", 8],
+          ["Claude vs ChatGPT vs Gemini: an honest comparison", 7],
+          ["4 practice tasks + quiz", 11]
         ]
       },
       {
-        "title": "Day 2: Thinking Mode and Smarter Prompts",
+        "title": "Day 2: Writing & Editing with Claude",
         "lectures": [
-          ["Introduction: when deeper reasoning helps", 5],
-          ["Using extended thinking for complex problems", 15],
-          ["Iterating: follow-ups, critiques and rewrites", 10],
-          ["Mission 2: plan a real decision with Claude", 15]
+          ["Diagnose before you fix: get Claude to name specific problems in your draft", 10],
+          ["Change the tone for a different audience without changing the facts", 10],
+          ["Check long documents for consistent tone and wording", 10],
+          ["Write sensitive messages (price increases, difficult feedback) with the right balance", 10],
+          ["4 practice tasks + quiz", 15]
         ]
       },
       {
-        "title": "Day 3: Research with Web Search",
+        "title": "Day 3: The Right Tool at the Right Step",
         "lectures": [
-          ["Turning on web search and reading citations", 10],
-          ["Verifying sources and spotting weak answers", 10],
-          ["Comparing options with tables and summaries", 10],
-          ["Mission 3: build a one-page research brief", 15]
+          ["Plain Chat for quick everyday questions", 8],
+          ["Extended Thinking for complex problems like scheduling with multiple conditions", 8],
+          ["Web Search for current information, with sources you can verify", 8],
+          ["3 checks before trusting any research answer", 8],
+          ["Quick question vs detailed brief: knowing which one you're writing", 7],
+          ["3 practice tasks + quiz", 11]
         ]
       },
       {
-        "title": "Day 4: Files, Projects and Artifacts",
+        "title": "Day 4: Enhancing Claude's Analysis",
         "lectures": [
-          ["Claude Projects: shared files and custom instructions", 10],
-          ["Analysing PDFs and spreadsheets", 15],
-          ["Creating documents and visuals as artifacts", 10],
-          ["Mission 4: turn a report into a summary dashboard", 10]
+          ["Choose the right analytical framework for your decision", 9],
+          ["Apply SWOT analysis properly", 9],
+          ["Combine two frameworks, such as SWOT with cost-benefit analysis", 9],
+          ["Turn your analysis into one final recommendation with the biggest risk named", 9],
+          ["3 practice tasks + quiz", 14]
         ]
       },
       {
-        "title": "Day 5: Claude Cowork for Real Tasks",
+        "title": "Day 5: Hand Off the Whole Task",
         "lectures": [
-          ["What Cowork is and how it works on desktop", 10],
-          ["Delegating multi-step tasks across files and folders", 15],
-          ["Permissions, checkpoints and reviewing the output", 10],
-          ["Mission 5: organise a messy folder and write a summary", 10]
+          ["What Cowork can do: 40 real tasks you can automate", 7],
+          ["The 3-tier system for deciding what to delegate and what to keep", 7],
+          ["Write a clear task brief with boundaries", 7],
+          ["Live demo: Cowork researches content and saves a report to your computer", 10],
+          ["Review the first run before trusting it", 7],
+          ["Schedule recurring tasks daily or weekly", 7],
+          ["4 practice tasks + quiz + video demos", 10]
         ]
       },
       {
-        "title": "Day 6: Build a Website with Claude Code",
+        "title": "Day 6: From Idea to a Real Website",
         "lectures": [
-          ["Installing Claude Code and terminal basics", 10],
-          ["Writing a clear brief for your website", 10],
-          ["Iterating on layout, content and styling", 15],
-          ["Mission 6: preview and publish your website", 10]
+          ["Install Claude Code step by step (Windows and Mac)", 8],
+          ["Describe your page and get a working first version", 8],
+          ["Make small, targeted edits and add new pages", 7],
+          ["Install design skills for better fonts and layouts", 7],
+          ["Use reference websites and screenshots to guide the design", 7],
+          ["Open and check your finished site in a browser", 7],
+          ["4 practice tasks + quiz + video demos", 11]
         ]
       },
       {
-        "title": "Day 7: Build a Functional App",
+        "title": "Day 7: Functional Apps",
         "lectures": [
-          ["Planning features and data for a small app", 10],
-          ["Building the app step by step with Claude Code", 20],
-          ["Testing, fixing bugs and adding polish", 10],
-          ["Capstone review and your next steps with Claude", 5]
+          ["Plan Mode: review the app structure before Claude builds it", 10],
+          ["Build a ticket booking app with event listings, search, category filters, bookings and saved data", 9],
+          ["Add new features: edit bookings, dark mode, show only active bookings", 9],
+          ["Get an honest design review from Claude", 9],
+          ["Fix every issue the review found", 9],
+          ["4 practice tasks + quiz + video demo", 14]
+        ]
+      },
+      {
+        "title": "Challenge Complete: Your Recap",
+        "lectures": [
+          ["The 7-word summary: Frame, Revise, Choose, Analyse, Delegate, Build, Extend", 6],
+          ["A quick-reference guide to every method you learned", 6],
+          ["Everything you built this week", 6],
+          ["The one habit to carry forward", 6],
+          ["Final quiz", 6]
         ]
       }
     ],
     "requirements": [
-      "A laptop or desktop with a stable internet connection",
-      "A free Claude account; some features such as Cowork or Claude Code may need a paid plan",
-      "No coding experience needed",
-      "About 45 minutes a day for seven days"
+      "No coding or AI experience needed",
+      "A laptop or desktop computer (Windows or Mac)",
+      "A free Claude account is enough for Days 1–4",
+      "A paid Claude plan (Pro or higher) is needed for Day 5 (Cowork) and Days 6–7 (Claude Code)",
+      "Claude desktop app (free download) for Cowork",
+      "Google Chrome for the Cowork browser task",
+      "Node.js (free). Installation is covered in Day 6"
     ],
     "audience": [
-      "Professionals who want to use Claude confidently in daily work",
-      "Business owners who want to build a simple website or tool without hiring a developer",
-      "Students and job seekers who want practical, portfolio-ready AI skills",
-      "Anyone who has tried chatbots casually and wants a structured path"
+      "Complete beginners who have never used Claude seriously and want a fast, practical start",
+      "Students who want to write, research and prepare for exams more effectively with AI",
+      "Small business owners who want to save time on emails, analysis, content and routine tasks",
+      "Working professionals who want to automate repetitive work and stand out with practical AI skills",
+      "Content creators, trainers and anyone who wants to build a website or app without learning to code"
     ],
     "description": [
-      "This free 7-day challenge turns Claude from a tool you try once into one you use every day. Each day has a short lesson and one practical mission, so by the end of the week you have built real habits and real outputs, not just watched videos.",
-      "The first half of the week covers the foundations: clear prompting, extended thinking for harder problems, web search for current information, and Projects for keeping files and instructions in one place. Every mission uses your own work, such as an email, a decision you need to make, or a report you need to summarise.",
-      "Day 5 introduces Claude Cowork, which lets Claude carry out multi-step tasks on files and folders on your computer. You will learn how to delegate a task, set sensible permissions and review what Claude did before you rely on it.",
-      "Days 6 and 7 move into Claude Code. You will describe a website in plain English and refine it with Claude, then plan and build a small functional app, test it and fix problems. No prior coding is assumed; the focus is on giving clear instructions and checking results.",
-      "By the end you will have a set of prompts you trust, a research brief, a website and a working app, plus a clear idea of which Claude feature to reach for in which situation. You can repeat any mission later with new material to keep building the habit."
-    ]
+      "You've learned how to ask AI questions. Now learn how to put AI to work.",
+      "Claude can be much more than a place to type a prompt. The 7-Day Claude AI Challenge is a structured, hands-on journey that takes you from better conversations to research, analysis, decision-making, task delegation, automation, website creation and app development.",
+      "You learn alongside three people through the whole challenge: Ritika, a university student new to AI; Karan, who runs a small business; and Takshika, who designs training content.",
+      "Every day follows the same simple pattern: see the steps, see a real example, then practise it yourself straight away. You don't read about four things and practise once at the end. You do each skill as you learn it.",
+      "What you'll be able to do after 7 days:",
+      "• WRITE more effectively",
+      "• RESEARCH with greater depth",
+      "• ANALYSE complex information",
+      "• THINK through decisions",
+      "• DELEGATE complete tasks",
+      "• AUTOMATE repeatable work",
+      "• BUILD websites and functional apps",
+      "Why this challenge?",
+      "Basic AI prompting is becoming common. What sets you apart is what you can do beyond the prompt. Can you use AI to research? Structure an analysis? Delegate an entire task? Build a webpage? Turn an idea into a working app?",
+      "This challenge takes you step by step from everyday AI use to real-world workflows. By the end, you won't just know what Claude can do. You'll know how to put Claude to work on your own tasks.",
+      "Chat → Think → Research → Analyse → Delegate → Automate → Build",
+      "7 days. From AI conversation to AI capability."
+    ],
+    "includes": [
+      "7 challenge days + 1 recap module (30–60 minutes a day)",
+      "26 hands-on practice tasks you complete in Claude as you learn",
+      "Ready-to-use example prompts for every skill",
+      "40 ready-made Cowork automation prompts for email summaries, news briefings, competitor tracking, social media content, KPI reports and more",
+      "Step-by-step video demos for Cowork, website building and app building",
+      "Quizzes and interactive exercises after every skill",
+      "2 real builds: a working website and a functional ticket booking app",
+      "Certificate of completion",
+      "Watch lessons on mobile or desktop (Days 5–7 practice needs a computer)"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "mastery-14": {
-    "subtitle": "Fourteen days, thirteen AI platforms: one practical task a day across research, writing, analysis, creation, building and automation.",
+    "subtitle": "Learn 13 powerful AI tools in 14 days, one tool a day, with hands-on practice after every feature. Research, write, create images, videos, music and avatars, build apps and automate your work.",
     "learn": [
-      "Apply a reusable prompt framework across ChatGPT, Claude and Gemini",
-      "Research topics with Perplexity and verify answers against cited sources",
-      "Analyse your own documents with NotebookLM and produce briefing notes",
-      "Clean, summarise and chart spreadsheet data using ChatGPT data analysis",
-      "Create on-brand images and social graphics with Midjourney and Canva AI",
-      "Build a presentation deck from an outline in minutes using Gamma",
-      "Generate a working website and a simple app from plain-English prompts",
-      "Automate a repetitive task end to end with an AI workflow in n8n"
+      "Use 13 leading AI tools in real depth: ChatGPT, Perplexity, NotebookLM, Claude, Gemini, DeepSeek, Gamma, Midjourney, Runway, Suno, HeyGen, Lovable and n8n",
+      "Follow one simple 4-step method that works on every AI tool, now and in future: Clarify, Specify, Generate, Verify & Refine",
+      "Research faster with cited sources, and turn your own documents into quizzes, flashcards, reports, mind maps and slide decks",
+      "Use deep research, reasoning modes, file and data analysis, and voice conversations to get better answers",
+      "Create professional presentations, product images, short promotional videos and original music",
+      "Make AI avatar videos from a script and translate videos into Hindi and 175+ other languages",
+      "Build and publish a working web app without coding",
+      "Automate tasks with AI agents that make decisions, use tools and remember conversations",
+      "Combine several tools into one connected project, from research to a live page with automated follow-ups"
     ],
     "sections": [
       {
-        "title": "Week 1: Research, Writing and Analysis",
+        "title": "Day 1: ChatGPT — Master Your AI Assistant",
         "lectures": [
-          ["Day 1: Welcome, setup and the prompt framework in ChatGPT", 45],
-          ["Day 2: Long-form writing and editing with Claude", 45],
-          ["Day 3: Gemini for research inside Google Workspace", 45],
-          ["Day 4: Cited research and fact-checking with Perplexity", 45],
-          ["Day 5: Analysing your documents with NotebookLM", 45],
-          ["Day 6: Spreadsheet analysis and charts with ChatGPT", 45],
-          ["Day 7: Week 1 project: an AI-assisted research report", 45]
+          ["Chat: write specific prompts that get usable answers", 9],
+          ["Custom GPTs: find and use ready-made assistants", 8],
+          ["Web Search: get current information with sources", 8],
+          ["Deep Research: detailed reports for real decisions", 8],
+          ["Data Analysis: upload a spreadsheet and get charts, no formulas needed", 8],
+          ["Image Generation: create social media banners and visuals", 8],
+          ["Voice Mode: practise interviews out loud", 8],
+          ["7 practice tasks + quiz", 13]
         ]
       },
       {
-        "title": "Week 2: Creation, Building and Automation",
+        "title": "Day 2: Perplexity — AI-Powered Research",
         "lectures": [
-          ["Day 8: Image generation with Midjourney", 45],
-          ["Day 9: Social graphics and design with Canva AI", 45],
-          ["Day 10: Presentations from an outline with Gamma", 45],
-          ["Day 11: Voiceovers and audio with ElevenLabs", 45],
-          ["Day 12: Building a website and an app with Lovable", 45],
-          ["Day 13: Automating a workflow with Zapier and n8n", 45],
-          ["Day 14: Capstone: your personal AI workflow", 45]
+          ["Basic Search with clickable citations", 9],
+          ["Focus Modes: academic papers, news, YouTube, Reddit and more", 9],
+          ["Pro Search for detailed multi-part comparisons", 8],
+          ["Spaces: organise ongoing research projects", 8],
+          ["File Upload: check your own document against current web data", 8],
+          ["5 practice tasks + quiz", 13]
+        ]
+      },
+      {
+        "title": "Day 3: NotebookLM — Research from Your Own Documents",
+        "lectures": [
+          ["Upload sources and chat with answers linked to exact passages", 8],
+          ["Quiz and Flashcards for exam prep", 8],
+          ["Mind Map to see how ideas connect", 8],
+          ["Reports: briefing docs, study guides, FAQs, timelines", 8],
+          ["Data Table exported to Google Sheets", 8],
+          ["Infographic in your own brand style", 8],
+          ["Slide Deck exported to PowerPoint", 8],
+          ["Audio Overview (podcast-style) and Video Overview", 8],
+          ["9 practice tasks + quiz", 11]
+        ]
+      },
+      {
+        "title": "Day 4: Claude — Careful Writing & Reasoning",
+        "lectures": [
+          ["Chat with clear roles and boundaries", 9],
+          ["Projects: save instructions and files so you never repeat yourself", 9],
+          ["Extended Thinking for complex problems", 9],
+          ["Web Search with sources", 9],
+          ["File Analysis: understand contracts and documents in plain language", 8],
+          ["Artifacts: build small working tools like a calculator", 8],
+          ["6 practice tasks + quiz", 13]
+        ]
+      },
+      {
+        "title": "Day 5: Gemini — Google's AI Assistant",
+        "lectures": [
+          ["Chat for exam and viva preparation", 9],
+          ["Gems: build your own reusable assistant", 9],
+          ["Deep Research for detailed comparisons", 9],
+          ["Canvas: create quizzes, documents and simple apps", 9],
+          ["Image Generation and image editing", 8],
+          ["Gemini Live: spoken conversations, with camera and screen sharing", 8],
+          ["6 practice tasks + quiz", 13]
+        ]
+      },
+      {
+        "title": "Day 6: DeepSeek — Free Reasoning & Coding",
+        "lectures": [
+          ["Instant Mode for quick questions", 9],
+          ["Expert Mode with DeepThink for step-by-step reasoning", 9],
+          ["Web Search for current prices and facts", 9],
+          ["Vision Mode: solve handwritten problems from a photo", 9],
+          ["File Upload: analyse expenses and spreadsheets", 8],
+          ["Coding: find bugs and understand code", 8],
+          ["6 practice tasks + quiz", 13]
+        ]
+      },
+      {
+        "title": "Day 7: Gamma — AI Presentations",
+        "lectures": [
+          ["Create a full presentation from a prompt in under a minute", 8],
+          ["Edit individual slides with AI", 8],
+          ["Apply themes or your own brand colours and logo", 8],
+          ["Gamma Agent: change the whole deck with one instruction", 8],
+          ["Create a landing page website", 8],
+          ["Analytics: see which slides your audience viewed most", 8],
+          ["6 practice tasks + quiz", 12]
+        ]
+      },
+      {
+        "title": "Day 8: Midjourney — AI Image Generation",
+        "lectures": [
+          ["Write image prompts that produce professional results", 7],
+          ["Draft Mode: explore many ideas cheaply", 7],
+          ["Personalization: train it to your taste", 7],
+          ["Variations: refine an image you like", 7],
+          ["Image Prompts: keep your real product consistent", 7],
+          ["Fix common image problems", 7],
+          ["Commercial use rights explained", 7],
+          ["6 practice tasks + quiz", 11]
+        ]
+      },
+      {
+        "title": "Day 9: Runway — AI Video Generation",
+        "lectures": [
+          ["Text-to-Video for promotional clips", 8],
+          ["Image-to-Video: animate your product photos", 8],
+          ["Motion Brush: animate just one part of an image", 8],
+          ["Camera Controls: pan, zoom and tilt like a director", 8],
+          ["Character Consistency across multiple scenes", 8],
+          ["Video-to-Video: give your phone footage a cinematic look", 8],
+          ["6 practice tasks + quiz", 12]
+        ]
+      },
+      {
+        "title": "Day 10: Suno — AI Music",
+        "lectures": [
+          ["Create songs and jingles with your own lyrics and style", 8],
+          ["Personas: keep a consistent brand sound", 8],
+          ["Voices: hear a song in your own voice", 8],
+          ["Instrumental Mode and Stems for further editing", 8],
+          ["Hum-to-Song: turn your hummed tune into a full song", 8],
+          ["Suno Studio: loops, mashups and alternate sections", 8],
+          ["6 practice tasks + quiz", 12]
+        ]
+      },
+      {
+        "title": "Day 11: HeyGen — AI Avatars",
+        "lectures": [
+          ["Create your own digital avatar from a short video or one photo", 8],
+          ["Turn a script into a presenter video", 8],
+          ["Translate videos into 175+ languages with matched lip movements", 8],
+          ["Interactive Avatar that answers questions live", 8],
+          ["Stock avatars and brand styling if you don't want to use your own face", 8],
+          ["Credit costs and consent explained", 8],
+          ["5 practice tasks + quiz", 12]
+        ]
+      },
+      {
+        "title": "Day 12: Lovable — Build Apps Without Coding",
+        "lectures": [
+          ["Build a working app from a description (e.g. a booking tool)", 9],
+          ["Make precise edits to style, sections, layout and text", 9],
+          ["Import a Figma design or screenshot", 9],
+          ["Connect real tools like Stripe for payments", 9],
+          ["Publish your app live", 8],
+          ["Add a custom domain, including a free route", 8],
+          ["5 practice tasks + quiz", 13]
+        ]
+      },
+      {
+        "title": "Day 13: n8n — AI Automation",
+        "lectures": [
+          ["Build your first automated workflow", 9],
+          ["AI Agent node that makes real decisions", 9],
+          ["Tools: let the agent check Google Sheets, Slack and more", 9],
+          ["MCP Client: connect many tools at once", 9],
+          ["Memory: agents that remember the conversation", 8],
+          ["When to use a simple Chain instead of a full Agent", 8],
+          ["6 practice tasks + quiz", 13]
+        ]
+      },
+      {
+        "title": "Day 14: Bringing It All Together",
+        "lectures": [
+          ["Research with Perplexity or NotebookLM", 8],
+          ["Write messaging with ChatGPT or Claude", 8],
+          ["Create visuals with Midjourney", 8],
+          ["Build a pitch deck with Gamma", 8],
+          ["Launch a landing page with Lovable", 8],
+          ["Automate sign-up follow-ups with n8n", 8],
+          ["7 practice checkpoints + quiz", 12]
+        ]
+      },
+      {
+        "title": "Challenge Complete: Your Recap",
+        "lectures": [
+          ["The 14-word summary, one word per day", 10],
+          ["Quick guide: which tool to use for which task", 10],
+          ["Everything you built during the challenge", 10],
+          ["Final quiz", 10]
         ]
       }
     ],
     "requirements": [
-      "A laptop or desktop with internet access",
-      "Free accounts on the tools covered; free tiers are enough for most tasks",
-      "No technical or coding background required"
+      "No AI or coding experience needed",
+      "A laptop or desktop computer with internet",
+      "A Google account (most tools let you sign in with it)",
+      "Most tools have a free plan that covers the practice tasks",
+      "Midjourney has no free plan (paid plans start at about US$10/month)",
+      "Some advanced features in Runway, HeyGen, Lovable and Gamma need a paid plan or free trial credits",
+      "Without a paid plan, you can still learn every step and prepare your prompts for later"
     ],
     "audience": [
-      "Working professionals who want a broad, practical AI toolkit quickly",
-      "Freelancers and creators who want to produce more in less time",
-      "Small business owners who want to see where AI fits in their work",
-      "Beginners who prefer daily structure over a long self-paced course"
+      "Beginners who want a practical tour of today's most useful AI tools",
+      "Students who want better research, study aids, presentations and interview practice",
+      "Small business owners who want marketing images, videos, a booking app and automated customer replies",
+      "Working professionals, trainers and content creators who want to produce more, faster",
+      "Anyone who wants to know which AI tool to use for which job"
     ],
     "description": [
-      "The 14 Days AI Mastery Challenge gives you a fast, practical tour of thirteen AI platforms, with one focused task every day. Instead of reading about tools, you use each one on a real piece of work and keep the result.",
-      "Week 1 is about thinking work: writing, research and analysis. You start with a prompt framework you can reuse anywhere, then apply it in ChatGPT, Claude and Gemini. You learn to research with citations in Perplexity, study your own documents in NotebookLM and analyse spreadsheets with ChatGPT. The week ends with a complete research report.",
-      "Week 2 is about making and building. You create images in Midjourney, design graphics in Canva, turn an outline into a deck with Gamma and produce voiceovers with ElevenLabs. You then build a website and a simple app with Lovable and connect tools together with Zapier and n8n.",
-      "Each day is designed to fit into about 45 minutes, so it works alongside a full-time job. The final day brings everything together into a personal AI workflow that you can keep using after the challenge ends. Short videos explain each tool, and every task uses your own work so the results are immediately useful."
-    ]
+      "AI isn't waiting. Are your skills keeping up?",
+      "AI is changing how quickly people research, write, analyse, create, build and automate. The advantage isn't knowing that these tools exist. It's knowing how to put them to work.",
+      "You learn alongside three people throughout the challenge: Ritika, a final-year student job-hunting and finishing coursework; Karan, who runs a small business; and Takshika, who designs training programs.",
+      "The 14-Day AI Mastery Challenge gives you a structured, hands-on introduction to 13 powerful AI platforms, with a different tool each day. For every feature, you see the exact steps, see a real example, then practise it yourself straight away.",
+      "13 AI platforms. One practical learning journey.",
+      "• ChatGPT: thinking, writing, ideas, everyday AI help",
+      "• Perplexity: search, research, source-backed answers",
+      "• NotebookLM: documents, knowledge, research from your own files",
+      "• Claude: reasoning, analysis, writing, structured work",
+      "• Gemini: research, creation, Google's AI",
+      "• DeepSeek: reasoning, analysis, problem solving, coding",
+      "• Gamma: presentations, documents, visual storytelling",
+      "• Midjourney: AI images, visual concepts, creative direction",
+      "• Runway: AI video, motion, visual storytelling",
+      "• Suno: music, songs, creative audio",
+      "• HeyGen: AI avatars, talking videos, digital presenters",
+      "• Lovable: websites, apps, prototypes",
+      "• n8n: automation, connected workflows, AI-powered processes",
+      "Research → Think → Create → Present → Build → Automate",
+      "This isn't about collecting AI tools. It's about learning what you can do with them:",
+      "• RESEARCH information faster",
+      "• WRITE and communicate more effectively",
+      "• ANALYSE ideas and information",
+      "• CREATE professional images",
+      "• PRODUCE AI-powered videos",
+      "• GENERATE music and audio",
+      "• BUILD presentations",
+      "• CREATE AI avatars",
+      "• BUILD websites and apps",
+      "• AUTOMATE repeatable workflows",
+      "Tools will keep changing. That's why the whole challenge is built on one 4-step method, Clarify, Specify, Generate, Verify & Refine, that you can apply to any new AI tool you meet in future.",
+      "14 days. 13 AI tools. One goal: become AI-ready.",
+      "Don't wait until AI skills become an expectation. Start building them now."
+    ],
+    "includes": [
+      "14 challenge days + 1 recap module (about 60 minutes a day)",
+      "13 AI tools covered in depth, with 80+ features explained step by step",
+      "86 hands-on practice tasks you complete in the real tools as you learn",
+      "Click-by-click instructions for every feature",
+      "Ready-to-use example prompts for every feature",
+      "Quizzes and interactive exercises every day",
+      "A final capstone project combining 6 tools",
+      "Honest notes on free vs paid plans, credit limits and responsible use",
+      "Certificate of completion",
+      "Watch lessons on mobile or desktop (practice works best on a computer)"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "mastery-28": {
-    "subtitle": "A 28-day guided path through 25+ AI tools for research, writing, design, video, productivity, marketing and automation.",
+    "subtitle": "Learn 28 practical AI tools in 28 days, one tool a day, across writing, design, video, marketing, sales, meetings, coding and productivity. Then combine 7 of them into one complete business launch project.",
     "learn": [
-      "Research faster with Perplexity, Gemini and NotebookLM while checking sources",
-      "Draft, edit and repurpose content with ChatGPT and Claude",
-      "Design social posts, thumbnails and brand visuals with Midjourney and Canva",
-      "Produce short videos with AI video tools and AI voiceovers",
-      "Organise your week with AI in Notion, Gmail and Google Calendar",
-      "Plan and write a marketing campaign with AI from idea to calendar",
-      "Connect apps and automate routine tasks using Zapier and n8n",
-      "Combine several tools into one repeatable workflow for your work or business"
+      "Use 28 AI tools for real work, from ChatGPT and DeepSeek to HubSpot, Canva, Synthesia, ClickUp and GitHub Copilot",
+      "Follow one simple 4-step method that works on any AI tool: Clarify, Specify, Generate, Verify & Refine",
+      "Create marketing content, product descriptions, SEO articles and social posts in your own brand voice",
+      "Design graphics, product photos and presentations, and remove or replace photo backgrounds",
+      "Produce training videos, AI avatar presenters and short social clips, and add subtitles in many languages",
+      "Polish your writing with grammar, tone and paraphrasing tools, and use AI responsibly for academic work",
+      "Set up AI for sales and customer support: CRM agents, chatbots for WhatsApp and Instagram, and lead follow-up",
+      "Capture meeting notes and action items automatically, and get clear call audio from anywhere",
+      "Use AI to write, review and secure code, even as a beginner",
+      "Choose the right tool for each job, including when a tool is too expensive or not the right fit"
     ],
     "sections": [
       {
-        "title": "Week 1: Research and Writing",
+        "title": "Day 1: DeepSeek — Reasoning",
         "lectures": [
-          ["Day 1: Welcome, setup and how to prompt well", 45],
-          ["Day 2: Deep research with Perplexity", 45],
-          ["Day 3: Gemini and NotebookLM for study and documents", 45],
-          ["Day 4: Writing and editing with ChatGPT", 45],
-          ["Day 5: Long documents and tone with Claude", 45],
-          ["Day 6: Repurposing one idea into many formats", 45],
-          ["Day 7: Week 1 project: a researched article", 45]
+          ["Instant Mode for quick answers", 10],
+          ["DeepThink for step-by-step reasoning on hard problems", 10],
+          ["Web Search for current prices and facts", 10],
+          ["Solve handwritten problems from a photo", 10],
+          ["Analyse spreadsheets and documents", 10],
+          ["Find and fix bugs in code", 10]
         ]
       },
       {
-        "title": "Week 2: Design and Visuals",
+        "title": "Day 2: ChatGPT — Full Capabilities",
         "lectures": [
-          ["Day 8: Image prompting fundamentals", 45],
-          ["Day 9: Midjourney styles and variations", 45],
-          ["Day 10: Canva AI for social media design", 45],
-          ["Day 11: Logos, brand kits and consistent visuals", 45],
-          ["Day 12: Presentations with Gamma", 45],
-          ["Day 13: Photo editing and background removal with AI", 45],
-          ["Day 14: Week 2 project: a visual brand pack", 45]
+          ["Interview preparation with specific prompts", 12],
+          ["Ready-made Custom GPTs", 12],
+          ["Web Search and Deep Research for decisions", 12],
+          ["Data analysis with charts, no formulas needed", 12],
+          ["Image generation for social media banners", 11],
+          ["Voice Mode for mock interviews", 11]
         ]
       },
       {
-        "title": "Week 3: Video, Audio and Productivity",
+        "title": "Day 3: HubSpot Breeze AI — CRM & Marketing",
         "lectures": [
-          ["Day 15: Short-form video scripting with AI", 45],
-          ["Day 16: Text-to-video with Kling and Runway", 45],
-          ["Day 17: AI avatars and presenters with HeyGen", 45],
-          ["Day 18: Voiceovers and audio with ElevenLabs", 45],
-          ["Day 19: Editing videos and captions with CapCut", 45],
-          ["Day 20: AI for email, notes and meetings", 45],
-          ["Day 21: Week 3 project: a 60-second explainer video", 45]
+          ["Breeze Assistant (free): summarise deal history before a call", 12],
+          ["Content Agent: landing pages in your brand voice", 12],
+          ["Customer Agent: a 24/7 support chatbot", 12],
+          ["Prospecting Agent: personalised outreach based on lead activity", 12],
+          ["Social Media Agent: weekly post ideas", 12]
         ]
       },
       {
-        "title": "Week 4: Marketing and Automation",
+        "title": "Day 4: Canva AI — Design",
         "lectures": [
-          ["Day 22: Marketing strategy and audience research with AI", 45],
-          ["Day 23: Ad copy, landing pages and A/B ideas", 45],
-          ["Day 24: Building a content calendar", 45],
-          ["Day 25: Automation basics with Zapier", 45],
-          ["Day 26: Building an AI workflow in n8n", 45],
-          ["Day 27: AI chat assistants for customer questions", 45],
-          ["Day 28: Capstone: your end-to-end AI system", 45]
+          ["Magic Design: a full design from one sentence", 12],
+          ["Magic Write: copy for your designs", 12],
+          ["Text to Image for illustrations", 12],
+          ["Background Remover and Magic Expand", 12],
+          ["Magic Charts: turn data into designed charts", 12]
+        ]
+      },
+      {
+        "title": "Day 5: Crystal Knows — Personality Insights for Sales",
+        "lectures": [
+          ["Personality (DISC) profiles from LinkedIn before a call", 11],
+          ["Communication tips for each person", 11],
+          ["Live tips during video meetings", 11],
+          ["Tailored interview questions for hiring", 11],
+          ["Using personality insights ethically", 11]
+        ]
+      },
+      {
+        "title": "Day 6: Gamma — AI Presentations",
+        "lectures": [
+          ["A full pitch deck from a prompt in under a minute", 12],
+          ["Edit slides with AI, apply your brand theme", 12],
+          ["Change the whole deck with one instruction", 12],
+          ["Create a landing page website", 12],
+          ["See which slides your audience viewed most", 12]
+        ]
+      },
+      {
+        "title": "Day 7: Copy.ai — Marketing Copy & Automation",
+        "lectures": [
+          ["Product descriptions, emails and ads from 90+ templates", 11],
+          ["Brand Voice trained on your past content", 11],
+          ["Workflows: research a lead and draft a personalised email automatically", 11],
+          ["Infobase: keep pricing and policies accurate", 11],
+          ["What it can't do well (SEO-specific content)", 11]
+        ]
+      },
+      {
+        "title": "Day 8: Lumen5 — Blog to Video",
+        "lectures": [
+          ["Turn a blog post into a video automatically", 11],
+          ["AI voiceover without recording", 11],
+          ["Brand Kit for consistent branding", 11],
+          ["Royalty-free stock footage and music", 11],
+          ["Export for YouTube, Instagram, LinkedIn", 11]
+        ]
+      },
+      {
+        "title": "Day 9: Midjourney — AI Images",
+        "lectures": [
+          ["Professional product photos from a prompt", 15],
+          ["Draft Mode to explore logo ideas cheaply", 15],
+          ["Personalization, Variations and reference images", 15],
+          ["Fix common image problems", 15]
+        ]
+      },
+      {
+        "title": "Day 10: D-ID — Talking Avatars",
+        "lectures": [
+          ["Turn one photo into a talking presenter video", 11],
+          ["Clone your own voice", 11],
+          ["Live interactive avatar agents for your website", 11],
+          ["AI-generated presenter faces", 11],
+          ["Add avatars inside PowerPoint and Canva", 11]
+        ]
+      },
+      {
+        "title": "Day 11: Pictory — Script & Webinar to Video",
+        "lectures": [
+          ["Turn a script into a video with captions", 11],
+          ["Turn a 60-minute webinar into a 60-second highlight", 11],
+          ["Split one recording into 10+ social clips", 11],
+          ["Turn a PowerPoint into a narrated video", 11],
+          ["Review AI-matched visuals before publishing", 11]
+        ]
+      },
+      {
+        "title": "Day 12: QuillBot — Editing & Academic Writing",
+        "lectures": [
+          ["Paraphraser in 7 modes, including Academic", 11],
+          ["Grammar Checker for cover letters and emails", 11],
+          ["Summariser for long articles", 11],
+          ["Citation Generator (APA, MLA, Chicago)", 11],
+          ["AI Detector and Humanizer, used honestly", 11]
+        ]
+      },
+      {
+        "title": "Day 13: Speechify — Text to Speech",
+        "lectures": [
+          ["Listen to any document or article", 11],
+          ["Scan a printed book page and hear it read aloud", 11],
+          ["Clone your own voice for study notes", 11],
+          ["Dub videos into Hindi and 60+ languages", 11],
+          ["Study faster with adjustable reading speed", 11]
+        ]
+      },
+      {
+        "title": "Day 14: GitHub — AI Code Review & Security",
+        "lectures": [
+          ["Automatic AI review of code changes", 14],
+          ["AI fixes for security vulnerabilities", 14],
+          ["Custom review instructions for your project", 14],
+          ["Staying safe with AI-generated code", 13]
+        ]
+      },
+      {
+        "title": "Day 15: GitHub Copilot — AI Coding",
+        "lectures": [
+          ["Code suggestions as you type", 12],
+          ["Ask Mode to understand unfamiliar code", 12],
+          ["Edit Mode for specific changes", 12],
+          ["Agent Mode to complete whole tasks", 12],
+          ["Copilot in the terminal, and safe approval settings", 12]
+        ]
+      },
+      {
+        "title": "Day 16: Rytr — Fast Short-Form Writing",
+        "lectures": [
+          ["40+ templates for descriptions, emails and posts", 13],
+          ["20+ tones and your own brand voice", 13],
+          ["AIDA and PAS copywriting frameworks", 12],
+          ["When to choose a bigger tool instead", 12]
+        ]
+      },
+      {
+        "title": "Day 17: Pixlr — AI Photo Editing",
+        "lectures": [
+          ["Remove backgrounds from product photos", 10],
+          ["Fix edges the AI missed", 10],
+          ["Process a whole product catalogue at once", 10],
+          ["Generate new backgrounds from a text prompt", 10],
+          ["Save in the right format (PNG vs JPEG)", 10]
+        ]
+      },
+      {
+        "title": "Day 18: Grammarly — Writing Assistant Everywhere",
+        "lectures": [
+          ["Real-time corrections in Gmail, Slack, Docs and LinkedIn", 13],
+          ["Tone Detector before you hit send", 13],
+          ["GrammarlyGO for replies and summaries", 12],
+          ["Authorship: show honestly what you wrote vs AI", 12]
+        ]
+      },
+      {
+        "title": "Day 19: Wordtune — Sentence-Level Rewriting",
+        "lectures": [
+          ["Rewrite awkward sentences", 10],
+          ["Change tone and length", 10],
+          ["Add sourced facts and examples", 10],
+          ["Summarise documents up to 500 pages with citations", 10],
+          ["Smart Paste: reformat text for a new context", 10]
+        ]
+      },
+      {
+        "title": "Day 20: Writesonic — SEO Content",
+        "lectures": [
+          ["Web-connected research with Chatsonic", 14],
+          ["SEO-optimised articles with Article Writer", 14],
+          ["See what people ask AI assistants, not just Google", 14],
+          ["Brand Voice for consistent articles", 13]
+        ]
+      },
+      {
+        "title": "Day 21: Chatfuel — Chatbots for WhatsApp & Instagram",
+        "lectures": [
+          ["Build a booking chatbot without code", 11],
+          ["Handle off-script questions with AI", 11],
+          ["One inbox for WhatsApp, Instagram, Messenger and website chat", 11],
+          ["Train the bot on your products and FAQs", 11],
+          ["Shopify abandoned cart recovery", 11]
+        ]
+      },
+      {
+        "title": "Day 22: Google AI — Search & Gmail",
+        "lectures": [
+          ["AI Overviews in Google Search", 11],
+          ["Summarise long email threads in Gmail (free)", 11],
+          ["Find old emails by asking a question", 11],
+          ["Help Me Write for email drafts", 11],
+          ["Privacy settings to control Gmail AI", 11]
+        ]
+      },
+      {
+        "title": "Day 23: ClickUp Brain — AI Project Management",
+        "lectures": [
+          ["Ask questions about your tasks and projects", 11],
+          ["Autopilot Agents for routine handoffs", 11],
+          ["Super Agents for multi-step work", 11],
+          ["AI Notetaker for meetings", 11],
+          ["Pricing to check before you subscribe", 11]
+        ]
+      },
+      {
+        "title": "Day 24: Synthesia — Training Videos",
+        "lectures": [
+          ["Screen recordings narrated by an AI presenter", 15],
+          ["Turn PowerPoint speaker notes into video", 15],
+          ["Full-body avatars with natural gestures", 15],
+          ["Export as SCORM for any LMS, including Moodle", 15]
+        ]
+      },
+      {
+        "title": "Day 25: Sembly AI — Meeting Notes",
+        "lectures": [
+          ["Auto-join and transcribe Zoom, Meet and Teams", 10],
+          ["Risks, decisions and action items extracted automatically", 10],
+          ["Organise meetings by project", 10],
+          ["Send tasks to Notion, Trello, HubSpot or Slack", 10],
+          ["Ask questions about past meetings", 10]
+        ]
+      },
+      {
+        "title": "Day 26: Krisp — Clear Call Audio",
+        "lectures": [
+          ["Remove background noise from calls", 13],
+          ["Accent Conversion and how it works", 13],
+          ["Meeting notes without a bot joining the call", 12],
+          ["On-device privacy", 12]
+        ]
+      },
+      {
+        "title": "Day 27: Vrew — Edit Video Like a Document",
+        "lectures": [
+          ["Cut video by deleting text from the transcript", 11],
+          ["Auto-subtitles in your brand style", 11],
+          ["Remove pauses and \"um\"s in one click", 11],
+          ["Fix a spoken mistake without re-recording", 11],
+          ["Translate subtitles into many languages", 11]
+        ]
+      },
+      {
+        "title": "Day 28: Conversica — AI Sales Assistants",
+        "lectures": [
+          ["Automatic lead follow-up and qualification", 10],
+          ["Re-engage cold leads", 10],
+          ["Email, SMS and chat outreach", 10],
+          ["Use in marketing, sales and customer success", 10],
+          ["Judging whether an enterprise tool fits your business size", 10]
+        ]
+      },
+      {
+        "title": "Day 29: Capstone — Launch a New Service Line",
+        "lectures": [
+          ["Research the idea with DeepSeek", 8],
+          ["Set up a lead pipeline in HubSpot", 8],
+          ["Create branding in Canva", 8],
+          ["Write website copy with Writesonic", 8],
+          ["Build a pitch deck in Gamma", 8],
+          ["Plan the launch in ClickUp", 7],
+          ["Set up a customer chatbot in Chatfuel", 7],
+          ["8 practice checkpoints, including your own 3-stage mini project", 11]
+        ]
+      },
+      {
+        "title": "Challenge Complete: Your Recap",
+        "lectures": [
+          ["The 28-word summary, one word per day", 15],
+          ["Quick guide: which tool to use for which task", 15],
+          ["Final quiz", 15]
         ]
       }
     ],
     "requirements": [
-      "A computer with internet access",
-      "Free accounts on the tools covered; some optional features need paid plans",
-      "Around 45 minutes a day for 28 days"
+      "No AI or coding experience needed",
+      "A laptop or desktop computer with internet",
+      "A Google account (most tools let you sign in with it)",
+      "Most tools have a free plan or free trial that covers the core practice",
+      "Some features need paid plans: Midjourney (no free plan), Writesonic, Canva Pro, HubSpot Professional agents, Synthesia, and advanced GitHub, ClickUp and Copy.ai features",
+      "Conversica is an enterprise tool (from about US$2,999/month), so that day is taught through examples rather than hands-on use",
+      "Where a tool needs a paid plan, the course gives you an alternative task, so you can complete every day without buying any tool"
     ],
     "audience": [
-      "Professionals who want to master a wide range of AI tools in a structured month",
-      "Marketers, creators and freelancers producing content regularly",
-      "Business owners who want to save time on research, design and admin",
-      "Beginners ready to move from occasional use to daily mastery"
+      "Small business owners who want AI for marketing, sales, customer support and operations",
+      "Marketing, sales and HR professionals who want practical, job-ready AI skills",
+      "Trainers, educators and content creators who want to produce videos, presentations and courses faster",
+      "Students who want better writing, research and study tools, used honestly",
+      "Anyone who wants a broad, structured tour of AI tools instead of random tutorials"
     ],
     "description": [
-      "This 28-day challenge is a structured month of AI practice. Every day introduces a tool or technique and ends with a short task, and every week ends with a project, so you finish with four finished pieces of work and the confidence to use more than 25 AI tools.",
-      "Week 1 builds the core skills of research and writing with Perplexity, Gemini, NotebookLM, ChatGPT and Claude. Week 2 moves to design, covering Midjourney, Canva AI, Gamma and AI photo editing, so you can create consistent visuals for any brand.",
-      "Week 3 covers video, audio and productivity: scripting, text-to-video with Kling and Runway, avatar videos with HeyGen, voiceovers with ElevenLabs and editing in CapCut, plus AI for email, notes and meetings. The week ends with a 60-second explainer video that you plan, generate, voice and edit yourself using these tools.",
-      "Week 4 focuses on marketing and automation. You plan a campaign, write ad copy and build a content calendar, then connect your tools with Zapier and n8n and set up a simple AI assistant for customer questions. Each step is explained for beginners, so you do not need any previous automation or coding experience.",
-      "The final capstone asks you to combine what you learned into one end-to-end system for your own job or business, which is the habit that makes AI genuinely useful over time. You will also have a clear list of the tools worth keeping in your routine and the prompts that work best for you."
-    ]
+      "Stop watching random AI tutorials. Start building a structured AI skillset.",
+      "Every week brings another AI tool, another feature and another promise to transform the way we work. You don't need to chase everything. You need a structured place to start.",
+      "You learn alongside three people throughout the challenge: Ritika, a university student; Karan, who runs a small home-repair business; and Takshika, who designs training programs.",
+      "The 28-Day AI Mastery Challenge gives you a focused, hands-on learning journey across:",
+      "• AI ASSISTANTS — ChatGPT · DeepSeek · Google AI (Search & Gmail)",
+      "• MARKETING & SALES — HubSpot Breeze · Crystal Knows · Copy.ai · Writesonic · Rytr · Chatfuel · Conversica",
+      "• DESIGN & VISUALS — Midjourney · Canva AI · Pixlr",
+      "• VIDEO & PRESENTATIONS — Gamma · Synthesia · D-ID · Pictory · Lumen5 · Vrew",
+      "• WRITING & VOICE — Grammarly · QuillBot · Wordtune · Speechify · Krisp",
+      "• PRODUCTIVITY — ClickUp Brain · Sembly AI",
+      "• CODING — GitHub · GitHub Copilot",
+      "For every feature, you see the exact steps, see a real example, then practise it yourself straight away.",
+      "\"I know AI\" is becoming the starting point. The question is: what can you actually do with it?",
+      "• Can you use AI to research?",
+      "• Can you create professional content?",
+      "• Can you improve presentations?",
+      "• Can you work with images and video?",
+      "• Can you support marketing and sales?",
+      "• Can you automate repetitive tasks?",
+      "• Can you choose the right AI tool for the work in front of you?",
+      "This challenge also tells you honestly what each tool can't do, where the hidden costs are, and when a cheaper tool fits better, so you spend your time and money wisely.",
+      "Don't just know the names of AI tools. Learn where they fit into real work.",
+      "From \"I should learn AI\" to \"I know where to start.\"",
+      "28 days · Practical AI · Real use cases"
+    ],
+    "includes": [
+      "28 tool days + 1 capstone project day + 1 recap module (about 1 hour a day)",
+      "28 AI tools covered in depth, with 140+ features explained step by step",
+      "120+ hands-on practice tasks in the real tools",
+      "Click-by-click instructions and ready-to-use example prompts for every feature",
+      "Quizzes and interactive exercises every day",
+      "A capstone project: launch a new service line using 7 connected tools",
+      "Honest notes on free vs paid plans, pricing traps, privacy and responsible use",
+      "Certificate of completion",
+      "Watch lessons on mobile or desktop (practice works best on a computer)"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "junior": {
-    "subtitle": "28 fun, safe AI missions for kids aged 8 to 12, taught in their own language: quizzes, art, stories and real Scratch games.",
+    "subtitle": "A 28-day creative journey for children aged 8–12. They learn to use AI to ask better questions, create quizzes, explore science and space, improve school projects, write stories, and build their own working game in Scratch.",
     "learn": [
-      "Explain what AI is and how it is different from a human brain",
-      "Follow simple rules for using AI safely with a parent nearby",
-      "Ask Claude clear questions to learn, check homework ideas and explore topics",
-      "Create illustrated short stories by planning characters, settings and endings",
-      "Make quizzes on favourite subjects and test family and friends",
-      "Use Scratch sprites, backdrops, motion and sound blocks with confidence",
-      "Build a complete Scratch game with scores, levels and a winning screen",
-      "Present a final project and explain how it was made"
+      "Ask AI clear questions and give clear instructions, which is a skill they'll use for life",
+      "Create their own quizzes, riddles, brain teasers and logic puzzles",
+      "Explore countries, science, space, animals and history through curiosity-led missions",
+      "Get help with school projects: find ideas, understand topics simply and plan presentations",
+      "Turn their imagination into characters, scenes and creative descriptions",
+      "Make invitations, greetings and activities for festivals and celebrations",
+      "Prepare for competitions with brainstorming, speech practice and confidence-building activities",
+      "Write stories, plan storyboards and come up with animation ideas",
+      "Design and build their own working game in Scratch, from idea to testing and improving it"
     ],
     "sections": [
       {
-        "title": "Week 1: Meet AI and Stay Safe",
+        "title": "Meet Your AI Creative Buddy",
         "lectures": [
-          ["Day 1: Welcome! What is AI and where do we see it?", 30],
-          ["Day 2: Being a safe and smart AI explorer", 30],
-          ["Day 3: Talking to Claude: asking good questions", 30],
-          ["Day 4: AI as a study buddy for school topics", 30],
-          ["Day 5: Fact or fiction? Checking AI answers", 30],
-          ["Day 6: Make your first AI quiz", 30],
-          ["Day 7: Mission review and quiz show with family", 30]
+          ["What Claude is and how to talk to it", 24],
+          ["Asking better questions", 24],
+          ["Giving clear instructions", 24],
+          ["Exploring ideas through conversation", 24]
         ]
       },
       {
-        "title": "Week 2: Stories and Art with AI",
+        "title": "Create Quizzes & Puzzles",
         "lectures": [
-          ["Day 8: Planning a story: hero, place and problem", 30],
-          ["Day 9: Writing a story together with Claude", 30],
-          ["Day 10: Drawing characters from your story", 30],
-          ["Day 11: Comic strips and story panels", 30],
-          ["Day 12: Poems, riddles and jokes with AI", 30],
-          ["Day 13: Making a mini storybook", 30],
-          ["Day 14: Storytelling day: share your book", 30]
+          ["Fun quizzes on any topic", 24],
+          ["Riddles and brain teasers", 24],
+          ["Logic challenges", 24],
+          ["Creating your own puzzles for friends and family", 24]
         ]
       },
       {
-        "title": "Week 3: Scratch Coding Basics",
+        "title": "Go on Knowledge Adventures",
         "lectures": [
-          ["Day 15: Hello Scratch: sprites, stage and blocks", 30],
-          ["Day 16: Moving and animating sprites", 30],
-          ["Day 17: Sounds, costumes and backdrops", 30],
-          ["Day 18: Events and keyboard controls", 30],
-          ["Day 19: Loops and if-then decisions", 30],
-          ["Day 20: Variables: keeping score", 30],
-          ["Day 21: Mini project: an animated greeting card", 30]
+          ["Countries and cultures", 24],
+          ["Science and space", 24],
+          ["Animals and nature", 24],
+          ["History and fascinating facts", 24]
         ]
       },
       {
-        "title": "Week 4: Build Your Own Game",
+        "title": "Make School Projects More Creative",
         "lectures": [
-          ["Day 22: Planning a game idea with Claude", 30],
-          ["Day 23: Building the player and the world", 30],
-          ["Day 24: Adding enemies, coins and collisions", 30],
-          ["Day 25: Levels, timers and a game-over screen", 30],
-          ["Day 26: Fixing bugs and asking Claude for hints", 30],
-          ["Day 27: Testing with friends and improving", 30],
-          ["Day 28: Game showcase and certificate day", 30]
+          ["Finding project ideas", 24],
+          ["Understanding topics in simple words", 24],
+          ["Research support", 24],
+          ["Planning presentations", 24]
+        ]
+      },
+      {
+        "title": "Turn Imagination into Creative Art",
+        "lectures": [
+          ["Creating characters and scenes", 24],
+          ["Choosing themes", 24],
+          ["Writing creative descriptions", 24],
+          ["Visual thinking", 24]
+        ]
+      },
+      {
+        "title": "Create for Festivals & Celebrations",
+        "lectures": [
+          ["Invitations and greetings", 24],
+          ["Celebration ideas and activities", 24],
+          ["Festival projects", 24]
+        ]
+      },
+      {
+        "title": "Prepare for Competitions",
+        "lectures": [
+          ["Brainstorming ideas", 24],
+          ["Practising speeches", 24],
+          ["Creative challenges", 24],
+          ["Building confidence", 24]
+        ]
+      },
+      {
+        "title": "Become a Young Story Creator",
+        "lectures": [
+          ["Writing stories and building characters", 24],
+          ["Planning scenes and storyboards", 24],
+          ["Video and animation ideas", 24]
+        ]
+      },
+      {
+        "title": "Build a Real Game in Scratch",
+        "lectures": [
+          ["Coming up with a game idea", 24],
+          ["Designing characters, rules and actions", 24],
+          ["Adding challenges", 24],
+          ["Building the game in Scratch", 24],
+          ["Testing and improving it", 24]
         ]
       }
     ],
     "requirements": [
-      "A computer or laptop with internet access; a tablet works for most AI missions",
-      "A parent or guardian to set up and supervise the AI account",
-      "A free Scratch account (scratch.mit.edu)",
-      "No coding experience needed"
+      "No coding or AI experience needed",
+      "A laptop or desktop computer with internet (recommended for Scratch)",
+      "A Claude account, which a parent sets up and supervises",
+      "Scratch, which is free at scratch.mit.edu",
+      "A parent or guardian available for supervision, especially during the first few missions"
     ],
     "audience": [
-      "Children aged 8 to 12 who are curious about AI, games and creating things",
-      "Parents who want a safe, guided introduction to AI for their child",
-      "Kids who learn best in their regional language",
-      "Schools and tutors looking for a ready-made AI and coding activity plan"
+      "Children aged 8–12 who are curious about AI, games and creating things",
+      "Parents who want their child's screen time to be creative and productive",
+      "Children who enjoy quizzes, stories, art or games and want to make their own",
+      "Students who want help making school projects and competition entries more creative",
+      "Families who prefer learning in English, Hindi or Marathi"
     ],
     "description": [
-      "The 28 Days Junior AI Challenge is a playful, step-by-step introduction to AI and coding for children aged 8 to 12. Each day is a short hands-on mission of around 30 minutes, taught in the child's regional language so the ideas are easy to follow.",
-      "Week 1 explains what AI is and how to use it safely. Children learn to ask Claude good questions with a parent nearby, check answers instead of trusting them blindly, and create their first quiz. Week 2 is all about creativity: planning stories, writing with AI help, drawing characters and making a mini storybook.",
-      "In Weeks 3 and 4 children move into Scratch, the free block-based coding platform. They learn sprites, motion, sounds, loops, decisions and variables, then plan and build their own game with scores, levels and a game-over screen, using Claude for ideas and hints when they get stuck.",
-      "Safety is built into every mission. AI accounts are set up and supervised by a parent, children never share personal details, and the focus is always on thinking for themselves with AI as a helper. The challenge ends with a showcase where each child presents their game."
-    ]
+      "What if your child could create with AI, not just watch it?",
+      "Your child will grow up with AI. Let's teach them to create with it.",
+      "The TAKXILA Junior AI Challenge turns screen time into creative time. Over 28 days, children aged 8–12 complete one hands-on mission every day. Each mission asks them to try, create and improve something of their own instead of passively watching.",
+      "The journey:",
+      "• Day 1: Meet your AI creative buddy",
+      "• Next: Create quizzes, solve puzzles, explore the world",
+      "• Then: Build school projects, imagine characters, write stories",
+      "• Finally: Design and build your own game in Scratch",
+      "Ask → Think → Explore → Create → Design → Build → Play",
+      "Less passive screen time. More creative screen time.",
+      "This isn't just \"learning AI.\" It's learning to create with AI, and to think, question and imagine along the way.",
+      "Their ideas. Their creativity. Their game."
+    ],
+    "includes": [
+      "28 daily missions, one new creative activity every day",
+      "310 interactive screens with activities and challenges, not passive videos",
+      "Hands-on practice with Claude AI",
+      "A complete Scratch game-building project",
+      "Lessons in English, Hindi and Marathi",
+      "Certificate of completion"
+    ],
+    "level": "Ages 8–12",
+    "language": "English, Hindi and Marathi"
   },
   "ready": {
-    "subtitle": "Build practical AI skills in 28 days: research, writing, analysis, visuals, video, audio, marketing and automation for everyday work.",
+    "subtitle": "Learn 27 practical AI tools in 28 days, one tool a day, for research, writing, visuals, video, voice, meetings, marketing, sales and automation. Each lesson tells you clearly what's free and what's paid.",
     "learn": [
-      "Use AI to research a topic quickly and present verified findings",
-      "Write professional emails, reports and proposals with ChatGPT and Claude",
-      "Analyse spreadsheets and turn numbers into clear charts and insights",
-      "Summarise meetings, documents and long threads into action points",
-      "Create visuals, presentations and short videos for work with AI tools",
-      "Produce clean voiceovers and audio content with ElevenLabs",
-      "Plan marketing content and campaigns with AI assistance",
-      "Automate a repetitive work task using no-code AI workflows"
+      "Write prompts that get useful answers using Role, Context and Instructions",
+      "Follow one simple 4-step method that works on any AI tool: Clarify, Specify, Generate, Verify & Refine",
+      "Research faster with cited sources using Perplexity, Grok, DeepSeek and Gemini",
+      "Analyse long documents, contracts and mixed files, and get one clear summary",
+      "Create images, social posts, flyers, product mockups and presentations without design skills",
+      "Produce AI avatar videos, script-to-video content and short clips for social media",
+      "Turn articles into audio, write by voice, get clear call audio and automatic meeting notes",
+      "Use AI inside Outlook, Excel, Word, PowerPoint, Teams, Notion and ClickUp",
+      "Write marketing copy, set up AI chatbots for Instagram and WhatsApp, and use AI in your CRM",
+      "Automate repeated tasks with Zapier by simply describing them",
+      "Know which tools are free, which are paid, and which one fits each job"
     ],
     "sections": [
       {
-        "title": "Week 1: Research and Writing for Work",
+        "title": "Day 1: ChatGPT — Endless Possibilities",
         "lectures": [
-          ["Day 1: Welcome, setup and the AI-ready mindset", 45],
-          ["Day 2: Prompting for reliable work outputs", 45],
-          ["Day 3: Fast research with Perplexity and Gemini", 45],
-          ["Day 4: Professional emails and messages", 45],
-          ["Day 5: Reports, proposals and SOPs with Claude", 45],
-          ["Day 6: Editing, tone and proofreading with AI", 45],
-          ["Day 7: Week 1 task: a research-backed proposal", 45]
+          ["Why vague prompts give vague answers", 11],
+          ["Role, Context and Instructions: the 3 parts of a strong prompt", 11],
+          ["Follow-ups that reuse the whole conversation", 11],
+          ["Custom GPTs, Memory, Projects, Voice Mode, Deep Research and Connectors", 11],
+          ["5 practice tasks", 16]
         ]
       },
       {
-        "title": "Week 2: Analysis and Productivity",
+        "title": "Day 2: Gemini — Make Sense of Mixed Documents",
         "lectures": [
-          ["Day 8: Spreadsheet analysis with ChatGPT", 45],
-          ["Day 9: Formulas, cleaning and pivot ideas with AI", 45],
-          ["Day 10: Charts and dashboards from raw data", 45],
-          ["Day 11: Document Q&A with NotebookLM", 45],
-          ["Day 12: Meetings, notes and action items", 45],
-          ["Day 13: Planning your week with AI", 45],
-          ["Day 14: Week 2 task: a data insights brief", 45]
+          ["Upload notes, emails, PDFs and spreadsheets together", 13],
+          ["Get one connected summary, with contradictions flagged", 13],
+          ["The 3-part formula for good Gemini requests", 12],
+          ["Gemini's limits and when to double-check", 12]
         ]
       },
       {
-        "title": "Week 3: Visuals, Video and Audio",
+        "title": "Day 3: Claude — Careful Thinking & Long Documents",
         "lectures": [
-          ["Day 15: Image generation for work visuals", 45],
-          ["Day 16: Presentations with Gamma and Canva", 45],
-          ["Day 17: Infographics and social graphics", 45],
-          ["Day 18: Short videos with AI video tools", 45],
-          ["Day 19: AI avatars for training videos", 45],
-          ["Day 20: Voiceovers and podcasts with ElevenLabs", 45],
-          ["Day 21: Week 3 task: a presentation with video", 45]
+          ["When to choose Claude over ChatGPT or Gemini", 13],
+          ["Review a contract section by section and flag risks", 13],
+          ["Prepare for a meeting or difficult conversation", 12],
+          ["Projects and Artifacts (free) vs Pro features", 12]
         ]
       },
       {
-        "title": "Week 4: Marketing and Automation",
+        "title": "Day 4: Midjourney — AI Images",
         "lectures": [
-          ["Day 22: Customer research and personas with AI", 45],
-          ["Day 23: Social posts, captions and ad copy", 45],
-          ["Day 24: Email campaigns and newsletters", 45],
-          ["Day 25: Introduction to automation with Zapier", 45],
-          ["Day 26: Building an AI workflow in n8n", 45],
-          ["Day 27: Measuring results and improving prompts", 45],
-          ["Day 28: Capstone: your AI-ready work system", 45]
+          ["Create your first image from a prompt", 12],
+          ["Refine with Vary Subtle, Vary Strong and Upscale", 11],
+          ["How lighting words change the whole image", 11],
+          ["Keep a consistent look with reference images", 11]
+        ]
+      },
+      {
+        "title": "Day 5: Synthesia — AI Avatar Videos",
+        "lectures": [
+          ["Create a presenter video from a script, no camera", 12],
+          ["Write scripts that sound natural", 11],
+          ["Translate videos into 160+ languages", 11],
+          ["Branding, scenes and export settings", 11]
+        ]
+      },
+      {
+        "title": "Day 6: Perplexity — Research with Sources",
+        "lectures": [
+          ["One researched answer instead of 10 open tabs", 12],
+          ["Compare tools or vendors and get a recommendation", 11],
+          ["Check citations before you act", 11],
+          ["Pro Search, Deep Research and Spaces", 11]
+        ]
+      },
+      {
+        "title": "Day 7: Canva AI — Design from a Sentence",
+        "lectures": [
+          ["Design, Image, Doc, Code and Video modes", 15],
+          ["Create posts and flyers by typing, uploading or speaking", 15],
+          ["Refine designs with the in-editor chatbot", 15]
+        ]
+      },
+      {
+        "title": "Day 8: ChatGPT Images — Visuals for Work",
+        "lectures": [
+          ["Posters with exact, readable text", 11],
+          ["Realistic people and specific art styles", 11],
+          ["Labelled diagrams and product mockups", 17],
+          ["Edit one thing at a time", 11]
+        ]
+      },
+      {
+        "title": "Day 9: Jasper — Marketing Copy in Your Brand Voice",
+        "lectures": [
+          ["Why general AI tools sound generic for marketing", 12],
+          ["The What + Who + Goal brief", 11],
+          ["Agent Library templates and Jasper IQ brand memory", 11],
+          ["Emails, social posts, ads and website copy", 11]
+        ]
+      },
+      {
+        "title": "Day 10: Notion AI — Your AI Project Hub",
+        "lectures": [
+          ["Build a reusable project management workspace", 19],
+          ["Planning, risk, reporting and team update templates", 18],
+          ["Ask questions across your whole workspace", 18]
+        ]
+      },
+      {
+        "title": "Day 11: Grok — Real-Time Information",
+        "lectures": [
+          ["What people are saying about a topic today", 12],
+          ["DeepSearch for cited, cross-checked research", 11],
+          ["Imagine for images and short videos", 11],
+          ["Turn rough notes into formatted documents", 11]
+        ]
+      },
+      {
+        "title": "Day 12: Microsoft Copilot — AI Inside Office",
+        "lectures": [
+          ["Summarise long email threads in Outlook", 13],
+          ["Meeting recaps in Teams", 13],
+          ["Charts and formulas in Excel from plain words", 12],
+          ["Turn a Word document into a PowerPoint deck", 12]
+        ]
+      },
+      {
+        "title": "Day 13: Fathom — AI Meeting Notes",
+        "lectures": [
+          ["Auto-join and record Zoom, Meet and Teams calls", 12],
+          ["Instant summaries and action items", 11],
+          ["Share a short clip instead of the full recording", 11],
+          ["Draft follow-up emails from the call", 11]
+        ]
+      },
+      {
+        "title": "Day 14: Zapier — Automate Repeated Work",
+        "lectures": [
+          ["Triggers and actions explained simply", 13],
+          ["Build an automation by describing it", 13],
+          ["Add AI steps to summarise, sort or draft", 12],
+          ["When to use an AI Agent instead", 12]
+        ]
+      },
+      {
+        "title": "Day 15: Beautiful.ai — Presentations in Minutes",
+        "lectures": [
+          ["Turn scattered notes into a designed deck", 12],
+          ["Smart Slides that keep layouts clean", 11],
+          ["Flowcharts and diagrams from a description", 11],
+          ["Where your own judgment must take over", 11]
+        ]
+      },
+      {
+        "title": "Day 16: DeepSeek — Reasoning & Search",
+        "lectures": [
+          ["Instant, Expert and Vision modes", 14],
+          ["DeepThink: see the step-by-step reasoning", 13],
+          ["Meaning-based search for \"why\" questions", 13]
+        ]
+      },
+      {
+        "title": "Day 17: Grammarly — Writing Partner Everywhere",
+        "lectures": [
+          ["Real-time corrections in Gmail, Docs, Slack and LinkedIn", 14],
+          ["Proofreader, Paraphraser, Reader Reactions and Humanizer", 13],
+          ["Grammarly Go assistant", 13]
+        ]
+      },
+      {
+        "title": "Day 18: QuillBot — Paraphrasing & Grammar",
+        "lectures": [
+          ["Standard, Fluency and Formal modes", 14],
+          ["Grammar Checker, Sentence Rewriter and vocabulary", 13],
+          ["Plagiarism Checker, citations and AI Detector", 13]
+        ]
+      },
+      {
+        "title": "Day 19: Pixlr — AI Photo Editing",
+        "lectures": [
+          ["Auto-enhance and AI image generation", 14],
+          ["Remove backgrounds and add text in minutes", 13],
+          ["Layers, filters and the right export format", 13]
+        ]
+      },
+      {
+        "title": "Day 20: Pictory — Script to Video",
+        "lectures": [
+          ["Turn a script, URL or PowerPoint into a video", 12],
+          ["Auto-highlights for social media clips", 11],
+          ["Edit video by editing text", 11],
+          ["AI voiceovers and brand kit", 11]
+        ]
+      },
+      {
+        "title": "Day 21: D-ID — Talking Avatars",
+        "lectures": [
+          ["Turn a photo into a talking presenter", 12],
+          ["Voice cloning in 120+ languages", 11],
+          ["Interactive AI agents for your website", 11],
+          ["Video Translate", 11]
+        ]
+      },
+      {
+        "title": "Day 22: Speechify — Listen, Dictate, Learn",
+        "lectures": [
+          ["Turn articles and PDFs into audio", 12],
+          ["Write by voice up to 5x faster", 11],
+          ["Ask questions about the document you're reading", 11],
+          ["Turn documents into podcasts", 11]
+        ]
+      },
+      {
+        "title": "Day 23: Krisp — Clear Calls & Meeting Notes",
+        "lectures": [
+          ["Remove background noise during calls", 12],
+          ["Accent Conversion and live voice translation", 11],
+          ["Meeting notes without a bot in the call", 11],
+          ["Ask Krisp to find any moment in a meeting", 11]
+        ]
+      },
+      {
+        "title": "Day 24: ClickUp Brain 2.0 — AI Project Management",
+        "lectures": [
+          ["Create tasks with one plain sentence", 13],
+          ["Switch between ChatGPT, Claude and Gemini in one chat", 13],
+          ["Super Agents for always-on workflows", 12],
+          ["Build automations in plain English", 12]
+        ]
+      },
+      {
+        "title": "Day 25: HubSpot Breeze — AI in Your CRM",
+        "lectures": [
+          ["Ask questions about your deals and contacts", 12],
+          ["Customer, Prospecting and Data Agents", 11],
+          ["Content Remix: one post into many formats", 11],
+          ["Track your brand in AI search results", 11]
+        ]
+      },
+      {
+        "title": "Day 26: Crystal — Personality Insights",
+        "lectures": [
+          ["Look up a colleague's or prospect's communication style", 12],
+          ["DISC personality types explained", 11],
+          ["Write emails that match the reader's style", 11],
+          ["Prepare for meetings with Meeting Insights", 11]
+        ]
+      },
+      {
+        "title": "Day 27: Chatfuel — AI for Instagram & WhatsApp",
+        "lectures": [
+          ["Set up an AI assistant for sales, bookings and marketing", 15],
+          ["Add your services, prices and FAQs", 15],
+          ["Test replies before going live", 15]
+        ]
+      },
+      {
+        "title": "Day 28: Conversica — AI Sales Conversations",
+        "lectures": [
+          ["Two-way AI follow-up with sales leads", 12],
+          ["Industry-trained agents for hospitality, education, automotive and more", 11],
+          ["Answers grounded in your own FAQs", 11],
+          ["How to evaluate an enterprise AI tool", 11]
         ]
       }
     ],
     "requirements": [
-      "A laptop or desktop with internet access",
-      "Free accounts on the tools covered",
-      "Basic computer and spreadsheet familiarity is helpful but not required"
+      "No AI or coding experience needed",
+      "A laptop or desktop computer with internet",
+      "A Google account (most tools let you sign in with it)",
+      "Most tools have a free plan that covers the practice tasks",
+      "Some tools are paid or trial-only: Midjourney, Jasper, Beautiful.ai, Pictory, D-ID, Chatfuel, ClickUp Brain and Microsoft 365 Copilot (for your own files)",
+      "Conversica is an enterprise tool with no free trial, so that day is taught through examples",
+      "Wherever a tool is paid, the lesson shows you a free alternative, so you can practise without buying anything"
     ],
     "audience": [
-      "Employees who want to work faster and stand out with AI skills",
-      "Managers and team leads introducing AI into their teams",
-      "Job seekers who want practical AI skills to show employers",
-      "Self-employed professionals handling many tasks at once"
+      "Corporate professionals and managers who want to stay relevant as AI changes their role",
+      "Consultants and small business owners who want practical, billable results from AI",
+      "Fresh graduates and job seekers who want job-ready AI skills on their CV",
+      "Marketing, sales and HR professionals who want AI for content, CRM and communication",
+      "Anyone who wants to know which AI tool to use for which job, and what it costs"
     ],
     "description": [
-      "The 28-Day AI Ready Challenge is about one thing: changing how you work. Every day you apply AI to a realistic work task, so the skills transfer straight into your job instead of staying theoretical. Each mission takes about 45 minutes and uses examples from typical office, sales and management roles.",
-      "Week 1 covers research and writing: prompting for reliable outputs, researching with Perplexity and Gemini, and writing emails, reports, proposals and SOPs with ChatGPT and Claude. Week 2 covers analysis and productivity, including spreadsheet analysis, charts, document Q&A in NotebookLM and turning meetings into action items.",
-      "Week 3 adds visuals, video and audio. You create work visuals, build decks with Gamma and Canva, make short videos and avatar-led training clips, and record clean voiceovers with ElevenLabs. You will finish the week with a short presentation that includes your own AI-made visuals, video clip and narration.",
-      "Week 4 focuses on marketing and automation: customer research, social and ad copy, email campaigns, and simple automations with Zapier and n8n. You also learn to review results and improve your prompts over time. No coding is needed for any of these automations, and each one is built step by step.",
-      "Each week ends with a task you can show to your manager or add to your portfolio, and the final capstone helps you design a personal AI work system that you will keep using. You can repeat the daily tasks with new material whenever your role or tools change."
-    ]
+      "AI is moving fast. Are your skills keeping up?",
+      "AI is already changing how professionals research, communicate, analyse, create, market and automate their work. The question is no longer whether AI will matter. It already does. The question is how prepared you will be to work with it.",
+      "You learn alongside three people throughout the challenge: Aditya, a mid-level corporate manager; Meera, who runs her own consultancy; and Yash, a recent graduate building job-ready skills.",
+      "28 days. Practical skills. Real-world application.",
+      "• RESEARCH WITH GREATER SPEED — discover information, compare sources, summarise findings",
+      "• WRITE & COMMUNICATE BETTER — emails, reports, documents, rewriting, professional communication",
+      "• ANALYSE INFORMATION — understand data, compare options, support decisions",
+      "• CREATE PROFESSIONAL VISUALS — images, designs, social creatives, presentations",
+      "• CREATE VIDEO CONTENT — scripts, AI avatars, AI video, social clips",
+      "• WORK WITH VOICE & AUDIO — narration, text to speech, voice typing, clear calls",
+      "• IMPROVE EVERYDAY PRODUCTIVITY — planning, meeting notes, organisation, faster execution",
+      "• BUILD MARKETING & SALES CONTENT — campaigns, brand copy, CRM, chatbots, lead follow-up",
+      "• AUTOMATE REPEATABLE WORK — AI automation and workflows",
+      "Learn → Practise → Apply → Improve → Become AI-ready",
+      "Every lesson shows you exactly where to click, gives you a real example, and asks you to try it on your own work. You'll also know what each tool costs before you sign up, so there are no surprises.",
+      "Knowing about AI isn't the same as knowing how to use it. This challenge gives you time to explore, experiment and build skills you can apply to real work.",
+      "28 days to start building the skills that matter in an AI-enabled workplace."
+    ],
+    "includes": [
+      "28 daily lessons (40–60 minutes each)",
+      "27 AI tools covered, with what's free vs paid explained for each",
+      "25+ click-by-click walkthroughs with real examples",
+      "30+ hands-on practice tasks on your own real work",
+      "Ready-to-use prompt formulas you can reuse every day",
+      "Quizzes after every topic",
+      "Free alternatives suggested wherever a tool is paid",
+      "Certificate of completion",
+      "Watch lessons on mobile or desktop (practice works best on a computer)"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "n8n-agents": {
-    "subtitle": "Build AI agents, voice agents, RAG chatbots and multi-agent systems in n8n, then package and sell them to real clients.",
+    "subtitle": "Go from complete beginner to building a working AI operations system for a real business: automations, AI agents, a knowledge-powered assistant, a phone voice agent and a multi-agent team. No coding background needed.",
     "learn": [
-      "Build n8n workflows with triggers, nodes, expressions, credentials and error handling",
-      "Create AI agents in n8n with chat models, memory and tools",
-      "Write reliable system prompts and structured outputs using a 100+ prompt library",
-      "Build RAG chatbots that answer from business documents using vector stores",
-      "Connect agents to external tools using n8n's MCP Client and MCP Server nodes",
-      "Design multi-agent systems with an orchestrator and specialist sub-agents",
-      "Build phone voice agents with Vapi, Retell AI or ElevenLabs connected to n8n",
-      "Price, propose, deliver and maintain AI agent projects for clients"
+      "Build, test and publish n8n workflows on your own, from a booking form to scheduled daily reports",
+      "Connect apps safely with credentials, APIs, webhooks and the HTTP Request node",
+      "Use AI inside automations to classify messages, extract details and draft replies",
+      "Build AI agents with chat models, memory, tools and clear instructions",
+      "Give an agent your business knowledge (prices, policies, FAQs) using RAG and vector stores",
+      "Connect a voice agent (Vapi or ElevenLabs) to n8n so it can answer calls, check availability and book jobs",
+      "Build multi-agent teams with a supervisor and specialist agents",
+      "Add human approval before an agent takes risky actions like refunds or discounts",
+      "Share your tools with other AI apps using MCP (Model Context Protocol)",
+      "Run automations in production with error alerts, evaluations, security and cost control",
+      "Self-host n8n for free with Docker",
+      "Scope, price and deliver automation projects for clients"
     ],
     "sections": [
       {
-        "title": "n8n Foundations",
+        "title": "Module 0: Welcome & Course Overview",
         "lectures": [
-          ["Welcome: what you will build and sell", 8],
-          ["What AI agents are and where they fit", 22],
-          ["n8n Cloud vs self-hosted: setting up your workspace", 32],
-          ["Nodes, triggers, credentials and executions", 36],
-          ["Your first workflow: form to Google Sheets to email", 42],
-          ["Quiz: n8n foundations", 10]
+          ["What you'll build and how the course works", 10],
+          ["The SparkFix project", 10]
         ]
       },
       {
-        "title": "Data, Expressions and Integrations",
+        "title": "Module 1: Automation, AI Agents & n8n Foundations",
         "lectures": [
-          ["Understanding JSON and items in n8n", 31],
-          ["Expressions and the Code node", 42],
-          ["The HTTP Request node and working with APIs", 42],
-          ["Google Sheets, Gmail and Slack integrations", 36],
-          ["Branching, merging and error workflows", 36],
-          ["Quiz: data and integrations", 10]
+          ["Why automate, and when to use AI", 26],
+          ["Workflows, nodes, triggers and executions", 26],
+          ["Automation vs AI automation vs AI agent vs voice agent", 25],
+          ["n8n Cloud vs self-hosted, plans and costs", 25],
+          ["Lab: create your n8n account and tour the editor", 38],
+          ["Map a business process before you build", 25]
         ]
       },
       {
-        "title": "Your First AI Agent",
+        "title": "Module 2: Your First Workflow — Form → Table → Email",
         "lectures": [
-          ["The AI Agent node explained", 26],
-          ["Connecting OpenAI, Claude and Gemini chat models", 31],
-          ["Adding memory to an agent", 31],
-          ["Giving agents tools: Sheets, Calendar and HTTP", 47],
-          ["Project: a customer FAQ agent", 52],
-          ["Quiz: AI agents", 10]
+          ["The n8n editor in depth", 31],
+          ["Lab: build a booking form", 46],
+          ["Lab: save every booking to a data table or Google Sheets", 46],
+          ["Lab: send personalised confirmation emails with Gmail", 46],
+          ["Testing, executions and publishing", 31],
+          ["Using AI to write better messages", 30]
         ]
       },
       {
-        "title": "Prompt Engineering for Agents",
+        "title": "Module 3: Logic, Routing & Scheduled Workflows",
         "lectures": [
-          ["System prompts that agents actually follow", 36],
-          ["Structured output parsers and JSON responses", 36],
-          ["Guardrails, fallbacks and handling bad input", 31],
-          ["Walking through the 100+ prompt library", 42],
-          ["Project: a lead qualification agent", 47],
-          ["Quiz: prompts", 10]
+          ["If and Switch routing", 35],
+          ["Filter, Sort, Aggregate, Merge and more", 35],
+          ["Lab: alert the owner about urgent jobs", 53],
+          ["Lab: a 7:30 am daily job digest", 52],
+          ["Loops and waiting", 35]
         ]
       },
       {
-        "title": "RAG: Agents That Know Your Business",
+        "title": "Module 4: Data Mastery — JSON, Expressions & the Code Node",
         "lectures": [
-          ["How retrieval-augmented generation works", 26],
-          ["Embeddings, chunking and document loaders", 42],
-          ["Vector stores: Supabase, Pinecone and Qdrant", 47],
-          ["Keeping the knowledge base up to date", 31],
-          ["Project: a document Q&A chatbot", 52],
-          ["Quiz: RAG", 10]
+          ["Items and JSON explained simply", 35],
+          ["Expressions to reach any data", 35],
+          ["Lab: clean messy names, phone numbers and dates", 52],
+          ["The Code node for pricing rules", 34],
+          ["Getting AI help with expressions", 34]
         ]
       },
       {
-        "title": "MCP: Model Context Protocol",
+        "title": "Module 5: Credentials, APIs, Webhooks & HTTP Requests",
         "lectures": [
-          ["What MCP is and why it matters", 26],
-          ["Using the MCP Client Tool node in an agent", 42],
-          ["Exposing n8n workflows with the MCP Server Trigger", 42],
-          ["Connecting n8n to Claude Desktop and other MCP clients", 36],
-          ["Project: an MCP-powered business assistant", 47],
-          ["Quiz: MCP", 10]
+          ["How APIs work, and what status codes mean", 32],
+          ["Keeping API keys and secrets safe", 32],
+          ["Lab: weather-based demand alert using a free API", 49],
+          ["Webhooks: letting other systems call n8n", 32],
+          ["Lab: build a secured \"free slots\" API", 48],
+          ["Import cURL, retries and pagination", 32]
         ]
       },
       {
-        "title": "Multi-Agent Systems",
+        "title": "Module 6: AI Automations — LLMs, Prompts & Structured Output",
         "lectures": [
-          ["When one agent is not enough", 26],
-          ["Orchestrator and specialist agent patterns", 42],
-          ["Sub-workflows and agents as tools", 42],
-          ["Routing, hand-offs and shared memory", 36],
-          ["Project: a multi-agent content team", 57],
-          ["Quiz: multi-agent systems", 10]
+          ["How LLMs work (tokens, context, temperature)", 33],
+          ["Lab: connect a chat model (free options included)", 49],
+          ["The RCTRO prompt pattern for automations", 33],
+          ["Lab: classify messages and extract booking details", 49],
+          ["Guardrails, privacy and AI cost control", 33],
+          ["Ready-made prompt pack", 33]
         ]
       },
       {
-        "title": "Voice AI Agents",
+        "title": "Module 7: Building AI Agents in n8n",
         "lectures": [
-          ["How voice agents work: speech, LLM and voice", 26],
-          ["Building a voice agent in Vapi", 47],
-          ["Retell AI and ElevenLabs agents compared", 36],
-          ["Connecting voice agents to n8n webhooks and calendars", 47],
-          ["Project: an appointment booking voice agent", 57],
-          ["Quiz: voice AI", 10]
+          ["Inside the AI Agent node and the agent loop", 40],
+          ["Lab: a chat agent with memory", 59],
+          ["Tools and $fromAI(): giving your agent hands", 39],
+          ["Lab: an agent that checks real slots and books jobs", 59],
+          ["Memory, sessions and writing great instructions", 39],
+          ["Testing and debugging agents", 39]
         ]
       },
       {
-        "title": "Agents for Real Businesses",
+        "title": "Module 8: RAG — Giving Agents Your Business Knowledge",
         "lectures": [
-          ["WhatsApp and website chat agents", 47],
-          ["Email triage and auto-reply agents", 42],
-          ["CRM updates and lead follow-up agents", 42],
-          ["Reporting and summary agents", 36],
-          ["Project: an end-to-end client support agent", 52],
-          ["Quiz: business use cases", 10]
+          ["How RAG and embeddings work", 35],
+          ["Chunking, overlap and metadata", 35],
+          ["Choosing a vector store (Pinecone, Supabase, Qdrant and more)", 35],
+          ["Lab: build a knowledge base from business documents", 53],
+          ["Lab: an agent that answers prices and warranty questions accurately", 52],
+          ["Keeping knowledge fresh and measuring answer quality", 35]
         ]
       },
       {
-        "title": "Deploy, Monitor and Scale",
+        "title": "Module 9: AI Voice Agents Connected to n8n",
         "lectures": [
-          ["Self-hosting n8n with Docker", 47],
-          ["Queue mode, scaling and reliability", 36],
-          ["Monitoring, logging and error alerts", 36],
-          ["Controlling LLM costs and rate limits", 31],
-          ["Security, credentials and data privacy", 31],
-          ["Quiz: deployment", 10]
+          ["How voice agents work, and why speed matters", 34],
+          ["Choosing a platform: Vapi, ElevenLabs Agents, Retell AI", 34],
+          ["Lab: make your n8n tools voice-ready", 50],
+          ["Lab: a Vapi phone receptionist that books real jobs", 50],
+          ["Lab: the same agent on ElevenLabs", 50],
+          ["Writing voice prompts", 34],
+          ["Phone numbers, call logs and compliance", 33]
         ]
       },
       {
-        "title": "Package and Sell AI Agents",
+        "title": "Module 10: Multi-Agent Systems, MCP & Human-in-the-Loop",
         "lectures": [
-          ["Finding a niche and spotting automation opportunities", 36],
-          ["Pricing models: projects, retainers and usage", 36],
-          ["Discovery calls, demos and proposals", 42],
-          ["Client onboarding, handover and documentation", 36],
-          ["Maintenance and support agreements", 31],
-          ["Quiz: selling AI agents", 10]
+          ["When one agent isn't enough", 37],
+          ["Lab: a supervisor with booking, knowledge and complaints specialists", 55],
+          ["Human approval for risky actions", 37],
+          ["Lab: discounts that need the owner's approval", 55],
+          ["MCP explained simply", 36],
+          ["Lab: share your tools with Claude Desktop and other AI apps", 55]
         ]
       },
       {
-        "title": "Capstone Projects and Final Review",
+        "title": "Module 11: Production — Errors, Evaluations, Security & Self-Hosting",
         "lectures": [
-          ["Capstone brief: build a sellable agent", 16],
-          ["Capstone build: agent, RAG and voice", 60],
-          ["Capstone build: testing and client demo", 52],
-          ["Final review: 200+ quiz questions", 52],
-          ["Next steps and building your portfolio", 16]
+          ["Error handling so no booking disappears", 32],
+          ["Lab: error alerts and safe fallbacks", 48],
+          ["Evaluations to measure AI quality", 32],
+          ["Monitoring and proving time saved", 32],
+          ["Security checklist and prompt-injection defence", 32],
+          ["Lab: self-host n8n free with Docker", 47],
+          ["Backups, updates, costs and scaling", 32]
+        ]
+      },
+      {
+        "title": "Module 12: Capstone — The Complete AI Operations System",
+        "lectures": [
+          ["Lab: integrate and test everything end to end (10 test cases)", 70],
+          ["Validation and handover pack", 47],
+          ["Applying the blueprint to salons, gyms, coaching, retail, restaurants and real estate", 47],
+          ["Delivering, pricing and maintaining client projects", 47],
+          ["Prompt library and glossary", 47],
+          ["Final mock exam", 47]
         ]
       }
     ],
     "requirements": [
-      "A computer with internet access",
-      "An n8n Cloud account or the ability to self-host n8n (setup is covered)",
-      "API keys for an LLM provider such as OpenAI or Anthropic; usage is billed by the provider",
-      "No coding required, though basic comfort with spreadsheets helps"
+      "No coding or AI experience needed",
+      "A laptop or desktop with Chrome or Edge",
+      "An email address and a Google account (for the Gmail and Sheets labs)",
+      "n8n: free Cloud trial (no credit card), or the free self-hosted Community Edition (setup taught in Module 11)",
+      "AI model: n8n Cloud's included credits, or a free Google Gemini API key",
+      "Voice labs: Vapi or ElevenLabs browser test calls",
+      "Optional paid costs: an n8n Cloud plan after the trial (from about €20/month), AI usage beyond free limits, and phone numbers and call minutes for a live voice agent"
     ],
     "audience": [
-      "Freelancers and agencies who want to offer AI agent services",
-      "Business owners who want to automate support, sales and operations",
-      "Developers and no-code builders moving into agentic AI",
-      "Professionals who want a practical, project-based path into AI agents"
+      "Complete beginners who want a guided path into automation and AI agents",
+      "Small business owners who want fewer repetitive tasks and faster customer replies",
+      "Freelancers and consultants who want to build and sell AI automations to clients",
+      "Operations, support, sales and marketing staff who want to automate their own work",
+      "Developers who want to prototype AI agents quickly without writing everything in code"
     ],
     "description": [
-      "This is a complete, hands-on course on building AI agents with n8n and turning them into services you can sell. Over more than 40 hours you go from your first workflow to multi-agent systems, RAG chatbots, MCP integrations and phone voice agents.",
-      "The first sections build a solid n8n foundation: triggers, nodes, expressions, APIs and error handling. You then create your first AI agent with the AI Agent node, connect chat models such as OpenAI, Claude and Gemini, add memory and give the agent real tools.",
-      "Next you learn the techniques that make agents useful in business. Prompt engineering with a library of more than 100 prompts, structured outputs and guardrails make agents reliable. RAG with vector stores lets them answer from company documents. MCP lets them use external tools and lets other AI apps call your n8n workflows.",
-      "You then build multi-agent systems with orchestrators and specialists, and voice agents with Vapi, Retell AI or ElevenLabs that can answer calls and book appointments through n8n. Every section ends with a project and a quiz, with more than 200 questions in total.",
-      "The final sections cover deployment, monitoring, cost control and security, then the business side: choosing a niche, pricing, proposals, onboarding and maintenance. Results depend on your own effort and market, but you will leave with working agents and a clear process for delivering them to clients."
-    ]
+      "Stop just using AI. Start building AI systems that automate real business work.",
+      "Most AI courses teach you to chat with AI. This one teaches you to build with it. You'll create a complete AI operations system for a real-style business, step by step, in n8n, the visual automation platform used by businesses and automation agencies worldwide.",
+      "The whole course builds one system for one business. SparkFix Home Services is an appliance-repair company in Nashik owned by Meera, with nine technicians. Today they miss calls after 7 pm and retype every booking by hand. By the end, you'll have automated all of it.",
+      "What you'll build:",
+      "• 🤖 AI Agents that chat with customers, check availability and book jobs",
+      "• 🎙️ AI Voice Agents that answer the phone after hours",
+      "• 🧠 RAG Systems that answer from your own price lists and policies",
+      "• ⚡ n8n Automations for forms, emails, routing and daily reports",
+      "• 🔗 APIs & Webhooks so other systems can talk to your workflows",
+      "• 🤝 Multi-Agent Systems with a supervisor and specialist agents",
+      "• 🔐 Human approvals and MCP for safe, connected AI",
+      "• 🏢 Business Automation that's production-ready, monitored and secure",
+      "Every page follows the same rhythm: understand it, see it, do it in the real tool, check your knowledge, fix common mistakes, and apply it to the project. Each lab tells you exactly where to click, what to type and what you should see.",
+      "Want to offer this as a service? The final module shows how to apply the same blueprint to six other industries, and how to scope, price, deliver and maintain automation projects for clients.",
+      "✅ Beginner friendly",
+      "✅ No advanced coding required",
+      "✅ Practical, project-based learning",
+      "✅ Free options first, wherever possible",
+      "✅ Freelancing and agency guidance included",
+      "From beginner to AI automation professional."
+    ],
+    "includes": [
+      "13 modules, about 48 hours including hands-on work",
+      "25 guided hands-on labs in real tools, with exact steps and troubleshooting tables",
+      "12 practical assignments, one per module",
+      "A capstone project: a complete AI operations system for a real-style business",
+      "190+ quiz questions and a final mock exam",
+      "A searchable prompt library with ready-to-copy AI prompts",
+      "Copy-ready code and expressions for every lab",
+      "A glossary of every technical term in plain language",
+      "Narrated lessons with captions and a language switcher",
+      "A guide to delivering and pricing automation projects for clients",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "wa-agent": {
-    "subtitle": "Build a working WhatsApp bulk messaging agent with n8n, Meta's WhatsApp Cloud API and Google Sheets in four easy steps.",
+    "subtitle": "Build your own WhatsApp bulk messaging workflow in 4 easy steps, using n8n, Google Sheets and the WhatsApp Business Platform from Meta. No coding needed, and you can finish the build in under 15 minutes.",
     "learn": [
-      "Create a Meta developer app and enable the WhatsApp Cloud API",
-      "Generate access tokens and find your phone number ID",
-      "Create and submit a WhatsApp message template for approval",
-      "Structure a Google Sheet of opted-in contacts for bulk sending",
-      "Connect Google Sheets and WhatsApp credentials inside n8n",
-      "Build an n8n workflow that sends a personalised template to every row",
-      "Test safely with your own number before sending to a list",
-      "Log delivery status back to the sheet and follow WhatsApp messaging rules"
+      "Set up a trigger that starts your messaging automation",
+      "Manage your message content and recipient list in Google Sheets",
+      "Set a sending limit to control how many messages go out at a time",
+      "Connect your workflow to WhatsApp through the Meta WhatsApp Business Platform",
+      "Send messages using Meta-approved message templates",
+      "See how the full automation works, from trigger to message delivery",
+      "Apply the same workflow to customer updates, reminders and outreach"
     ],
     "sections": [
       {
-        "title": "Step 1: Set Up Meta and WhatsApp Cloud API",
+        "title": "Step 1: Set Up the Trigger",
         "lectures": [
-          ["Welcome: what you will build in 30 minutes", 3],
-          ["Creating a Meta app and adding WhatsApp", 3],
-          ["Access token, phone number ID and a message template", 3]
+          ["How a trigger starts the whole automation", 4],
+          ["Choosing when your messages should be sent", 4]
         ]
       },
       {
-        "title": "Step 2: Prepare Your Google Sheet",
+        "title": "Step 2: Connect Google Sheets",
         "lectures": [
-          ["Contact sheet layout: names, numbers and status", 3],
-          ["Opt-in rules and number formatting", 3]
+          ["Organise recipients and message content in a sheet", 4],
+          ["Connect the sheet to your workflow", 3]
         ]
       },
       {
-        "title": "Step 3: Build the n8n Workflow",
+        "title": "Step 3: Set a Sending Limit",
         "lectures": [
-          ["Connecting Google Sheets and WhatsApp in n8n", 3],
-          ["Looping rows and sending personalised templates", 3]
+          ["Control how many messages are sent per run", 3],
+          ["Why limits keep your sending safe and controlled", 3]
         ]
       },
       {
-        "title": "Step 4: Test and Send in Bulk",
+        "title": "Step 4: Connect WhatsApp Through Meta",
         "lectures": [
-          ["Testing with your own number", 3],
-          ["Running the campaign and logging status", 3],
-          ["Next steps: adding AI replies", 3]
+          ["Connect your WhatsApp Business account", 3],
+          ["Use approved message templates", 3],
+          ["Run the complete workflow and check delivery", 3]
         ]
       }
     ],
     "requirements": [
-      "A Facebook account to access Meta for Developers",
-      "A phone number not already registered on WhatsApp, or the free test number Meta provides",
-      "A free n8n account and a Google account"
+      "No coding experience needed",
+      "A laptop or desktop computer",
+      "An n8n account (free Cloud trial or free self-hosted version)",
+      "A Google account for Google Sheets",
+      "A Meta Business account with the WhatsApp Business Platform set up",
+      "A phone number to register on the WhatsApp Business Platform",
+      "At least one approved WhatsApp message template",
+      "Recipients who have agreed to receive WhatsApp messages from your business",
+      "Note: Meta may charge for template messages. Check current rates on Meta's WhatsApp Business pricing page."
     ],
     "audience": [
-      "Small business owners who want to message customers in bulk",
-      "Marketers running WhatsApp offers and reminders",
-      "Beginners who want a quick first win with n8n automation"
+      "Small business owners who send regular updates to customers on WhatsApp",
+      "Marketers and sales teams who want to save time on repeated messages",
+      "Beginners who want a quick, practical first automation project",
+      "Freelancers who want to offer WhatsApp automation to clients"
     ],
     "description": [
-      "This short free course shows you how to build your own WhatsApp bulk messaging agent in about 15 minutes of build time, using n8n, Meta's WhatsApp Cloud API and Google Sheets. The whole course runs in roughly half an hour and is split into four easy steps.",
-      "In step one you create a Meta developer app, add WhatsApp, collect your access token and phone number ID, and set up a message template. In step two you prepare a Google Sheet of contacts with the right number format and a status column.",
-      "In step three you build the n8n workflow that reads each row and sends a personalised template message. In step four you test with your own number, then run the campaign and log the results back to your sheet. Every node is explained, so you understand how to change it later.",
-      "Throughout, the course follows WhatsApp's rules: only message people who have opted in, use approved templates for business-initiated messages, and respect messaging limits so your number stays in good standing. You will finish with a working agent and a clear idea of how to add AI replies next."
-    ]
+      "Create your own WhatsApp bulk messaging agent, from scratch.",
+      "Sending the same WhatsApp message to dozens of customers one by one takes hours. In this free course, you'll build a working automation that does it for you, using a simple no-code workflow.",
+      "Every step is explained clearly, so beginners can follow along easily:",
+      "• A trigger starts the automation",
+      "• Your message content and recipient list live in Google Sheets",
+      "• A built-in limit keeps sending controlled",
+      "• Messages go out through WhatsApp via Meta, using approved templates",
+      "By the end, you'll have a ready-to-use WhatsApp messaging workflow, and a practical automation skill you can use for business updates, reminders and customer outreach.",
+      "4 steps. 30 minutes. Free."
+    ],
+    "includes": [
+      "A complete, working workflow built step by step",
+      "4 easy steps, each explained for beginners",
+      "Tools used: n8n, Google Sheets, Meta WhatsApp Business Platform",
+      "Certificate of completion"
+    ],
+    "level": "Beginner",
+    "language": "English"
   },
   "agentic": {
-    "subtitle": "Design and build autonomous AI agents with LangChain, LangGraph, CrewAI, AutoGen and n8n, from first principles to deployment.",
+    "subtitle": "Go from \"what is an AI agent?\" to designing, building, testing, securing and deploying real AI agents. Build them with code (Python, LangGraph, MCP) or without code (n8n), using free tools first.",
     "learn": [
-      "Explain how agents plan, use tools, keep memory and act autonomously",
-      "Call LLMs from Python and implement tool calling with structured outputs",
-      "Build chains, tools and retrieval pipelines with LangChain",
-      "Model agent workflows as stateful graphs with LangGraph",
-      "Add human-in-the-loop approvals and persistent checkpoints in LangGraph",
-      "Orchestrate role-based agent teams with CrewAI crews and tasks",
-      "Build conversational multi-agent systems with AutoGen",
-      "Evaluate, monitor and deploy agents as reliable APIs"
+      "Understand what turns a chatbot into an agent, and decide when an agent is the right solution and when it isn't",
+      "Choose the right AI model for each task and estimate what an agent will cost to run",
+      "Write system prompts, examples and structured JSON output that make agents reliable",
+      "Give agents \"hands\" by building tools they can call safely to check slots, create bookings and draft quotes",
+      "Build a knowledge base with RAG, embeddings and vector stores, so agents answer from your own documents with citations",
+      "Apply proven agent patterns: ReAct, planning, reflection, routing and orchestrator-workers",
+      "Build stateful agents in LangGraph with memory and human approval before risky actions",
+      "Build an MCP server and connect it to Claude Desktop and your own agents",
+      "Compare Google ADK, the OpenAI Agents SDK and the Claude Agent SDK, and pick the right framework",
+      "Design multi-agent teams with supervisors and handoffs, and build one in CrewAI",
+      "Build a complete agent without code in n8n",
+      "Test agents with golden datasets and traces, protect them against the OWASP Agentic Top 10, and run them in production with monitoring and cost controls"
     ],
     "sections": [
       {
-        "title": "Module 1: Foundations of AI Agents",
+        "title": "Module 1: The Agentic Shift — What AI Agents Are",
         "lectures": [
-          ["Welcome and course roadmap", 5],
-          ["From chatbots to autonomous agents", 15],
-          ["The agent loop: perceive, plan, act, reflect", 20],
-          ["Agent patterns: ReAct, planning and reflection", 20]
+          ["Chatbot, workflow or agent: knowing the difference", 10],
+          ["The agent loop and the five building blocks of an agent", 10],
+          ["How much autonomy to give an agent: a practical scale", 10],
+          ["Measuring whether an agent is good", 10],
+          ["When NOT to build an agent", 10],
+          ["Lab: feel the difference between chat and tool-using AI", 15],
+          ["Assignment: build an agent opportunity map", 10]
         ]
       },
       {
-        "title": "Module 2: LLMs, Prompts and Tool Calling",
+        "title": "Module 2: Inside the Agent's Brain — Models, Tokens & Costs",
         "lectures": [
-          ["Python environment and API keys", 15],
-          ["Calling LLMs from Python", 15],
-          ["Tool calling and function schemas", 20],
-          ["Structured outputs with Pydantic", 15]
+          ["How language models turn text into decisions", 10],
+          ["Today's model families and reasoning (\"thinking\") models", 10],
+          ["Settings that control behaviour, such as temperature", 9],
+          ["Lab: test models in Google AI Studio and get your free API key", 14],
+          ["Estimating and cutting agent costs", 9],
+          ["Model limitations every agent designer must plan for", 9],
+          ["Optional lab: run a model on your own computer with Ollama", 14]
         ]
       },
       {
-        "title": "Module 3: LangChain Essentials",
+        "title": "Module 3: Instructing Agents — System Prompts & Structured Output",
         "lectures": [
-          ["LangChain building blocks and LCEL", 15],
-          ["Prompt templates and output parsers", 15],
-          ["Creating and binding custom tools", 15],
-          ["Building your first LangChain agent", 20]
+          ["The messages an agent sees", 11],
+          ["Anatomy of a strong agent system prompt", 11],
+          ["Few-shot examples and step-by-step reasoning", 11],
+          ["Roles, personas and boundaries", 11],
+          ["Structured JSON output your code can trust", 10],
+          ["Lab: build and test an intake classifier", 16],
+          ["Common prompt failures, and treating prompts like code", 10]
         ]
       },
       {
-        "title": "Module 4: Memory and RAG",
+        "title": "Module 4: Your Developer Workbench",
         "lectures": [
-          ["Short-term and long-term memory", 15],
-          ["Embeddings and vector stores", 14],
-          ["Building a retrieval pipeline", 19],
-          ["Agentic RAG: agents that decide when to search", 14]
+          ["Install Python and VS Code", 10],
+          ["Virtual environments and packages", 10],
+          ["Keep API keys secret with .env and .gitignore", 10],
+          ["Lab: run your first coded model call", 15],
+          ["Structured output with Pydantic", 10],
+          ["Rate limits, errors and retries", 10],
+          ["Using AI coding assistants responsibly", 10]
         ]
       },
       {
-        "title": "Module 5: LangGraph Fundamentals",
+        "title": "Module 5: Tools & Function Calling — Giving Agents Hands",
         "lectures": [
-          ["Why graphs: state, nodes and edges", 14],
-          ["Conditional edges and loops", 14],
-          ["Tool nodes and the ReAct agent in LangGraph", 19],
-          ["Streaming and debugging graphs", 10]
+          ["Why agents need tools, and how function calling works", 13],
+          ["Defining tools: name, description, arguments", 13],
+          ["Lab: build and test a booking agent", 20],
+          ["The explicit tool loop that frameworks use", 13],
+          ["Handling tool failures", 13],
+          ["Tool safety rules that prevent disasters", 13]
         ]
       },
       {
-        "title": "Module 6: Advanced LangGraph",
+        "title": "Module 6: Memory & Knowledge — RAG, Embeddings & Vector Stores",
         "lectures": [
-          ["Checkpointers and persistent state", 14],
-          ["Human-in-the-loop interrupts and approvals", 14],
-          ["Subgraphs and multi-agent supervisors", 19],
-          ["Project: a research agent with approvals", 14]
+          ["Short-term, working, long-term and knowledge memory", 12],
+          ["Managing conversation context", 12],
+          ["Embeddings and the RAG pipeline explained simply", 11],
+          ["Chunking well, and choosing a vector store", 11],
+          ["Build a knowledge base with Chroma", 11],
+          ["Lab: build RAG with citations and test grounding", 17],
+          ["Measuring retrieval quality, and long-term memory with privacy", 11]
         ]
       },
       {
-        "title": "Module 7: CrewAI",
+        "title": "Module 7: Thinking Patterns — ReAct, Planning, Reflection & Routing",
         "lectures": [
-          ["Agents, tasks and crews", 14],
-          ["Sequential and hierarchical processes", 14],
-          ["Tools and memory in CrewAI", 14],
-          ["Project: a content research crew", 19]
+          ["Start with the simplest design that works", 12],
+          ["Workflow patterns: chaining, routing, parallel work", 12],
+          ["ReAct, plan-and-execute and orchestrator-workers", 12],
+          ["Reflection and evaluator-optimizer loops", 11],
+          ["Lab: build a router and a reflection check before quotes go out", 17],
+          ["Tree-of-thoughts and other advanced reasoning", 11]
         ]
       },
       {
-        "title": "Module 8: AutoGen",
+        "title": "Module 8: Building with LangGraph",
         "lectures": [
-          ["AutoGen AgentChat concepts", 14],
-          ["Assistant and user proxy agents", 14],
-          ["Group chats and team patterns", 14],
-          ["Project: a coding and review team", 14]
+          ["LangChain vs LangGraph: who does what", 14],
+          ["Lab: a quick agent with create_agent", 20],
+          ["Graph basics: state, nodes and edges", 14],
+          ["Memory per customer, pausing and resuming", 14],
+          ["Lab: build a graph with human approval", 20],
+          ["Streaming progress, errors, limits and project structure", 13]
         ]
       },
       {
-        "title": "Module 9: No-Code Agents with n8n",
+        "title": "Module 9: MCP — Connecting Agents to Any Tool or Data",
         "lectures": [
-          ["The n8n AI Agent node", 14],
-          ["Memory, tools and vector stores in n8n", 14],
-          ["Triggering agents from apps and webhooks", 14],
-          ["Project: a business automation agent", 19]
+          ["The problem MCP solves: hosts, clients and servers", 13],
+          ["Tools, resources and prompts; local vs remote servers", 13],
+          ["Lab: build and test an MCP server with the MCP Inspector", 20],
+          ["Connect your server to Claude Desktop and your LangGraph agent", 13],
+          ["MCP security rules, registries and remote servers", 13],
+          ["Agent-to-agent communication with A2A", 13]
         ]
       },
       {
-        "title": "Module 10: Evaluation, Observability and Safety",
+        "title": "Module 10: Vendor Agent SDKs — OpenAI, Claude & Google ADK",
         "lectures": [
-          ["Tracing agents with LangSmith", 14],
-          ["Building evaluation datasets", 14],
-          ["Guardrails, permissions and prompt injection", 19],
-          ["Cost and latency optimisation", 10]
+          ["One set of ideas across every SDK", 13],
+          ["What to avoid in 2026: deprecated tools", 12],
+          ["Lab: rebuild the agent in Google ADK on the free Gemini key", 19],
+          ["OpenAI Agents SDK and Claude Agent SDK (optional, paid API)", 12],
+          ["Microsoft Agent Framework overview", 12],
+          ["A decision matrix for choosing a framework", 12]
         ]
       },
       {
-        "title": "Module 11: Deploying Agents",
+        "title": "Module 11: Multi-Agent Systems — Teams, Handoffs & CrewAI",
         "lectures": [
-          ["Serving agents with FastAPI", 19],
-          ["Containerising with Docker", 14],
-          ["Background jobs, queues and scaling", 14],
-          ["Choosing a framework for production", 10]
+          ["When you need more than one agent, and when you don't", 13],
+          ["Supervisor, pipeline, handoff and critic architectures", 13],
+          ["Designing roles and communication", 13],
+          ["Lab: build and stress-test a CrewAI team", 20],
+          ["How multi-agent systems fail", 13],
+          ["Supervisors in LangGraph and handoffs in SDKs", 13]
         ]
       },
       {
-        "title": "Module 12: Capstone Project",
+        "title": "Module 12: No-Code Agents — n8n, Zapier & Make",
         "lectures": [
-          ["Capstone brief: an autonomous multi-agent system", 10],
-          ["Designing the architecture", 14],
-          ["Building and testing the system", 24],
-          ["Deployment, review and next steps", 10]
+          ["Why and when to choose no-code", 13],
+          ["Start n8n and learn the building blocks", 12],
+          ["Lab: build an intake agent with memory and Google Sheets tools", 19],
+          ["Add a human approval step", 12],
+          ["Activate, monitor and stay safe", 12],
+          ["Zapier and Make for agent workflows", 12]
+        ]
+      },
+      {
+        "title": "Module 13: Testing & Evaluating Agents",
+        "lectures": [
+          ["Why agent testing is different from normal software", 12],
+          ["What to measure: outcomes, steps, content and cost", 12],
+          ["Build a golden test dataset", 12],
+          ["Code checks and LLM-as-judge", 11],
+          ["Tracing every step in LangSmith", 11],
+          ["Lab: build an evaluation suite with automated regression tests", 17]
+        ]
+      },
+      {
+        "title": "Module 14: Agent Security & Guardrails",
+        "lectures": [
+          ["Why agents are a new security problem", 11],
+          ["Direct and indirect prompt injection", 11],
+          ["The OWASP Top 10 for Agentic Applications", 11],
+          ["Layered guardrails, permissions and sandboxes", 11],
+          ["Human oversight that actually works", 10],
+          ["Lab: guard and red-team your agent", 16],
+          ["Responsible AI duties", 10]
+        ]
+      },
+      {
+        "title": "Module 15: Shipping to Production",
+        "lectures": [
+          ["Production readiness checklist", 12],
+          ["Wrap the agent in an API and package it in a container", 12],
+          ["Durable state, secrets and deployment options", 12],
+          ["Monitoring, alerts, cost controls and fallbacks", 11],
+          ["Model updates and incident response", 11],
+          ["Lab: ship the agent as a service", 17]
+        ]
+      },
+      {
+        "title": "Module 16: Capstone — The Complete Agent Platform & Your Career",
+        "lectures": [
+          ["Assemble the complete platform", 13],
+          ["Lab: end-to-end platform test", 20],
+          ["Write a 30-day pilot plan", 13],
+          ["Adapt the design to another industry or your own business", 13],
+          ["Careers in agentic AI, and presenting your capstone as a portfolio project", 13],
+          ["Final assessment", 13]
         ]
       }
     ],
     "requirements": [
-      "Basic Python knowledge (variables, functions, installing packages)",
-      "A computer that can run Python 3.10 or later",
-      "API keys for an LLM provider such as OpenAI or Anthropic; usage is billed by the provider"
+      "No AI experience needed",
+      "No coding needed for the non-technical path. Basic Python helps on the technical path, and Module 4 sets everything up from zero",
+      "A laptop or desktop (Windows, macOS or Linux) with a modern browser",
+      "A Google account for a free Gemini API key (no card needed)",
+      "A free ChatGPT or Claude account",
+      "Python and VS Code (free, installed step by step in Module 4)",
+      "n8n: free self-hosted version or a Cloud trial (Module 12)",
+      "You never need to spend money to finish this course. OpenAI and Anthropic API comparisons are optional and every paid lab has a free alternative"
     ],
     "audience": [
-      "Developers who want to build production-ready AI agents",
-      "Data and ML practitioners moving into agentic AI",
-      "Technical founders and product builders exploring autonomous systems",
-      "No-code builders ready to add Python frameworks to their toolkit"
+      "Complete beginners who want a guided path into agentic AI, with a no-code option",
+      "Developers who want to build agents with Python, LangGraph, MCP and vendor SDKs, including testing and deployment",
+      "Business owners and managers who want to know where agents add value, what they cost and how to manage the risks",
+      "Automation and no-code builders who want to add AI agents to n8n, Zapier or Make workflows",
+      "Students and career changers who want a portfolio project and a clear path into agent-engineering roles"
     ],
     "description": [
-      "This course teaches you how to design and build intelligent autonomous systems using today's main agent frameworks: LangChain, LangGraph, CrewAI, AutoGen and n8n. It is organised into 12 modules that move steadily from beginner concepts to advanced, deployable agents. Each module mixes short explanations with hands-on coding.",
-      "You begin with the fundamentals: what makes an agent different from a chatbot, the agent loop, and common patterns such as ReAct and reflection. You then work directly with LLMs in Python, implementing tool calling and structured outputs so you understand what frameworks do for you.",
-      "The core of the course covers each framework in depth. LangChain gives you the building blocks for tools, prompts and retrieval. LangGraph lets you model agents as stateful graphs with checkpoints and human approvals. CrewAI and AutoGen show two different approaches to multi-agent teamwork, and n8n shows how to build agents visually.",
-      "Later modules cover what it takes to run agents for real: tracing and evaluation with LangSmith, guardrails against prompt injection, cost control and deployment with FastAPI and Docker. You will learn how to compare frameworks honestly and choose the right one for each project instead of following trends.",
-      "The capstone brings it together in an autonomous multi-agent system you design, build, test and deploy, giving you a strong portfolio project. Along the way you document your design decisions, test cases and trade-offs, so you can explain the system clearly to employers or clients."
-    ]
+      "AI is evolving from tools that answer prompts into systems that plan, use tools, remember, check their own work and take actions under human supervision.",
+      "AI Agents & Agentic AI Mastery gives you a practical, structured path to understanding and building these systems. You don't just learn the ideas. You build one real agent platform, piece by piece, from a first tool call to a deployed, monitored and secured multi-agent system.",
+      "The whole course builds one project for one business. FixWell Home Services is a repair company in Bengaluru with 26 technicians. Its operations head, Kavya Menon, handles 140+ requests a day across WhatsApp, the website and phone. Customers wait hours for quotes, technicians get double-booked, and staff search 200-page manuals for answers. Module by module, you build the FixWell Agent Platform that fixes this.",
+      "What you'll build:",
+      "• An intake and FAQ agent that answers from verified policies and manuals (RAG)",
+      "• A booking agent that checks slots, creates jobs and drafts quotes using tools",
+      "• An MCP server that any MCP-compatible AI app can use",
+      "• A multi-agent dispatch team that triages, schedules and escalates",
+      "• A no-code intake flow in n8n",
+      "• An evaluation suite, guardrails and monitoring, so the platform is safe to trust",
+      "Every module follows the same rhythm: explain, why it matters, see it, do it, practise, check, fix common mistakes, and apply it to the project.",
+      "Tools you'll work with: LangChain • LangGraph • MCP • CrewAI • Google ADK • OpenAI Agents SDK • Claude Agent SDK • n8n • LangSmith • Chroma • Gemini • Ollama",
+      "Most agent courses stop at demos. This one is built around reliability from the first module: testing, security, human approval and cost control. You'll also learn when not to use an agent.",
+      "By the end, you'll have a working, documented agent platform, a security review, a deployment runbook and a portfolio capstone you can show employers or clients.",
+      "Enrol now and start building intelligent AI agents."
+    ],
+    "includes": [
+      "16 modules, about 21.5 hours of learning",
+      "128 lessons across 400+ interactive screens",
+      "18 hands-on labs in real tools",
+      "15 practical assignments, one per module, plus a capstone project",
+      "150 knowledge-check activities (multiple choice, drag-and-drop, matching, ordering and more)",
+      "A final assessment of 50 scenario-based questions (75 minutes)",
+      "A prompt library with 236 copy-ready prompts across 17 use cases and 19 industries",
+      "Copy-ready code for every coded lab",
+      "A glossary of 88 technical terms in plain language",
+      "Troubleshooting guides for common errors in every module",
+      "Narrated lessons with captions and a language switcher for 78 languages",
+      "Two paths: technical (with code) and non-technical (no code)",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "wa-mastery": {
-    "subtitle": "Master WhatsApp Business automation: bulk campaigns, templates, webhooks, AI assistants, customer journeys, commerce and analytics.",
+    "subtitle": "Build a complete WhatsApp business system from zero on Meta's official WhatsApp Business Platform: consent-based contact lists, approved templates, bulk campaigns, a reply inbox, an AI assistant, payments, automated customer journeys and analytics. Choose a no-code path or a technical path.",
     "learn": [
-      "Set up Meta Business, a WhatsApp Business Account and the Cloud API",
-      "Write message templates that get approved across marketing and utility categories",
-      "Run compliant bulk campaigns to segmented, opted-in audiences",
-      "Receive messages and delivery statuses through webhooks in n8n",
-      "Build an AI assistant that answers customer questions on WhatsApp",
-      "Design automated journeys such as onboarding, reminders and win-back flows",
-      "Sell with catalogues, product messages, interactive buttons and payment links",
-      "Track delivery, read and reply rates and improve campaign performance"
+      "Set up and verify a Meta Business Portfolio, WhatsApp Business Account and business number the right way",
+      "Send your first WhatsApp message through the official Cloud API, from n8n or from code",
+      "Build a consent-first contact list with clean numbers, customer segments and automatic opt-out",
+      "Write marketing and utility templates that get approved, with variables, images and buttons",
+      "Run bulk campaigns from Google Sheets through n8n, paced to Meta's limits and fully logged",
+      "Schedule campaigns with approval checks, safe retries, frequency caps and error alerts",
+      "Capture every customer reply and delivery status through webhooks into a working inbox",
+      "Create tap-to-reply menus and buttons so customers don't have to type",
+      "Build an AI assistant that answers only from your business information and hands over to a person when needed, following Meta's 2026 AI policy",
+      "Use AI to plan, write and design campaigns, and run fair A/B tests",
+      "Take orders and payments on WhatsApp with Razorpay payment links",
+      "Automate reminders, follow-ups, abandoned-cart messages and win-back campaigns",
+      "Measure results with a dashboard, then secure and scale the system for real business use"
     ],
     "sections": [
       {
-        "title": "Module 1: Welcome and the WhatsApp Ecosystem",
+        "title": "Module 1: The WhatsApp Business Landscape",
         "lectures": [
-          ["Welcome and course roadmap", 5],
-          ["WhatsApp app vs Business app vs Business Platform", 21],
-          ["How the WhatsApp Cloud API works", 21],
-          ["Use cases across industries", 21],
-          ["Course tools: Meta, n8n and Google Sheets", 16]
+          ["WhatsApp vs WhatsApp Business App vs WhatsApp Business Platform", 13],
+          ["Why unofficial \"bulk sender\" tools put your number at risk", 13],
+          ["The four Meta places you'll work in", 13],
+          ["How messages go out and replies come back", 13],
+          ["2026 pricing, messaging limits and the AI policy in plain language", 13],
+          ["Hands-on: create your project blueprint", 20]
         ]
       },
       {
-        "title": "Module 2: Meta Business and Account Setup",
+        "title": "Module 2: Business Portfolio, Verification & WhatsApp Business Account",
         "lectures": [
-          ["Creating a Meta Business portfolio", 21],
-          ["WhatsApp Business Account and phone numbers", 21],
-          ["Business verification and display names", 21],
-          ["Permanent access tokens and system users", 21]
+          ["What a Meta Business Portfolio is and why it comes first", 15],
+          ["The name-matching rule for your documents (GST, Udyam and more)", 14],
+          ["Business verification, including missing buttons and rejections", 14],
+          ["Adding your team safely with two-factor security", 14],
+          ["Display names and your business profile", 14],
+          ["Planning your business phone number", 14]
         ]
       },
       {
-        "title": "Module 3: Message Templates",
+        "title": "Module 3: Developer App, Test Number & Your First Message",
         "lectures": [
-          ["Template categories: marketing, utility and authentication", 21],
-          ["Variables, media headers and buttons", 26],
-          ["Writing templates that get approved", 21],
-          ["Handling rejections and template quality", 16]
+          ["Create a developer app with the WhatsApp use case", 16],
+          ["Send your first message using Meta's free test number", 16],
+          ["Every ID and token, and where to keep each one safely", 16],
+          ["Create a permanent access token", 16],
+          ["Send a message from n8n (no-code) or cURL (technical)", 16],
+          ["Fix the most common errors", 15]
         ]
       },
       {
-        "title": "Module 4: Compliance and Number Health",
+        "title": "Module 4: Consent-First Contact Lists",
         "lectures": [
-          ["Opt-in rules and consent collection", 21],
-          ["The 24-hour customer service window", 16],
-          ["Quality rating and messaging limits", 21],
-          ["Pricing and managing messaging costs", 21]
+          ["Meta's opt-in rules and India's data-protection context", 13],
+          ["Collect opt-ins at the counter, by Google Form, click-to-chat link and QR code", 13],
+          ["Clean and validate Indian mobile numbers", 13],
+          ["Segments and tags that make campaigns relevant", 13],
+          ["An easy, permanent STOP / opt-out process", 13],
+          ["Hands-on: build a campaign-ready contact list", 20]
         ]
       },
       {
-        "title": "Module 5: Contacts and Segmentation",
+        "title": "Module 5: Message Templates That Get Approved",
         "lectures": [
-          ["Building a clean contact database", 21],
-          ["Tags, segments and personalisation fields", 21],
-          ["Importing from Google Sheets and CRMs", 21],
-          ["Unsubscribes and suppression lists", 21]
+          ["When you need a template", 14],
+          ["Marketing, utility and authentication categories", 14],
+          ["Header, body, footer and buttons within Meta's limits", 14],
+          ["Variables and sample values", 14],
+          ["Why templates get rejected and how to avoid it", 14],
+          ["Hands-on: create utility and marketing templates, and send them from n8n", 20]
         ]
       },
       {
-        "title": "Module 6: Bulk Campaign Workflows",
+        "title": "Module 6: Bulk Campaign Pipeline I — From Sheet to WhatsApp",
         "lectures": [
-          ["Planning a campaign end to end", 16],
-          ["Building a bulk sender in n8n", 32],
-          ["Batching, throttling and retries", 21],
-          ["Scheduling campaigns", 21]
+          ["Messaging limits and sending speed explained", 17],
+          ["Move from the test number to your real business number", 17],
+          ["Plan campaigns and log every send in Google Sheets", 17],
+          ["Build an n8n campaign sender with daily caps, batches and a dry-run switch", 17],
+          ["The five-person rule: test before going live", 16],
+          ["Read bulk errors: when to retry and when to fix", 16]
         ]
       },
       {
-        "title": "Module 7: Webhooks and Two-Way Messaging",
+        "title": "Module 7: Bulk Campaign Pipeline II — Scheduling, Retries & Safety",
         "lectures": [
-          ["Configuring the Cloud API webhook", 21],
-          ["Receiving and parsing incoming messages", 21],
-          ["Tracking sent, delivered and read statuses", 21],
-          ["Logging conversations to a database", 21]
+          ["Scheduled campaigns that run only when approved", 13],
+          ["Frequency caps so no customer gets too many messages", 13],
+          ["Safe retries for temporary errors", 13],
+          ["Error alerts that notify a person", 13],
+          ["Monitor quality ratings and limits, and know when to stop", 13],
+          ["Hands-on: build a campaign budget calculator", 20]
         ]
       },
       {
-        "title": "Module 8: AI Assistants on WhatsApp",
+        "title": "Module 8: Inbox & Webhooks — Hearing Every Reply",
         "lectures": [
-          ["Designing an AI assistant for your business", 16],
-          ["Connecting ChatGPT or Claude in n8n", 26],
-          ["Answering from your FAQs and documents", 26],
-          ["Escalating to a human agent", 16]
+          ["How webhooks work, explained simply", 18],
+          ["Read message and delivery-status data", 18],
+          ["Hands-on: log every reply to an inbox sheet", 28],
+          ["Track delivered, read and failed messages", 18],
+          ["Automate STOP handling and route questions to the right person", 18]
         ]
       },
       {
-        "title": "Module 9: Customer Journeys",
+        "title": "Module 9: Interactive Messages & Menus",
         "lectures": [
-          ["Mapping a customer journey", 16],
-          ["Welcome and onboarding sequences", 21],
-          ["Reminders, follow-ups and feedback requests", 26],
-          ["Re-engagement and win-back flows", 21]
+          ["Reply buttons, list menus and location messages", 18],
+          ["Writing within Meta's limits", 18],
+          ["Hands-on: build a main menu and workshop-booking buttons", 26],
+          ["Route each tap to the right response", 18]
         ]
       },
       {
-        "title": "Module 10: Interactive Messages and Flows",
+        "title": "Module 10: The Business-Scoped AI Assistant",
         "lectures": [
-          ["Reply buttons and list messages", 21],
-          ["Call-to-action and quick replies", 21],
-          ["WhatsApp Flows for forms and bookings", 26],
-          ["Project: an appointment booking flow", 21]
+          ["What Meta's 2026 policy allows for AI on WhatsApp", 18],
+          ["Answer from your own FAQ and product sheets, not the AI's general knowledge", 18],
+          ["Get a free Groq AI key and choose a model", 18],
+          ["Hands-on: build the assistant in n8n with a hand-over to a person", 28],
+          ["Test it with tricky questions before customers see it", 18]
         ]
       },
       {
-        "title": "Module 11: Commerce on WhatsApp",
+        "title": "Module 11: AI Campaign Studio — Plan, Write, Design, Test",
         "lectures": [
-          ["Catalogues and product messages", 21],
-          ["Taking orders in chat", 21],
-          ["Sending payment links and order updates", 21],
-          ["Abandoned cart and post-purchase messages", 21]
+          ["Where AI helps and where a person must decide", 18],
+          ["Write campaign briefs and template versions for each segment with AI", 18],
+          ["Create header images you have the right to use", 18],
+          ["Run a fair A/B test and read the results", 18],
+          ["What Meta's Marketing Messages API adds", 18]
         ]
       },
       {
-        "title": "Module 12: Customer Engagement and Support",
+        "title": "Module 12: WhatsApp Commerce & Payments",
         "lectures": [
-          ["Support workflows and response times", 21],
-          ["Shared inbox and human handover", 21],
-          ["Feedback, reviews and loyalty messages", 21],
-          ["Broadcast etiquette that keeps customers subscribed", 16]
+          ["Design an order tracker with order IDs", 20],
+          ["Build a tap-first order flow: product → quantity → area → confirm", 20],
+          ["Create Razorpay payment links (test mode)", 20],
+          ["Confirm payments safely", 20],
+          ["Send receipts, and handle failed, expired and refunded payments", 20]
         ]
       },
       {
-        "title": "Module 13: Analytics and Optimisation",
+        "title": "Module 13: Automated Customer Journeys",
         "lectures": [
-          ["Key metrics: delivery, read and reply rates", 21],
-          ["Building a campaign dashboard in Google Sheets", 26],
-          ["A/B testing templates and send times", 21],
-          ["Calculating cost per conversion", 16]
+          ["Welcome, reminder, feedback, abandoned-cart and win-back journeys", 22],
+          ["Exit rules that stop journeys when things change", 21],
+          ["One daily n8n workflow that runs every journey", 21],
+          ["A journey log so no one gets the same message twice", 21]
         ]
       },
       {
-        "title": "Module 14: Scaling, Reliability and Security",
+        "title": "Module 14: Analytics & Optimisation",
         "lectures": [
-          ["Handling high volumes and rate limits", 21],
-          ["Error handling and alerting", 21],
-          ["Protecting tokens and customer data", 21],
-          ["Running multiple numbers and brands", 21]
+          ["The metrics that matter: delivered, read, reply, opt-out, orders, revenue, cost per order", 15],
+          ["Build a campaign dashboard in Google Sheets", 15],
+          ["Which orders came from which campaign", 15],
+          ["WhatsApp Manager insights", 15],
+          ["A 20-minute weekly review that ends in one tested change", 15]
         ]
       },
       {
-        "title": "Module 15: Capstone Project",
+        "title": "Module 15: Production, Security & Scaling",
         "lectures": [
-          ["Capstone brief: a full WhatsApp automation system", 10],
-          ["Building campaigns, AI assistant and journeys", 37],
-          ["Testing, analytics and launch checklist", 26],
-          ["Next steps and course wrap-up", 10]
+          ["n8n Cloud or self-hosted?", 17],
+          ["Keep secrets safe and rotate them", 17],
+          ["Backups and an incident playbook", 17],
+          ["Protect customer data and keep it only as long as needed", 17],
+          ["When to move from Google Sheets to a database", 17]
+        ]
+      },
+      {
+        "title": "Module 16: Capstone, Industry Playbooks & Resources",
+        "lectures": [
+          ["Capstone: one customer through every part of the system, from contact list to payment and follow-up", 32],
+          ["Adapt the blueprint to other industries", 22],
+          ["Offer WhatsApp automation as a paid service", 22],
+          ["Final assessment", 22],
+          ["Prompt library, glossary and official resources", 22]
         ]
       }
     ],
     "requirements": [
-      "A Facebook account and a business you can verify, or a demo business for practice",
-      "A phone number that can be registered with the WhatsApp Business Platform",
-      "A free n8n account and a Google account",
-      "No coding experience required"
+      "No coding knowledge needed for the No-Code track",
+      "A computer with a modern browser, and a smartphone with WhatsApp",
+      "A Facebook account and a Google account",
+      "You can learn on Meta's free test number. Business documents (such as GST or Udyam registration) are needed only when you verify a real business",
+      "n8n: free Cloud trial or the free self-hosted version",
+      "Groq free API key for the AI assistant",
+      "Razorpay test mode for payments (no real money)",
+      "Meta charges for template messages sent to real customers. The course explains 2026 pricing so you can plan your budget"
     ],
     "audience": [
-      "Business owners who sell or support customers over WhatsApp",
-      "Digital marketers and agencies running WhatsApp campaigns",
-      "Customer support teams that want to automate common queries",
-      "Automation builders who want to offer WhatsApp solutions to clients"
+      "Small business owners who want to send offers, reminders and order updates without risking their number",
+      "Marketers and social media managers who want to run compliant WhatsApp campaigns and measure results",
+      "Freelancers and agency owners who want a sellable WhatsApp automation service for local businesses",
+      "Students and career changers who want a portfolio project in APIs, automation and AI",
+      "Developers who want to work directly with the Cloud API, webhooks and production deployment"
     ],
     "description": [
-      "WhatsApp is where many customers already prefer to talk to businesses. This course shows you how to automate that channel properly, from account setup and approved templates to AI assistants, customer journeys, commerce and analytics, across 15 modules and more than 21 hours.",
-      "You start with the WhatsApp ecosystem and the Cloud API, then set up a Meta Business portfolio, a WhatsApp Business Account and permanent tokens. You learn template categories, how to write templates that get approved, and the rules on opt-in, the 24-hour window, quality ratings and messaging limits.",
-      "With the foundation in place, you build bulk campaign workflows in n8n with segmentation, batching and scheduling, then set up webhooks to receive replies and delivery statuses. You add an AI assistant using ChatGPT or Claude that answers from your FAQs and hands over to a human when needed.",
-      "Later modules cover customer journeys, interactive buttons and lists, WhatsApp Flows for bookings and forms, catalogues, orders and payment links. You also build a simple analytics dashboard and learn to test templates and send times. Each topic includes a ready-to-adapt n8n workflow so you can apply it to your own business quickly.",
-      "The course ends with scaling, security and a capstone in which you build a complete WhatsApp automation system for a real or sample business. You will combine campaigns, an AI assistant, journeys and analytics into one working setup, with a launch checklist you can reuse for future clients or brands."
-    ]
+      "WhatsApp isn't just a messaging app. It can become your business automation channel.",
+      "Most businesses still forward offers by hand, answer the same questions all day and track orders in notebooks. Others try unofficial \"bulk sender\" tools and lose their number. This course shows you the safe, professional way to do it, using Meta's official WhatsApp Business Platform.",
+      "The whole course builds one system for one business. GreenNest Plant Studio is a plant nursery in Baner, Pune, run by Anaya Deshpande with her cousin Rohit. They answer 120–180 WhatsApp chats a day by hand, forward festival offers one by one, forget plant-care reminders and track orders in a notebook. Module by module, you automate all of it.",
+      "You'll build the system behind:",
+      "Customer Lists → Campaigns → Templates → Messages → Replies → AI → Journeys → Analytics",
+      "What you'll build:",
+      "• A consent-first contact list with automatic opt-out",
+      "• Approved message templates for offers, reminders and order updates",
+      "• A bulk campaign pipeline that respects Meta's limits and logs every message",
+      "• An inbox that captures every reply and delivery status",
+      "• Tap-to-reply menus and booking buttons",
+      "• An AI assistant that only talks about your business, and hands over to a person when needed",
+      "• Order and payment flows with Razorpay",
+      "• Automated reminders, follow-ups and win-back journeys",
+      "• A dashboard that shows what's working",
+      "Every lesson tells you exactly where to click, what to enter and what you should see, with a checklist and troubleshooting steps. Two tracks build the same system: No-Code with n8n and Google Sheets, or Technical with the API and code.",
+      "Free-first tools: WhatsApp Cloud API • n8n • Google Sheets • Groq • ChatGPT, Claude or Gemini • Razorpay",
+      "By the end, you'll have a complete, working WhatsApp business system that you can use for your own business or offer as a service to clients."
+    ],
+    "includes": [
+      "16 modules, about 24 hours of learning",
+      "120+ lessons with step-by-step setup screens",
+      "58 hands-on tasks and practical assignments in real tools",
+      "170+ knowledge-check activities (drag-and-drop, matching, ordering, calculations and more)",
+      "A final assessment",
+      "A 3-part capstone project covering the full system end to end",
+      "22 AI prompt exercises plus a prompt library with 100+ ready-to-use prompts",
+      "Ready-made workflows for campaigns, the inbox, the AI assistant and customer journeys",
+      "Two tracks: No-Code (n8n + Google Sheets) and Technical (API, JSON, cURL, Node.js)",
+      "Troubleshooting guides for common errors and template rejections",
+      "A glossary and a list of official resources",
+      "Narrated lessons with captions, in English and many Indian and global languages",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "omni-master": {
-    "subtitle": "Create cinematic AI videos with Omni AI: the 5-part prompt formula, consistent characters, native audio, Scenebuilder and avatars.",
+    "subtitle": "Go from your first prompt to a finished 40–60 second brand film using Google's AI video tools: Veo 3.1, Gemini Omni Flash, Google Flow and Nano Banana Pro. No video or AI experience needed.",
     "learn": [
-      "Write text-to-video prompts using the 5-part prompt formula",
-      "Control camera movement, lighting and style for a cinematic look",
-      "Keep characters consistent across shots using reference images and descriptions",
-      "Generate native audio, sound effects and spoken dialogue in your clips",
-      "Assemble multi-shot sequences in Scenebuilder and extend scenes smoothly",
-      "Edit clips conversationally with Omni Flash instead of regenerating from scratch",
-      "Create presenter videos with AI avatars in Google Vids",
-      "Plan and deliver a complete short cinematic film"
+      "Find your way around Google's AI video tools and know which one to use for each shot",
+      "Work confidently in Google Flow: projects, models, aspect ratios, credits and downloads",
+      "Create a \"look book\" of characters, products and locations with Nano Banana Pro",
+      "Write video prompts like a director, covering subject, action, scene, camera, style and sound",
+      "Generate cinematic scenes with Veo 3.1, including native sound and spoken dialogue",
+      "Turn still images into controlled video, and design transitions using first and last frames",
+      "Keep characters and products looking the same across scenes with Ingredients to Video",
+      "Lengthen shots with Extend, and add or remove objects",
+      "Create video from text, images, audio and video with Gemini Omni Flash, then edit it just by describing the changes",
+      "Assemble a full film in Scenebuilder, add captions and titles, and export for every platform",
+      "Label AI content honestly, check rights, and price video work for clients"
     ],
     "sections": [
       {
-        "title": "Getting Started with Omni AI",
+        "title": "Module 1: Google's AI Video Ecosystem",
         "lectures": [
-          ["Welcome and what you will create", 4],
-          ["Accessing Omni AI and touring the workspace", 8],
-          ["Credits, settings and output formats", 6],
-          ["Your first text-to-video clip", 10]
+          ["Google's AI video tools at a glance", 7],
+          ["Veo 3.1 Lite, Fast and Quality: when to use each", 7],
+          ["Gemini Omni Flash and how it differs from Veo", 7],
+          ["Credits and plans explained", 7],
+          ["SynthID, AI labels and responsible use", 7],
+          ["Lab: explore Google Flow and Flow TV", 7],
+          ["Assignment: write the film brief", 8]
         ]
       },
       {
-        "title": "Text-to-Video and the 5-Part Prompt Formula",
+        "title": "Module 2: Getting Started in Google Flow",
         "lectures": [
-          ["The formula: subject, action, setting, camera and style", 10],
-          ["Camera language: shots, angles and movement", 10],
-          ["Lighting, mood and colour", 9],
-          ["Practice: rewriting weak prompts", 11]
+          ["Open Flow and create your first project", 8],
+          ["Every control in the creation panel explained", 8],
+          ["The right aspect ratio for each platform", 8],
+          ["Lab: generate your first image and first video clip", 8],
+          ["Review, keep, download and upscale results", 9],
+          ["Quick video in the Gemini app", 9]
         ]
       },
       {
-        "title": "Character Consistency",
+        "title": "Module 3: Visual Foundations with Nano Banana Pro",
         "lectures": [
-          ["Why characters drift between shots", 7],
-          ["Character sheets and reference images", 11],
-          ["Reusing characters across scenes", 11],
-          ["Practice: one character, five scenes", 11]
+          ["Why images come first", 7],
+          ["The image prompt formula", 7],
+          ["Light and lens language", 7],
+          ["Design characters that stay consistent", 7],
+          ["Create product scenes from a real product photo", 7],
+          ["Lab: build the full look book", 7],
+          ["Fix common image problems", 8]
         ]
       },
       {
-        "title": "Native Audio and Dialogue",
+        "title": "Module 4: Directing with Veo 3.1",
         "lectures": [
-          ["How native audio generation works", 7],
-          ["Prompting ambience and sound effects", 9],
-          ["Writing dialogue and voice direction", 11],
-          ["Practice: a two-character dialogue scene", 11]
+          ["From still image to motion", 10],
+          ["The video prompt formula: subject, action, scene, camera, style", 10],
+          ["Camera vocabulary and pacing short clips", 10],
+          ["Native audio: sound effects, ambience and dialogue", 10],
+          ["Lab: generate three directed scenes, including a spoken welcome line", 10],
+          ["Review clips with a critical eye", 10]
         ]
       },
       {
-        "title": "Scenebuilder and Scene Extensions",
+        "title": "Module 5: Control & Consistency",
         "lectures": [
-          ["Planning a multi-shot sequence", 9],
-          ["Building scenes in Scenebuilder", 13],
-          ["Extending scenes for continuity", 11],
-          ["Transitions and pacing", 9]
+          ["Frames to Video: start from an approved image", 9],
+          ["First and last frames for designed transitions (clay to bowl)", 9],
+          ["Ingredients to Video for a consistent character and product", 9],
+          ["Lab: create consistent shots with Frames and Ingredients", 9],
+          ["Extend: continue a shot", 9],
+          ["Insert and remove objects", 10]
         ]
       },
       {
-        "title": "Conversational Editing with Omni Flash",
+        "title": "Module 6: Gemini Omni Flash — Multimodal Creation & Conversational Editing",
         "lectures": [
-          ["What Omni Flash can change in a clip", 7],
-          ["Editing with natural-language instructions", 11],
-          ["Fixing common problems: hands, faces and motion", 9],
-          ["Practice: iterate a clip to final", 9]
+          ["What Gemini Omni Flash is", 9],
+          ["Omni Flash or Veo 3.1: choosing the right one", 9],
+          ["Create video from a mix of text, images, audio and video", 9],
+          ["Conversational editing: change a clip just by describing it", 9],
+          ["Short-form video for YouTube Shorts", 9],
+          ["Lab: create and refine clips with Omni Flash", 10]
         ]
       },
       {
-        "title": "AI Avatars and Google Vids",
+        "title": "Module 7: Capstone — Assemble, Finish & Deliver the Film",
         "lectures": [
-          ["Introduction to Google Vids", 7],
-          ["Creating avatar presenter videos", 11],
-          ["Combining avatars with Omni footage", 9],
-          ["Practice: a short explainer video", 9]
-        ]
-      },
-      {
-        "title": "Capstone: Your Cinematic Short Film",
-        "lectures": [
-          ["Capstone brief and storyboard", 9],
-          ["Generating and assembling the shots", 16],
-          ["Audio, edits and final export", 11],
-          ["Review and next steps", 4]
+          ["Assemble the brand film in Scenebuilder", 6],
+          ["Finish with sound, captions, titles and AI labels", 5],
+          ["Export for each platform (landscape and vertical reels)", 4],
+          ["Lab: assemble and finish the complete film", 7],
+          ["Rights and compliance checklist", 4],
+          ["Client workflow and pricing", 5],
+          ["Adapt the method to restaurants, electronics and other industries", 4],
+          ["Final assessment", 25]
         ]
       }
     ],
     "requirements": [
-      "A computer with internet access",
-      "Access to Omni AI and a Google account for Google Vids; some features need a paid plan",
-      "No video editing experience needed"
+      "No video or AI experience needed",
+      "A Google account (you must be 18 or older)",
+      "A computer with Chrome or Edge",
+      "Google Flow: free daily credits cover a few practice drafts",
+      "A paid Google AI plan (Plus, Pro or Ultra) gives more credits, higher resolution and extra features. It's optional, but helpful for completing every lab at full quality",
+      "Video generation in the Gemini app needs an eligible Google AI plan",
+      "Optional: Canva or DaVinci Resolve (free versions) for extra editing",
+      "Credit costs and plan prices vary by country and change often. Always check the cost shown in Flow before generating"
     ],
     "audience": [
-      "Content creators who want cinematic videos without a film crew",
-      "Marketers producing ads, reels and product videos",
-      "Educators and trainers who need explainer and avatar videos",
-      "Aspiring AI filmmakers learning shot-by-shot storytelling"
+      "Small business owners who want product films, workshop promos and social reels without a film crew",
+      "Content creators making cinematic shorts for YouTube and Instagram",
+      "Marketers and agencies who want a repeatable Google-based video workflow",
+      "Filmmakers and editors who want AI for pre-visualisation, B-roll and stylised shots",
+      "Students and career changers who want a portfolio film and a video service they can sell"
     ],
     "description": [
-      "Master the Omni AI is a focused course on making cinematic AI video. In just over five hours you learn how to write prompts that produce controlled, film-like shots, keep characters consistent, add sound and dialogue, and assemble everything into a finished short.",
-      "The course starts with text-to-video and the 5-part prompt formula, which breaks every prompt into subject, action, setting, camera and style. You practise camera language, lighting and mood so that your results stop looking random and start looking directed. Every lesson includes practice prompts to try.",
-      "Next you tackle the hardest problems in AI video. You use reference images and character sheets for consistency, generate native audio and dialogue, build multi-shot sequences in Scenebuilder and extend scenes for continuity. You also learn conversational editing with Omni Flash, changing a clip with simple instructions rather than starting again.",
-      "A dedicated section covers AI avatars in Google Vids for presenter and explainer videos. The course ends with a capstone in which you storyboard, generate, edit and export your own cinematic short film. You will finish with a polished film and a prompt library you can reuse on future projects."
-    ]
+      "From first prompt to professional AI film production.",
+      "Creating an impressive AI video clip is one thing. Building a complete video with intentional scenes, consistent characters, controlled transitions, dialogue, sound, editing and a clear visual style needs a much deeper workflow. That's what this course teaches.",
+      "You'll start by understanding Google's AI video tools and setting up Google Flow. Then you'll build the visual foundation of your film with Nano Banana Pro, write director-style prompts for Veo 3.1, design transitions with first and last frames, keep characters consistent with Ingredients to Video, add native sound and dialogue, and refine clips by simply describing changes to Gemini Omni Flash.",
+      "In the final capstone, you bring it all together: assemble the film in Scenebuilder, add captions, titles and AI labels, and export it for every platform.",
+      "The whole course builds one project for one business. Kaveri Clay Studio is a small pottery studio in Pune run by potter Anika Desai. She sells handmade mugs and planters and runs weekend wheel-throwing workshops, but has no video content. Module by module, you create her complete film kit.",
+      "What you'll create:",
+      "• A look book of characters, products and locations",
+      "• A scene library of cinematic shots with native sound",
+      "• Consistent character and product sequences",
+      "• Short-form clips for YouTube Shorts and Reels",
+      "• A finished 40–60 second brand film, plus vertical reels",
+      "Tools: Veo 3.1 • Gemini Omni Flash • Google Flow • Nano Banana Pro • Gemini app",
+      "Every lesson shows you exactly where to click and what you should see, gives you a ready-to-use prompt, and asks you to try it yourself in Flow.",
+      "Don't just generate AI video. Learn to direct the complete workflow.",
+      "Edition: 2026 (tools checked October 2026)."
+    ],
+    "includes": [
+      "7 modules, about 6 hours 20 minutes of learning",
+      "40+ lessons with click-by-click instructions",
+      "7 hands-on labs in Google Flow and the Gemini app",
+      "14 practice prompts written for Flow, with expected results and follow-ups",
+      "6 practical assignments plus a capstone brand film",
+      "65+ knowledge-check activities (drag-and-drop, matching, ordering and more)",
+      "A final assessment: 30 scenario-based questions (45 minutes)",
+      "A prompt library with 191 copy-ready prompts for 19 industries",
+      "A glossary of 54 AI video terms in plain language",
+      "Troubleshooting guides for common image and video problems",
+      "Narrated lessons with captions and a language switcher for 78 languages",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "kling-master": {
-    "subtitle": "Go deep on Kling AI 3.0 and Video 3.0 Omni: motion control, multi-shot stories, consistent characters, lip sync and a capstone film.",
+    "subtitle": "Learn Kling AI 3.0 step by step: cinematic images, consistent characters, directed camera work, native sound, multi-shot storytelling, talking avatars and professional editing.",
     "learn": [
-      "Navigate Kling AI 3.0, its models, settings and credit costs",
-      "Generate strong starting frames with Kling text-to-image",
-      "Animate still images into natural motion with image-to-video",
-      "Use Video 3.0 Omni with references for richer, controlled scenes",
-      "Direct camera moves and character actions with motion control",
-      "Plan and generate multi-shot sequences that tell one story",
-      "Keep characters and elements consistent across an entire film",
-      "Write cinematic prompts with Claude and add lip sync and voiceovers"
+      "Understand the Kling 3.0 model family and choose the right model, mode and settings for each shot",
+      "Plan credits like a producer so you don't waste generations",
+      "Write cinematic image prompts covering subject, setting, light, lens and composition",
+      "Edit images with plain-language instructions and combine multiple reference images",
+      "Keep characters and objects consistent across every shot using Kling's Elements",
+      "Write video prompts like a director: action, camera movement, pacing and native sound",
+      "Bring still images to life, design transitions with start and end frames, and move only what you choose with Motion Brush",
+      "Build connected multi-shot sequences with VIDEO 3.0 Omni and Custom Multi-Shot",
+      "Direct exact character movement with Motion Control",
+      "Create a talking presenter with Avatar 2.0 and lip-sync speech to faces",
+      "Edit your film in Canva or DaVinci Resolve with sound, captions, titles and colour matching",
+      "Label AI content, check rights, and price AI video work for clients"
     ],
     "sections": [
       {
-        "title": "Welcome to Kling AI 3.0",
+        "title": "Module 1: Kling AI Foundations",
         "lectures": [
-          ["Welcome and what you will create", 6],
-          ["Kling AI 3.0 interface tour", 14],
-          ["Models, modes, resolutions and credits", 14],
-          ["Your first generation", 14],
-          ["Reading results and planning iterations", 11]
+          ["What Kling AI is, and the Kling 3.0 model family", 8],
+          ["Generation modes: the director's toolbox", 8],
+          ["How credits work, and budgeting them", 8],
+          ["Responsible and legal AI video", 8],
+          ["Where Kling fits among other AI video tools", 8],
+          ["Lab: explore Kling and map the model selector", 8],
+          ["Assignment: write the film brief and shot list", 7]
         ]
       },
       {
-        "title": "Text-to-Image in Kling",
+        "title": "Module 2: Account, Plans & Interface Mastery",
         "lectures": [
-          ["Text-to-image basics", 14],
-          ["Composition, lighting and styles", 17],
-          ["Creating key frames for video", 17],
-          ["Practice: a mood board for your film", 14]
+          ["Create and secure your Kling account", 10],
+          ["Choose the right plan", 9],
+          ["Tour the creation workspace", 9],
+          ["The right aspect ratio for every channel", 9],
+          ["Lab: generate and save your first image", 9],
+          ["Organise assets and history; use Kling on mobile", 9]
         ]
       },
       {
-        "title": "Image-to-Video",
+        "title": "Module 3: Cinematic Images with IMAGE 3.0: The Look Book",
         "lectures": [
-          ["How image-to-video works", 11],
-          ["Prompting motion from a still frame", 17],
-          ["Start and end frames", 17],
-          ["Fixing distortion and unwanted motion", 14],
-          ["Practice: animate five key frames", 14]
+          ["Why stills come first", 10],
+          ["The cinematic image prompt formula", 10],
+          ["Lighting, camera and composition language", 9],
+          ["Design characters and create a character turnaround sheet", 9],
+          ["Lab: create the character set", 9],
+          ["Location and mood stills", 9],
+          ["Fix common image problems", 9]
         ]
       },
       {
-        "title": "Video 3.0 Omni",
+        "title": "Module 4: Editing, References & Elements: Consistent Characters",
         "lectures": [
-          ["What Video 3.0 Omni adds", 11],
-          ["Text-to-video with references", 20],
-          ["Combining images, video and instructions", 18],
-          ["Practice: a reference-driven scene", 15]
+          ["Why characters change between shots, and how to stop it", 10],
+          ["Edit images with plain-language instructions", 10],
+          ["Combine multiple reference images", 9],
+          ["Elements: Kling's consistency system", 9],
+          ["Lab: build and test character Elements", 9],
+          ["Give characters a voice (VIDEO 3.0 Omni)", 9],
+          ["Elements for objects and places", 9]
         ]
       },
       {
-        "title": "Claude AI Cinematic Prompting",
+        "title": "Module 5: Text-to-Video: Directing with Words, Camera & Sound",
         "lectures": [
-          ["Shot types, lenses and camera language", 15],
-          ["Using Claude to write shot lists", 18],
-          ["Turning a script into Kling prompts", 18],
-          ["A reusable cinematic prompt template", 15]
+          ["From still to motion: what changes", 10],
+          ["The video prompt formula", 10],
+          ["Camera movement vocabulary", 10],
+          ["Duration and pacing", 10],
+          ["Native audio: sound and dialogue in the same generation", 10],
+          ["Lab: generate your first three scenes, including a line of dialogue", 10],
+          ["Review a clip with a critical eye", 10]
         ]
       },
       {
-        "title": "Motion Control",
+        "title": "Module 6: Image-to-Video, Start & End Frames, Motion Brush & Extend",
         "lectures": [
-          ["Camera control: pan, tilt, dolly and orbit", 18],
-          ["Motion control from reference video", 20],
-          ["Directing character actions", 15],
-          ["Practice: an action sequence", 15]
+          ["Why image-to-video gives you more control", 10],
+          ["Prepare a great starting image", 10],
+          ["Motion prompts: describe what changes", 9],
+          ["Start and end frames for designed transitions (dawn to dusk)", 9],
+          ["Motion Brush: move only what you choose", 9],
+          ["Extend: continue a shot", 9],
+          ["Lab: animate the look book", 9]
         ]
       },
       {
-        "title": "Multi-Shot Storytelling",
+        "title": "Module 7: Multi-Shot Storytelling with VIDEO 3.0 & Omni",
         "lectures": [
-          ["Storyboarding for AI video", 15],
-          ["Generating multi-shot sequences", 20],
-          ["Continuity of light, costume and setting", 15],
-          ["Practice: a 30-second story", 18]
+          ["What multi-shot generation is", 11],
+          ["Film grammar for believable sequences", 11],
+          ["Write a Custom Multi-Shot prompt shot by shot", 11],
+          ["Use Omni references to keep characters and voices consistent", 11],
+          ["Lab: build a rooftop sunset sequence", 11],
+          ["Optional: plan sequences with an AI assistant such as ChatGPT, Claude or Gemini", 10]
         ]
       },
       {
-        "title": "Character and Element Consistency",
+        "title": "Module 8: Performance: Motion Control, Talking Avatars & Lip Sync",
         "lectures": [
-          ["Why consistency breaks", 12],
-          ["Using Elements and reference images", 20],
-          ["Building a character library", 15],
-          ["Practice: one hero across ten shots", 18]
+          ["Three ways to control a performance", 8],
+          ["Motion Control, using your own recorded movement", 8],
+          ["Lab: a signature character gesture with Motion Control", 8],
+          ["Avatar 2.0: talking presenters", 8],
+          ["Write avatar scripts that sound natural, and choose voices and languages", 7],
+          ["Lab: a 30-second talking welcome video", 7],
+          ["Lip sync for existing clips", 7],
+          ["Consent and disclosure for avatars", 7]
         ]
       },
       {
-        "title": "Lip Sync and Voiceovers",
+        "title": "Module 9: Post-Production: Editing, Sound, Captions & Export",
         "lectures": [
-          ["Writing dialogue and narration", 12],
-          ["Generating voiceovers", 15],
-          ["Kling lip sync workflow", 20],
-          ["Sound effects and music", 15]
+          ["Why AI clips still need editing", 7],
+          ["Choose an editor: Canva or DaVinci Resolve", 7],
+          ["The story edit", 7],
+          ["Sound mixing: dialogue, ambience and licensed music", 7],
+          ["Captions, titles and the AI label", 7],
+          ["Colour consistency", 7],
+          ["Lab: edit the hero film", 7],
+          ["Export formats, thumbnails and quality checks", 6]
         ]
       },
       {
-        "title": "Editing and Finishing",
+        "title": "Module 10: Capstone: Film Kit, Client Workflow & Industry Playbooks",
         "lectures": [
-          ["Assembling clips in an editor", 18],
-          ["Colour, pacing and transitions", 15],
-          ["Upscaling and export settings", 12],
-          ["Preparing for YouTube and social media", 12]
-        ]
-      },
-      {
-        "title": "Capstone Cinematic Film Project",
-        "lectures": [
-          ["Capstone brief and script", 12],
-          ["Storyboard and prompt pack with Claude", 20],
-          ["Generating, consistency checks and lip sync", 29],
-          ["Final edit, review and next steps", 15]
+          ["What you deliver: the complete film kit", 9],
+          ["Lab: final review of the film kit", 9],
+          ["A professional client workflow and rights checklist", 9],
+          ["Pricing AI video work", 9],
+          ["Adapt the method to electronics stores, restaurants and other industries", 8],
+          ["Your portfolio and next steps", 8],
+          ["Final assessment", 8]
         ]
       }
     ],
     "requirements": [
-      "A computer with internet access",
-      "A Kling AI account; paid credits are needed for longer or higher-quality generations",
-      "A free Claude account for prompt writing",
-      "Any basic video editor such as CapCut or DaVinci Resolve"
+      "No video, filming or editing experience needed",
+      "A computer (recommended for editing) or a smartphone, with a modern browser",
+      "A Kling AI account: the free plan gives daily credits and covers every lab",
+      "Free plan videos have a watermark and can't be used commercially. A paid Kling plan is needed for watermark-free, commercial or client work",
+      "Canva (free plan) for editing; DaVinci Resolve (free) is optional",
+      "Optional: ChatGPT, Claude or Gemini (free plans) for planning scripts and shot lists"
     ],
     "audience": [
-      "Creators and YouTubers who want cinematic AI video",
-      "Filmmakers and editors adding AI to their pipeline",
-      "Marketers and agencies producing video ads",
-      "Beginners who want an in-depth, single-tool mastery course"
+      "Complete beginners who have never made a video",
+      "Business owners who want ads, product films and social reels without a film crew",
+      "Content creators who want consistent characters and cinematic shots for YouTube and Instagram",
+      "Marketers and agencies who want a repeatable AI video workflow for client work",
+      "Filmmakers, editors and students who want a portfolio film and a video service they can sell"
     ],
     "description": [
-      "Kling AI is one of the most capable AI video tools available, and this course goes deep into it. Over more than 12 hours you learn Kling AI 3.0 and Video 3.0 Omni from first generation to a finished cinematic film.",
-      "You begin with the interface, models and credit costs, then learn text-to-image to create strong key frames and image-to-video to bring them to life. You then move to Video 3.0 Omni, using references to get richer and more controlled scenes.",
-      "A full section is dedicated to cinematic prompting with Claude, turning a script into shot lists and precise Kling prompts. You then practise motion control for camera moves and character actions, and multi-shot storytelling for sequences that hold together. Every lesson includes practice exercises.",
-      "Consistency is where most AI films fall apart, so you learn to use Elements and reference images to keep characters and objects stable across shots. You add dialogue with voiceovers and Kling lip sync, then finish your clips with editing, colour and export.",
-      "The capstone cinematic film project takes you through script, storyboard, prompt pack, generation and final edit, leaving you with a complete short film for your portfolio. You will also keep the prompt templates, character library and shot lists you build along the way for future projects and client work."
-    ]
+      "Anyone can generate an AI video. Can you direct one?",
+      "AI video has moved beyond simple text-to-video experiments. The real skill now is knowing how to create the right visual, control movement, keep characters consistent, connect multiple shots, and turn separate clips into a complete cinematic story.",
+      "Kling AI: In-Depth Mastery takes you from your first Kling image to a finished, publish-ready film. You'll work with the Kling AI 3.0 tools, including IMAGE 3.0, VIDEO 3.0, VIDEO 3.0 Omni, Elements, Motion Brush, Motion Control, Avatar 2.0 and Lip Sync.",
+      "What you'll create:",
+      "• A look book of cinematic character and location stills",
+      "• Reusable character Elements that stay consistent in every shot",
+      "• A scene library of directed shots with camera moves and native sound",
+      "• A 45–60 second multi-shot promo film with dialogue and transitions",
+      "• A talking presenter avatar video",
+      "• A social media kit of vertical reels, with captions and an AI-content label",
+      "The core workflow:",
+      "Idea → Frame → Prompt → Create → Direct → Control → Consistency → Edit → Produce",
+      "Every lesson shows you exactly where to click and what you should see, gives you a ready-to-use Kling prompt, and asks you to try it yourself.",
+      "This isn't about randomly generating AI clips and hoping something works. It's about learning to think like a director while working with AI."
+    ],
+    "includes": [
+      "10 modules, about 10 hours of learning",
+      "79 lessons with click-by-click instructions",
+      "11 hands-on labs in Kling",
+      "17 practice prompts written for Kling, with settings, expected results and follow-ups",
+      "9 practical assignments plus a capstone film project",
+      "99 knowledge-check activities (drag-and-drop, matching, ordering and more)",
+      "A final assessment: 40 scenario-based questions (60 minutes)",
+      "A prompt library with 202 copy-ready prompts for 19 industries",
+      "A glossary of 71 AI video and Kling terms in plain language",
+      "Troubleshooting guides for common image and video problems",
+      "Narrated lessons with captions and a language switcher for 78 languages",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "genai-complete": {
-    "subtitle": "The complete generative AI course: 50+ tools for text, images, video, audio and automation, including ChatGPT, Claude and Midjourney.",
+    "subtitle": "Go from your first AI chat to running a complete AI toolkit for real work: writing, images, voice, video, research, data, automation and strategy, used responsibly. No prior AI experience needed.",
     "learn": [
-      "Explain how large language models and diffusion models generate content",
-      "Write effective prompts using proven frameworks for any AI tool",
-      "Use ChatGPT custom GPTs and data analysis for everyday work",
-      "Work with long documents, Projects and Artifacts in Claude",
-      "Create professional images with Midjourney and DALL-E 3",
-      "Produce AI videos, avatars and voiceovers with leading tools",
-      "Build presentations and designs quickly with Gamma and Canva",
-      "Automate workflows with Zapier and n8n and use AI responsibly"
+      "Understand how generative AI works, why it sometimes gets things wrong, and where it should and shouldn't make decisions",
+      "Set up ChatGPT and Claude as real workspaces, using Projects, memory, files, custom instructions, GPTs and Artifacts",
+      "Try agentic AI with Claude Cowork and Claude Code, with free alternatives provided",
+      "Choose the right assistant for each task: ChatGPT, Claude, Gemini, Copilot or Perplexity",
+      "Write prompts that work every time with the CRAFTED framework, then advance to examples, prompt chains, JSON output, self-critique and meta-prompting",
+      "Build a content engine: brand voice guide, product descriptions at scale, social posts, emails and WhatsApp messages",
+      "Create and edit campaign images with ChatGPT, Nano Banana, Canva, Adobe Firefly and Midjourney",
+      "Produce voice-overs in English and Hindi with ElevenLabs, and background music with Suno",
+      "Plan and generate short videos with Veo and Runway, and assemble a finished Reel in Canva",
+      "Research with cited sources, ask questions of your own documents in NotebookLM, and analyse sales data",
+      "Build no-code automations in Zapier and Make, including an AI step with human approval",
+      "Use AI for strategy: SWOT, 90-day plans, customer journeys and SOPs",
+      "Protect privacy, reduce bias, respect copyright, and label AI content under Indian and EU rules"
     ],
     "sections": [
       {
-        "title": "Module 1: Introduction to Generative AI",
+        "title": "Module 1: How Generative AI Really Works",
         "lectures": [
-          ["Welcome and how to use this course", 5],
-          ["What generative AI is and what it can do", 16],
-          ["The landscape of 50+ AI tools", 22],
-          ["Setting up your AI toolkit", 22]
+          ["What generative AI actually is", 9],
+          ["How a language model turns your prompt into an answer", 8],
+          ["Tokens and context windows, explained simply", 8],
+          ["Why AI makes things up (hallucinations)", 8],
+          ["Where AI helps, and where it shouldn't decide", 8],
+          ["The AI tool landscape, and free vs paid plans", 8],
+          ["Lab: your first side-by-side test of ChatGPT and Claude", 13],
+          ["Assignment: your AI starting plan", 13]
         ]
       },
       {
-        "title": "Module 2: How Generative AI Works",
+        "title": "Module 2: ChatGPT — From First Chat to Power User",
         "lectures": [
-          ["Large language models in plain English", 22],
-          ["Tokens, context windows and hallucinations", 16],
-          ["How image and video diffusion models work", 16],
-          ["Choosing the right model for the task", 16]
+          ["Tour of the ChatGPT interface", 10],
+          ["Choosing a model or mode", 10],
+          ["Custom instructions and memory", 10],
+          ["Lab: build a ChatGPT Project with a brand facts file", 14],
+          ["Working with documents, spreadsheets and images", 9],
+          ["Search, image generation, deep research and agent mode", 9],
+          ["GPTs: custom versions of ChatGPT for one job", 9],
+          ["Desktop, mobile, sharing and data controls", 9]
         ]
       },
       {
-        "title": "Module 3: Prompt Engineering",
+        "title": "Module 3: Claude — Projects, Artifacts, Cowork & Claude Code",
         "lectures": [
-          ["Anatomy of a great prompt", 16],
-          ["Prompt frameworks and templates", 16],
-          ["Few-shot examples and step-by-step reasoning", 16],
-          ["Practice: a personal prompt library", 22]
+          ["Why learn a second assistant", 8],
+          ["Tour of Claude, choosing models, and setting preferences and styles", 8],
+          ["Memory and privacy in Claude", 8],
+          ["Lab: build and test a Claude Project", 12],
+          ["Artifacts: build an interactive size-guide tool", 8],
+          ["Research, web search and connectors", 8],
+          ["Cowork: agentic AI for knowledge work (lab with a free-plan alternative)", 12],
+          ["Claude Code for non-coders: build a small web page", 8],
+          ["Claude or ChatGPT? A practical guide", 8]
         ]
       },
       {
-        "title": "Module 4: ChatGPT Deep Dive",
+        "title": "Module 4: Gemini, Copilot, Perplexity & Choosing the Right Assistant",
         "lectures": [
-          ["ChatGPT features tour", 16],
-          ["Custom GPTs for repeat tasks", 22],
-          ["Data analysis with spreadsheets", 16],
-          ["Practice: build your own GPT", 15]
+          ["Tour of the Gemini app, and its plans in India", 9],
+          ["Lab: create a custom Gem for captions", 13],
+          ["Microsoft Copilot inside Microsoft 365", 9],
+          ["Lab: research with Perplexity, then check the citations", 13],
+          ["Other assistants, and a word of caution", 8],
+          ["Build your assistant selection matrix", 8]
         ]
       },
       {
-        "title": "Module 5: Claude for Thinking and Writing",
+        "title": "Module 5: Prompt Engineering — Beginner to Advanced",
         "lectures": [
-          ["Claude features tour", 15],
-          ["Projects and long documents", 15],
-          ["Artifacts for documents and mini apps", 15],
-          ["Practice: a report from raw notes", 21]
+          ["The CRAFTED framework, and rebuilding a weak prompt step by step", 11],
+          ["Let the AI ask you questions first", 11],
+          ["Examples (few-shot) to get your style", 11],
+          ["Step-by-step reasoning and prompt chains", 11],
+          ["Structured output: tables, CSV and JSON", 10],
+          ["Self-critique loops and meta-prompting", 10],
+          ["Lab: build and test your prompt library in Google Sheets", 16],
+          ["Prompt injection: when content gives the AI orders", 10]
         ]
       },
       {
-        "title": "Module 6: Research with Gemini and Perplexity",
+        "title": "Module 6: AI Writing & Content Creation",
         "lectures": [
-          ["Gemini in Google Workspace", 15],
-          ["Cited research with Perplexity", 15],
-          ["NotebookLM for studying sources", 15],
-          ["Practice: a fact-checked brief", 15]
+          ["Build a brand voice guide from your best writing", 9],
+          ["Lab: generate 10 product descriptions in Google Sheets", 13],
+          ["Social media posts that don't sound generic, and a two-week content calendar", 9],
+          ["Emails and WhatsApp messages, including a four-email launch sequence", 9],
+          ["Long-form articles and search", 9],
+          ["Repurposing one idea into many formats", 9],
+          ["Editing with AI while keeping your own voice", 9],
+          ["Originality, AI detectors and disclosure", 8]
         ]
       },
       {
-        "title": "Module 7: Image Generation with Midjourney",
+        "title": "Module 7: AI Image Generation & Editing",
         "lectures": [
-          ["Getting started with Midjourney", 15],
-          ["Styles, parameters and aspect ratios", 21],
-          ["Character and style references", 15],
-          ["Practice: a brand image set", 15]
+          ["What AI images are for, and what they're not for", 9],
+          ["Anatomy of an image prompt", 9],
+          ["Lab: create a campaign mood board in ChatGPT", 13],
+          ["Edit real product photos with Nano Banana in Gemini", 9],
+          ["Midjourney for premium artistic images (paid)", 9],
+          ["Canva AI and Adobe Firefly for design-ready work", 9],
+          ["Keep a consistent look across a campaign", 9],
+          ["Rights, truthfulness and labelling", 8]
         ]
       },
       {
-        "title": "Module 8: DALL-E 3 and Other Image Tools",
+        "title": "Module 8: AI Voice, Audio & Music",
         "lectures": [
-          ["DALL-E 3 and image generation in ChatGPT", 15],
-          ["Adobe Firefly and Leonardo AI", 15],
-          ["Editing, inpainting and upscaling", 15],
-          ["Practice: product and social visuals", 15]
+          ["Writing scripts for the ear", 8],
+          ["Lab: produce English and Hindi voice-overs in ElevenLabs", 12],
+          ["Voice cloning and consent", 8],
+          ["Lab: generate a background track with Suno", 11],
+          ["Clean-up and mixing basics", 8],
+          ["Podcast-style audio from your own documents", 8]
         ]
       },
       {
-        "title": "Module 9: AI Video",
+        "title": "Module 9: AI Video Creation",
         "lectures": [
-          ["Text-to-video and image-to-video with Runway and Kling", 21],
-          ["Avatar videos with HeyGen", 15],
-          ["Editing and captions with CapCut", 15],
-          ["Practice: a 30-second promo video", 15]
+          ["What AI video can realistically do in 2026", 8],
+          ["Plan first: shot list, storyboard and video prompts", 8],
+          ["Lab: generate a clip with Veo in Gemini or Flow", 13],
+          ["Runway and budgeting your credits", 8],
+          ["AI avatars and presenters", 8],
+          ["Lab: assemble a finished Reel in Canva with voice, music and captions", 13],
+          ["Labelling AI video responsibly", 12]
         ]
       },
       {
-        "title": "Module 10: AI Audio and Voice",
+        "title": "Module 10: AI for Research, Documents & Data Analysis",
         "lectures": [
-          ["Voiceovers and voice cloning with ElevenLabs", 21],
-          ["Music generation with Suno", 15],
-          ["Transcription and podcast clean-up", 15],
-          ["Practice: a narrated explainer", 15]
+          ["A research workflow you can trust", 10],
+          ["Which research tool for which job", 10],
+          ["Lab: run deep research and verify five claims", 14],
+          ["Lab: build a knowledge notebook in NotebookLM", 14],
+          ["Analyse sales data with ChatGPT and Claude", 9],
+          ["Let AI write your spreadsheet formulas", 9],
+          ["Turn findings into decisions", 9]
         ]
       },
       {
-        "title": "Module 11: Presentations, Documents and Design",
+        "title": "Module 11: Automation & AI Agents",
         "lectures": [
-          ["Decks in minutes with Gamma", 15],
-          ["Design with Canva AI", 15],
-          ["Websites from prompts", 15],
-          ["Practice: a pitch deck and landing page", 15]
+          ["What an automation is, with technical words explained simply", 8],
+          ["Zapier, Make or n8n?", 8],
+          ["Design before you build", 8],
+          ["Lab: an enquiry-alert automation in Zapier (free plan)", 12],
+          ["Lab: AI-drafted replies with human approval in Make", 12],
+          ["Keeping keys, permissions and data safe", 8],
+          ["n8n for technical learners", 8],
+          ["AI agents: when a fixed workflow isn't enough", 8],
+          ["Monitoring and error handling", 8]
         ]
       },
       {
-        "title": "Module 12: Automation and AI Agents",
+        "title": "Module 12: AI for Business Strategy & Operations",
         "lectures": [
-          ["Automation basics with Zapier", 15],
-          ["AI workflows in n8n", 21],
-          ["Introduction to AI agents", 15],
-          ["Practice: automate a weekly task", 15]
+          ["AI as a strategy partner, not the strategist", 10],
+          ["Competitor positioning and an evidence-based SWOT", 10],
+          ["A 90-day plan with measurable goals", 10],
+          ["Customer journey mapping with Claude Artifacts", 10],
+          ["Turn rough notes into SOPs, training and meeting notes", 10],
+          ["What-if scenarios and pre-mortems", 10]
         ]
       },
       {
-        "title": "Module 13: Responsible and Ethical AI",
+        "title": "Module 13: Responsible AI — Privacy, Bias, Copyright & the Law",
         "lectures": [
-          ["Copyright, ownership and licensing", 15],
-          ["Privacy and protecting your data", 15],
-          ["Bias, accuracy and fact-checking", 15],
-          ["Using AI at work responsibly", 10]
+          ["Personal data and India's DPDP Act", 8],
+          ["Privacy-safe AI habits", 8],
+          ["Spotting and reducing bias", 8],
+          ["Copyright and ownership of AI content", 8],
+          ["Labelling synthetic media under Indian and EU rules", 12],
+          ["AI-powered scams and account safety", 8],
+          ["Write a one-page AI-use policy", 8]
         ]
       },
       {
-        "title": "Module 14: Capstone Project",
+        "title": "Module 14: Capstone — Your AI Operating Kit, Career & Staying Current",
         "lectures": [
-          ["Capstone brief: a multi-tool AI project", 10],
-          ["Planning and building your project", 26],
-          ["Presenting your portfolio", 15],
-          ["Next steps in generative AI", 10]
+          ["Assemble the complete AI Operating Kit", 8],
+          ["Lab: an end-to-end test, from product idea to customer", 12],
+          ["Write a 30-day adoption plan", 8],
+          ["Adapt the kit to any industry or to your own work", 8],
+          ["Keep up with AI without drowning", 8],
+          ["Evaluate any new AI tool in 15 minutes", 8],
+          ["Your portfolio, career next steps and personal learning plan", 8],
+          ["Final assessment", 15]
         ]
       }
     ],
     "requirements": [
-      "A computer with internet access",
-      "Free accounts on the tools covered; some, such as Midjourney, need a paid plan",
-      "No technical background required"
+      "No prior AI or coding experience needed",
+      "A laptop or desktop with a modern browser, and a smartphone for sign-in codes",
+      "A Google account (most tools sign in with it)",
+      "Free plans of ChatGPT, Claude, Gemini, NotebookLM and Perplexity cover most labs",
+      "Canva and Google Sheets (free)",
+      "Optional: ElevenLabs, Suno and Runway free tiers (practice only, with limits on commercial use)",
+      "Optional: Zapier and Make free plans",
+      "Some features need paid plans: Claude Cowork and Claude Code, Midjourney (no free plan), and video generation in Gemini. Every lesson that uses a paid feature also gives you a free alternative, so you never need to buy anything to finish the course"
     ],
     "audience": [
-      "Beginners who want one complete course covering all of generative AI",
-      "Professionals who want to apply AI across writing, design and video",
-      "Content creators and marketers building a modern AI toolkit",
-      "Students preparing for AI-enabled careers"
+      "Complete beginners who want a structured, practical start with AI",
+      "Business owners and freelancers who want to save hours every week on writing, replies, research and planning",
+      "Marketers and content creators who want on-brand copy, images, audio and video, faster",
+      "Technical learners who want APIs, JSON output, automation and Claude Code",
+      "Students and job seekers who want a portfolio project and the AI skills employers expect"
     ],
     "description": [
-      "The Complete Generative AI Mastery brings together text, image, video, audio and automation in one structured course. Across 14 modules and more than 15 hours you work with over 50 AI tools, including ChatGPT, Claude, Midjourney and DALL-E 3. Every module includes hands-on practice.",
-      "The first modules explain how generative AI actually works, from large language models and context windows to diffusion models for images and video. You then learn prompt engineering frameworks that work with any tool, and build your own prompt library.",
-      "Next come in-depth modules on the major assistants: ChatGPT with custom GPTs and data analysis, Claude with Projects and Artifacts, and research with Gemini, Perplexity and NotebookLM. You then move into images with Midjourney, DALL-E 3, Firefly and Leonardo. Each tool is shown on a real task.",
-      "The creative modules continue with video using Runway, Kling and HeyGen, audio with ElevenLabs and Suno, and fast design with Gamma and Canva. You also learn to connect tools and automate work with Zapier and n8n, and get an introduction to AI agents.",
-      "A module on responsible AI covers copyright, privacy, bias and fact-checking. The course closes with a capstone project that combines several tools into one portfolio piece. You will plan it, build it with the tools that suit it best and present the result, finishing with a clear picture of how to keep learning as generative AI continues to change."
-    ]
+      "From AI user to professional AI power user.",
+      "Using AI is easy. Using it well is a skill. Most people use AI like a search box and get average results. The gap between average and excellent isn't secret tricks. It's knowing how these systems work, giving them the right context, checking what they produce, and connecting tools into a workflow. That's what this course teaches, step by step.",
+      "The whole course builds one project for one business. Kalaa Threads is a handloom clothing boutique in Aundh, Pune, owned by Meera Joshi. She and her two team members spend more than 15 hours a week on captions, product descriptions, customer replies and admin. Module by module, you build her complete AI Operating Kit to launch the Monsoon Weaves collection and cut routine work in half.",
+      "What you'll explore:",
+      "• ChatGPT & Claude, set up as power-user workspaces",
+      "• Gemini, Copilot and Perplexity, and when to use each",
+      "• Prompt engineering, from beginner to advanced",
+      "• AI writing and content creation",
+      "• AI image generation and editing",
+      "• AI voice, audio and music",
+      "• AI video creation",
+      "• Research, documents and data analysis",
+      "• No-code automation and AI agents",
+      "• Business strategy and operations",
+      "• Responsible AI: privacy, bias, copyright and the law",
+      "What you'll walk away with:",
+      "• Working ChatGPT and Claude workspaces",
+      "• A tested prompt library",
+      "• A brand voice guide and content engine",
+      "• An image, audio and video kit",
+      "• A research and data pack",
+      "• Two working automations",
+      "• A strategy pack and an AI-use policy",
+      "• A 30-day plan to put AI to work in your own role or business",
+      "Tools you'll use: ChatGPT • Claude • Gemini • Copilot • Perplexity • NotebookLM • Midjourney • Nano Banana • Canva • Adobe Firefly • ElevenLabs • Suno • Runway • Veo • Zapier • Make • n8n • and more",
+      "Every lesson shows you exactly where to click, gives you a real example, and asks you to try it yourself straight away.",
+      "Move beyond experimenting with AI. Learn to select, prompt, combine and apply AI tools in real work."
+    ],
+    "includes": [
+      "14 modules, about 17 hours of learning",
+      "119 lessons with click-by-click instructions",
+      "25+ AI tools covered hands-on",
+      "18 hands-on labs in real tools",
+      "32 ready-to-use AI prompt exercises",
+      "13 practical assignments plus a capstone project",
+      "140+ knowledge-check activities (drag-and-drop, matching, ordering and more)",
+      "A final assessment: 40 scenario-based questions (60 minutes)",
+      "A prompt library with 294 copy-ready prompts across 18 use cases and 19 industries",
+      "A glossary of 78 AI terms in plain language",
+      "Troubleshooting guides in every module",
+      "Two tracks: Non-technical (no code) and Technical (APIs, JSON, Claude Code)",
+      "Narrated lessons with captions and a language switcher for 78 languages",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "mj-advanced": {
-    "subtitle": "Go beyond basic prompts: control style, characters, parameters and video in Midjourney for professional, client-ready creative work.",
+    "subtitle": "Go from your first prompt to a complete professional brand image library using Midjourney V8.2 and its latest 2026 features: Style References, Personalization, Moodboards, the Edit Model, the Editor and Video.",
     "learn": [
-      "Build advanced prompts that control composition, lens, lighting and mood precisely",
-      "Use Style Reference and style codes to lock a consistent visual identity",
-      "Keep characters consistent across scenes with Omni Reference and image prompts",
-      "Tune outputs with stylize, chaos, weird, aspect ratio and version parameters",
-      "Refine images using Vary Region, Remix, Pan, Zoom and upscalers",
-      "Turn still images into short animated clips with Midjourney video",
-      "Create personalized style profiles and moodboards for repeatable brand looks",
-      "Deliver a complete professional campaign from brief to final exported assets"
+      "Write clear, descriptive prompts with the Five-Layer method",
+      "Control the shape, style strength, variety and randomness of your images with parameters (aspect ratio, Stylize, Raw, Chaos, Weird, seed, tile)",
+      "Lock in a consistent brand look with Style References, Style codes, Personalization and Moodboards",
+      "Use your own product photos with Image Prompts and the V8.2 Edit Model, including placing real products and keeping characters consistent",
+      "Fix and extend images in the Editor (inpainting and outpainting), and choose the right upscaler",
+      "Work faster with Draft Mode, Variations, Remix and Conversational Mode",
+      "Turn still images into short videos with motion, seamless loops and start-to-end frames",
+      "Organise your image library, and export at the right size for social media, websites and print",
+      "Finish images in Canva or Photoshop with real text and logos",
+      "Use Midjourney responsibly and professionally for commercial and client work"
     ],
     "sections": [
       {
-        "title": "Welcome and the Advanced Mindset",
+        "title": "Module 1: How Midjourney Thinks: Foundations",
         "lectures": [
-          ["Welcome and how this course is structured", 5],
-          ["Reviewing the Midjourney web interface and settings", 12],
-          ["From casual prompting to directed creative work", 14],
-          ["Setting up your project folders and naming system", 9]
+          ["What's new in 2026: V8.2, HD and the Edit Model", 11],
+          ["How text becomes an image", 11],
+          ["What Midjourney does brilliantly, and where it struggles", 11],
+          ["The model line-up and when to use each", 11],
+          ["Rights, respect, the public gallery and commercial use", 11],
+          ["Hands-on: write a visual brief and shot list", 10],
+          ["Labs: short vs described prompts, comparing model versions", 10]
         ]
       },
       {
-        "title": "Advanced Prompt Architecture",
+        "title": "Module 2: Getting In: Plans, GPU Time & a Tour of the Website",
         "lectures": [
-          ["Anatomy of a professional prompt", 16],
-          ["Subject, environment, composition and medium", 19],
-          ["Camera language: lens, angle and framing", 21],
-          ["Prompt weights and multi prompts", 17],
-          ["Negative prompting with --no", 12]
+          ["Basic, Standard, Pro and Mega plans compared", 11],
+          ["GPU time explained: Fast, Relax and Turbo; SD vs HD costs", 11],
+          ["Stealth mode and the public gallery", 11],
+          ["Tour of Explore, Create, Edit, Personalize, Organize and Tasks", 11],
+          ["Hands-on: subscribe, set safe defaults and make a test image", 11],
+          ["Optional: create on Discord", 10],
+          ["Labs: SD vs HD, Fast vs Relax, settings vs parameters", 10]
         ]
       },
       {
-        "title": "Mastering Parameters",
+        "title": "Module 3: The Language of Prompts",
         "lectures": [
-          ["Stylize, chaos and weird explained with examples", 21],
-          ["Aspect ratios for social, print and web", 14],
-          ["Model versions, raw mode and when to switch", 17],
-          ["Seeds and repeatable experiments", 14],
-          ["Building a personal parameter cheat sheet", 12]
+          ["Describe, don't instruct", 13],
+          ["The Five-Layer Prompt", 12],
+          ["Vocabulary for medium, light, colour, mood and composition", 12],
+          ["Diagnose and fix weak prompts", 12],
+          ["Text inside images", 12],
+          ["Hands-on: create the first four project shots, starting with the hero mug", 12],
+          ["Labs: Five-Layer Prompt, lighting vocabulary, text in images", 12]
         ]
       },
       {
-        "title": "Lighting, Color and Mood",
+        "title": "Module 4: Control Dials: Essential Parameters",
         "lectures": [
-          ["Lighting setups that read as professional", 21],
-          ["Color palettes and grading through prompts", 17],
-          ["Time of day, weather and atmosphere", 16],
-          ["Exercise: one subject, five moods", 17]
+          ["Aspect ratio for every placement", 12],
+          ["Stylize and Raw", 12],
+          ["Variety (Chaos) and Weird", 12],
+          ["--no, seed and tile", 11],
+          ["HD vs SD, and --exp", 11],
+          ["Hands-on: the Stylize ladder and a seamless packaging pattern", 11],
+          ["Labs: product recipe, Chaos, Weird, Exp, tile and seed", 11]
         ]
       },
       {
-        "title": "Style Reference and Style Codes",
+        "title": "Module 5: Lock the Look: Style References, Personalization & Moodboards",
         "lectures": [
-          ["How Style Reference works", 16],
-          ["Combining and weighting multiple style images", 17],
-          ["Discovering and saving style codes", 16],
-          ["Building a reusable brand style kit", 21]
+          ["Style References and style weight (--sw)", 14],
+          ["Style codes and the Style Explorer", 14],
+          ["Personalization profiles", 13],
+          ["Moodboards", 13],
+          ["Hands-on: find style codes and build the brand moodboard", 13],
+          ["Assignment: write a brand style card", 13]
         ]
       },
       {
-        "title": "Personalization and Moodboards",
+        "title": "Module 6: Your Own Images: Image Prompts, the Edit Model & Describe",
         "lectures": [
-          ["Training your personalization profile", 14],
-          ["Creating moodboards for projects", 16],
-          ["Mixing personalization with style references", 16],
-          ["Case study: a consistent editorial look", 19]
+          ["Image prompts and image weight", 12],
+          ["The V8.2 Edit Model: edit with words and combine up to 4 references", 12],
+          ["Place real products and keep characters consistent", 12],
+          ["Change perspective and restyle images", 11],
+          ["Describe: get prompt ideas from an image", 11],
+          ["Rights to the images you upload", 11],
+          ["Hands-on: place a real mug in a café scene", 11]
         ]
       },
       {
-        "title": "Character Consistency with Omni Reference",
+        "title": "Module 7: Fix the Frame: The Editor, Pan, Zoom & Upscalers",
         "lectures": [
-          ["Omni Reference fundamentals", 17],
-          ["Controlling omni weight for likeness and freedom", 17],
-          ["Placing one character in many scenes", 21],
-          ["Outfits, expressions and poses for the same character", 19],
-          ["Common consistency problems and fixes", 14]
+          ["The Editor: erase and repaint areas (inpainting)", 13],
+          ["Expand the canvas (outpainting)", 13],
+          ["Pan and Zoom Out", 13],
+          ["Vary Region", 12],
+          ["Upscalers and HD", 12],
+          ["Hands-on: fix a detail, and turn a feed post into a website banner", 12]
         ]
       },
       {
-        "title": "Editing: Vary Region, Remix, Pan and Zoom",
+        "title": "Module 8: Iterate Like a Pro: Variations, Remix, Conversational & Draft Modes",
         "lectures": [
-          ["Vary Region for targeted fixes", 17],
-          ["Remix mode for controlled iteration", 16],
-          ["Pan and Zoom Out to extend scenes", 16],
-          ["Using the editor with external images", 17],
-          ["Retexture and restyling existing images", 14]
+          ["Choose images with clear criteria", 10],
+          ["Subtle and strong variations", 10],
+          ["Remix", 10],
+          ["Conversational Mode", 10],
+          ["Seeds for controlled comparisons", 10],
+          ["Draft Mode: 24 quick concepts", 10],
+          ["Hands-on: run a Diwali concept funnel", 10]
         ]
       },
       {
-        "title": "Upscaling and Output Quality",
+        "title": "Module 9: Still to Story: Midjourney Video",
         "lectures": [
-          ["Subtle vs creative upscaling", 14],
-          ["Preparing files for print and large formats", 16],
-          ["Fixing hands, text and small details", 17],
-          ["Exporting and organizing final assets", 10]
+          ["Animate: Auto, Manual and Loop", 10],
+          ["Low and high motion", 10],
+          ["Start and end frames", 10],
+          ["Extend clips up to 21 seconds", 10],
+          ["Batch size, SD/HD and costs", 10],
+          ["Hands-on: animate the hero mug and make a Diwali start-to-end clip", 10],
+          ["Download clips for social media", 10]
         ]
       },
       {
-        "title": "Image to Video",
+        "title": "Module 10: Organize & Deliver: Library, Sizes & Export",
         "lectures": [
-          ["How Midjourney video works", 14],
-          ["Low and high motion settings", 16],
-          ["Writing motion prompts for clean animation", 19],
-          ["Extending clips and choosing the best takes", 16],
-          ["Combining clips into short reels", 17]
+          ["The Organize page: search, filters and folders", 11],
+          ["Likes and ratings", 11],
+          ["Image size and resolution", 11],
+          ["The right sizes for social media, websites and print", 11],
+          ["Download images and videos", 11],
+          ["Hands-on: organise the full project library", 10]
         ]
       },
       {
-        "title": "Professional Creative Workflows",
+        "title": "Module 11: Professional Use: Rights, Ethics & Client Workflow",
         "lectures": [
-          ["Product and e-commerce visuals", 21],
-          ["Brand campaigns and ad creatives", 21],
-          ["Book covers, posters and editorial art", 19],
-          ["Thumbnails and social content at scale", 17],
-          ["Usage rights, terms and client communication", 12]
+          ["Commercial use and plan conditions", 10],
+          ["Ethics: real people, brands and artists' styles", 10],
+          ["Honest disclosure in marketing", 10],
+          ["Finish images in Canva or Photoshop with real text and logos", 10],
+          ["Print and merchandise considerations", 10],
+          ["A step-by-step client workflow", 10],
+          ["Hands-on: finish the workshop poster", 10]
         ]
       },
       {
-        "title": "Capstone: Full Campaign Project",
+        "title": "Module 12: Capstone, Industry Playbooks & Mock Exam",
         "lectures": [
-          ["Writing the creative brief", 12],
-          ["Building the style kit and character set", 24],
-          ["Producing hero images and variations", 28],
-          ["Creating the video teaser", 22],
-          ["Final review, delivery and next steps", 12]
+          ["Capstone: assemble and quality-check the complete brand image kit", 18],
+          ["Industry applications", 18],
+          ["Write your portfolio case study", 18],
+          ["Prompt library and glossary", 17],
+          ["Mock exam", 17],
+          ["Labs: capstone hero image, campaign series, teaser clip", 17]
         ]
       }
     ],
     "requirements": [
-      "A paid Midjourney subscription",
-      "Comfort with basic Midjourney prompting and the web interface",
-      "A computer with a stable internet connection"
+      "No art or design background needed",
+      "A computer (recommended) or phone with a modern browser",
+      "A paid Midjourney subscription for the hands-on image tasks. Midjourney has no free plan; planning tasks work without one",
+      "A Google account for the free planning documents",
+      "A few photos of your own real products for the reference-image modules",
+      "Optional: a Discord account, and Canva or Photoshop for adding final text"
     ],
     "audience": [
-      "Designers and creators who want professional control over Midjourney outputs",
-      "Marketers producing brand visuals and ad creatives",
-      "Freelancers building client-ready AI image and video services",
-      "Learners who completed an entry-level Midjourney course"
+      "Complete beginners who want a calm, step-by-step path to images they're proud of",
+      "Small business owners who want product scenes, social posts and campaign visuals without a monthly photoshoot",
+      "Marketers and content creators who want consistent, on-brand images and short animated clips",
+      "Designers and illustrators who want a fast concepting partner and a professional workflow",
+      "Freelancers and students who want a portfolio project and a responsible way to offer AI imagery to clients"
     ],
     "description": [
-      "This advanced course is for people who already know how to type a prompt in Midjourney and now want reliable, professional results. Across 12 modules you move from loose experimentation to directed creative work, where you decide the composition, light, style and character before you generate, and get outputs you can actually use for clients and brands.",
-      "You start with prompt architecture and a deep look at parameters such as stylize, chaos, weird, aspect ratio, seeds and raw mode. Each lesson uses side by side examples so you can see exactly what a change does, and you finish with your own parameter cheat sheet for daily work.",
-      "The middle of the course focuses on consistency, the biggest challenge in AI imagery. You learn Style Reference and style codes for a repeatable look, personalization profiles and moodboards for your taste, and Omni Reference for keeping the same character across scenes, outfits and expressions.",
-      "Next you master editing and output quality: Vary Region, Remix, Pan, Zoom, the editor, retexturing and upscaling for print. Then you bring images to life with Midjourney video, writing motion prompts, choosing motion levels and extending clips into short reels.",
-      "The course ends with real workflows for products, ads, posters and social content, plus a capstone where you build a full campaign from a written brief to final images and a video teaser. You leave with a portfolio piece and a process you can repeat."
-    ]
+      "Anyone can generate an AI image. But can you control the result?",
+      "This course takes you from your very first prompt to a complete, professional image library made with Midjourney. It teaches only the features that exist today in V8.2, so you won't waste time on outdated tutorials.",
+      "What you'll master:",
+      "• Core prompting with the Five-Layer method",
+      "• Aspect ratio, Stylize, Chaos and Weird",
+      "• Style References and style control",
+      "• Personalization and Moodboards",
+      "• Character and product consistency with the V8.2 Edit Model",
+      "• Inpainting and outpainting in the Editor",
+      "• Draft Mode and Conversational Mode",
+      "• Image-to-video creation",
+      "• Finishing in Canva and Photoshop",
+      "• Organising and exporting your library",
+      "• A complete brand identity capstone",
+      "Prompt → Control → Create → Refine → Consistency → Animate",
+      "Every module includes Midjourney Labs: ready-to-copy prompts you run in Midjourney itself, with a next prompt and a pro variation to push further. You also get hands-on tasks with exact steps, what you should see, and troubleshooting.",
+      "By the end, you'll have a complete, portfolio-ready brand image kit, and the skills to create consistent, professional imagery for your own business or for clients.",
+      "From your first Midjourney image to professional creative workflows. Don't just generate. Create with control."
+    ],
+    "includes": [
+      "12 modules, about 15.5 hours of learning",
+      "74 lessons with click-by-click instructions",
+      "36 Midjourney Labs: copy-ready prompts with an Open Midjourney button, a next prompt and a pro variation",
+      "32 hands-on tasks and practical assignments",
+      "12 AI planning prompts (briefs, style cards, export specs, client checklists)",
+      "115+ knowledge-check activities (drag-and-drop, matching, ordering and more)",
+      "A complete brand image kit capstone project",
+      "A mock exam",
+      "A prompt library with 108 Midjourney prompts by industry and use case",
+      "A glossary of Midjourney terms",
+      "Narrated lessons with captions in many Indian and global languages",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "claude-code": {
-    "subtitle": "Use Claude Code to plan, build, debug and ship real projects with MCP, CLAUDE.md, skills, subagents and automation.",
+    "subtitle": "From your first build to websites, apps, automation and agentic development: learn to plan, build, edit, debug, connect and ship real projects with Claude Code, without needing to know how to code.",
     "learn": [
-      "Install Claude Code and run it confidently in your terminal and IDE",
-      "Plan features with plan mode before letting Claude write any code",
-      "Write a CLAUDE.md that teaches Claude your project rules and conventions",
-      "Debug, refactor and test code through clear, iterative Claude Code sessions",
-      "Connect external tools and data to Claude Code using MCP servers",
-      "Create custom slash commands, skills, hooks and plugins for repeat tasks",
-      "Delegate focused work to subagents and run automated headless routines",
-      "Build, connect and deploy a complete real project from idea to live"
+      "Understand what Claude Code is, how it differs from a regular Claude chat, and when to use it",
+      "Install Claude Code and build your first real web page from a plain-English description",
+      "Make targeted edits, point Claude at specific files, and undo changes that don't work",
+      "Control how Claude works with the three dials: model, effort and permission mode",
+      "Plan bigger projects with Plan Mode before any code is written",
+      "Recover from any mistake with checkpoints and rewind",
+      "Publish your site live on the internet, and push updates to it",
+      "Turn a website into a working app that saves data",
+      "Add bigger features without breaking what already works",
+      "Debug real problems by finding the root cause, not guessing",
+      "Connect real data and tools, such as Google Drive, with MCP connectors",
+      "Teach Claude your project rules with CLAUDE.md",
+      "Build reusable Skills, automate recurring work with Routines, delegate tasks to Subagents, and install Plugins",
+      "Use Claude Code responsibly, and know when a project needs a professional developer's review"
     ],
     "sections": [
       {
-        "title": "Getting Started with Claude Code",
+        "title": "Module 1: What Is Claude Code & When to Use It",
         "lectures": [
-          ["Welcome and what Claude Code can do", 5],
-          ["Installing Claude Code and signing in", 12],
-          ["Terminal basics you need for this course", 14],
-          ["Your first session: reading a codebase", 16],
-          ["Using Claude Code inside VS Code and JetBrains", 12]
+          ["What Claude Code is, in plain words", 6],
+          ["How it differs from a regular Claude chat", 6],
+          ["Where Claude Code excels, and where another tool fits better", 6],
+          ["What you need before you start", 7]
         ]
       },
       {
-        "title": "Plan, Build and Edit",
+        "title": "Module 2: Getting Started — Install, Interface & First Build",
         "lectures": [
-          ["Plan mode: thinking before coding", 18],
-          ["Writing clear task prompts for code", 16],
-          ["Reviewing and accepting edits safely", 14],
-          ["Permissions and approval modes", 14],
-          ["Checkpoints, undo and recovering from mistakes", 12]
+          ["Install the Claude desktop app (Mac and Windows)", 7],
+          ["A tour of the working view", 7],
+          ["Open your first project folder", 7],
+          ["Hands-on: build your first real page", 9]
         ]
       },
       {
-        "title": "Debugging, Refactoring and Testing",
+        "title": "Module 3: From Idea to a Real Page — Your First Website",
         "lectures": [
-          ["Reading errors and stack traces with Claude", 16],
-          ["Debugging a broken feature step by step", 20],
-          ["Refactoring without breaking behaviour", 18],
-          ["Writing and running tests with Claude Code", 20],
-          ["Git workflows: commits, branches and pull requests", 18]
+          ["Build a website for a small business", 6],
+          ["Describe the page clearly to get a usable first version", 6],
+          ["Understand what Claude built and why", 6],
+          ["Add to the page without rebuilding it", 6],
+          ["Save your work", 6]
         ]
       },
       {
-        "title": "CLAUDE.md and Project Memory",
+        "title": "Module 4: Targeted Edits — Refining Without Starting Over",
         "lectures": [
-          ["What CLAUDE.md is and where it lives", 12],
-          ["Writing project rules, commands and conventions", 18],
-          ["Context management and the /compact command", 14],
-          ["Keeping memory accurate as projects grow", 12]
+          ["Edits that touch multiple related files", 6],
+          ["Point Claude at a specific file", 6],
+          ["Revert an edit that didn't work", 6],
+          ["Iterate until it's exactly right", 7]
         ]
       },
       {
-        "title": "MCP: Connecting Tools and Data",
+        "title": "Module 5: The Three Dials — Model, Effort & Permission Mode",
         "lectures": [
-          ["What the Model Context Protocol is", 14],
-          ["Adding MCP servers to Claude Code", 16],
-          ["Working with GitHub, databases and docs via MCP", 20],
-          ["Browser and design tool connections", 16],
-          ["Security and permission basics for MCP", 12]
+          ["Choose the right model for each task", 8],
+          ["Choose the right effort level for cost and quality", 8],
+          ["Choose a permission mode for the oversight you want", 8],
+          ["Work within your usage limits", 6]
         ]
       },
       {
-        "title": "Skills, Slash Commands, Hooks and Plugins",
+        "title": "Module 6: Plan Mode for Bigger Projects",
         "lectures": [
-          ["Custom slash commands for repeat tasks", 16],
-          ["Creating and using Agent Skills", 18],
-          ["Hooks: running checks automatically", 18],
-          ["Installing and sharing plugins", 14]
+          ["When a project needs a plan first", 8],
+          ["What a good plan covers", 8],
+          ["Review and refine a plan before approving it", 9]
         ]
       },
       {
-        "title": "Subagents and Automation Routines",
+        "title": "Module 7: Checkpoints & Recovering from Mistakes",
         "lectures": [
-          ["What subagents are and when to use them", 14],
-          ["Creating a reviewer and a tester subagent", 20],
-          ["Headless mode and scripted runs", 16],
-          ["Running Claude Code in GitHub Actions", 18],
-          ["Designing reliable automation routines", 14]
+          ["How automatic checkpoints work", 6],
+          ["Rewind to an earlier state when something breaks", 6],
+          ["Reverting one edit vs rewinding a whole session", 6],
+          ["Experiment with confidence", 7]
         ]
       },
       {
-        "title": "Capstone: Build, Connect and Deploy",
+        "title": "Module 8: Publishing — From Local Project to Live Site",
         "lectures": [
-          ["Project brief and planning session", 14],
-          ["Building the app feature by feature", 29],
-          ["Connecting data and services through MCP", 20],
-          ["Testing, review and fixing issues", 18],
-          ["Deploying the project live", 18],
-          ["Your ongoing AI development workflow", 8]
+          ["What a web host does", 6],
+          ["Publish your project live (for example, on Netlify)", 6],
+          ["Push updates to a live site", 6],
+          ["Check your site on your phone", 7]
+        ]
+      },
+      {
+        "title": "Module 9: Building Interactive Apps",
+        "lectures": [
+          ["Static sites vs apps that save data", 9],
+          ["Hands-on: build a working study tracker app", 13],
+          ["Test features by actually using them", 8]
+        ]
+      },
+      {
+        "title": "Module 10: Adding Features Without Breaking What Works",
+        "lectures": [
+          ["Safe changes vs risky ones", 8],
+          ["Ask Claude what's in your project before changing it", 8],
+          ["Check that existing features still work", 9]
+        ]
+      },
+      {
+        "title": "Module 11: Debugging Real Issues",
+        "lectures": [
+          ["Describe a bug's symptoms clearly", 6],
+          ["Let Claude find the real root cause", 6],
+          ["Push the fix live and confirm it worked", 6],
+          ["A debugging routine you can repeat", 7]
+        ]
+      },
+      {
+        "title": "Module 12: MCP Connectors — Bringing in Your Real Data",
+        "lectures": [
+          ["What MCP does for your project", 8],
+          ["Connect Google Drive step by step", 8],
+          ["Use a real document directly in a build request", 8],
+          ["Example: migrating data into your app", 6]
+        ]
+      },
+      {
+        "title": "Module 13: CLAUDE.md — Teaching Claude Your Project Rules",
+        "lectures": [
+          ["Stop repeating yourself every session", 8],
+          ["Write project rules Claude actually follows", 8],
+          ["Test a rule in a fresh session", 8],
+          ["CLAUDE.md vs Claude's automatic memory", 6]
+        ]
+      },
+      {
+        "title": "Module 14: Skills — Reusable Expertise on Demand",
+        "lectures": [
+          ["What a Skill is and how it differs from CLAUDE.md", 7],
+          ["Write a description so the Skill loads at the right moment", 7],
+          ["Example: a design review Skill", 7],
+          ["Hands-on: build and test your own Skill", 9]
+        ]
+      },
+      {
+        "title": "Module 15: Routines — Automating Repeatable Work",
+        "lectures": [
+          ["What a Routine does and where it lives", 7],
+          ["Write a routine prompt that runs on a schedule", 7],
+          ["Start as a draft before letting it run fully automatically", 7],
+          ["Hands-on: set up your own routine", 9]
+        ]
+      },
+      {
+        "title": "Module 16: Subagents — Delegating Parallel Work",
+        "lectures": [
+          ["What a subagent is", 6],
+          ["When a subagent helps", 6],
+          ["An important limitation around permissions", 6],
+          ["Read the subagent's summary report", 7]
+        ]
+      },
+      {
+        "title": "Module 17: Plugins — Installing Capability Bundles",
+        "lectures": [
+          ["What a plugin bundles together", 7],
+          ["Why installing beats asking Claude to do it manually", 7],
+          ["Hands-on: install a design-review plugin and act on its feedback", 10],
+          ["What else plugins can do", 6]
+        ]
+      },
+      {
+        "title": "Module 18: Professional Use Cases",
+        "lectures": [
+          ["Complete workflow: Student", 4],
+          ["Complete workflow: Job seeker", 4],
+          ["Complete workflow: Working professional", 4],
+          ["Complete workflow: Business owner", 4],
+          ["Complete workflow: Content creator", 4],
+          ["Complete workflow: Freelancer or consultant", 4],
+          ["Hands-on: build a workflow for your own role", 6]
+        ]
+      },
+      {
+        "title": "Module 19: Responsible Use, Safety & Limits",
+        "lectures": [
+          ["Claude Code's honest limitations", 6],
+          ["Choosing permission modes based on what's at stake", 6],
+          ["Handling sensitive data, especially with connectors", 6],
+          ["When to bring in a professional developer", 7]
+        ]
+      },
+      {
+        "title": "Module 20: Capstone — Build and Ship a Real Project",
+        "lectures": [
+          ["Phase 1: choose and frame your project", 6],
+          ["Phase 2: plan before building", 6],
+          ["Phase 3: build the first version", 6],
+          ["Phase 4: refine with targeted edits", 6],
+          ["Phase 5: test and debug", 6],
+          ["Phase 6: add a reusable Skill or Routine", 6],
+          ["Phase 7: publish and do a final check", 9]
+        ]
+      },
+      {
+        "title": "Bonus: Claude Code Prompt Library",
+        "lectures": [
+          ["83 ready-to-use prompts, filterable by category and audience", 5]
         ]
       }
     ],
     "requirements": [
-      "A computer running macOS, Linux or Windows",
-      "A Claude Pro, Max or API account to use Claude Code",
-      "Basic familiarity with code is helpful but not required"
+      "No coding experience needed: every request is written in plain English",
+      "A Mac or Windows computer",
+      "A paid Claude plan (Pro or higher). Claude Code isn't available on the free plan",
+      "The Claude desktop app (free download), installed step by step in Module 2",
+      "Windows only: a one-time Git for Windows install (the app prompts you)",
+      "A free Netlify account for publishing (Module 8)",
+      "Optional: a Google account to practise MCP connectors with Google Drive"
     ],
     "audience": [
-      "Developers who want a faster, AI-assisted coding workflow",
-      "Founders and makers building their own products and tools",
-      "Students moving from chat-based AI to agentic coding",
-      "Tech-curious professionals who want to automate work with code"
+      "Complete beginners who want to build websites, apps and tools without learning to code first",
+      "Students and job seekers who want portfolio projects and practical AI development skills",
+      "Working professionals who want to build internal tools and automate repetitive work",
+      "Business owners who want their own website, booking tool or business app",
+      "Content creators and freelancers who want to build and ship projects for themselves or for clients"
     ],
     "description": [
-      "Claude Code is Anthropic's agentic coding tool. It reads your project, plans changes, edits files, runs commands and helps you ship. This 10 hour course teaches you to use it the way experienced builders do: with a plan, clear instructions and the right guardrails, so the work is fast and stays under your control.",
-      "You begin with installation, terminal basics and your first session reading a real codebase. Then you learn the core loop of plan, build and edit, including plan mode, permission settings, reviewing diffs and recovering with checkpoints when something goes wrong.",
-      "Next comes daily development work: debugging from error messages, refactoring safely, writing tests and handling Git commits, branches and pull requests. You also write a strong CLAUDE.md so Claude remembers your project's commands, rules and style across every session. By the end of this module Claude works inside your conventions instead of guessing them.",
-      "The advanced modules open up the full platform. You connect tools and data with MCP servers, create custom slash commands and Agent Skills, add hooks that run checks automatically, install plugins, delegate focused jobs to subagents and run Claude Code headlessly in scripts and GitHub Actions.",
-      "Everything comes together in a capstone where you plan, build, connect and deploy a real project from start to finish. You leave with a practical AI development workflow you can apply to your own apps, client work or internal tools."
-    ]
+      "Stop just asking AI for code. Start building with AI.",
+      "Anyone can ask AI to generate code. But can you turn it into a working product? This course teaches you to stop copying code from a chat window, and to plan, build, modify, debug, connect and ship real projects with Claude Code instead.",
+      "What you'll learn to do:",
+      "• Go from idea to working build: installation, interface and your first page",
+      "• Build real websites with targeted edits and step-by-step refinement",
+      "• Control how Claude works: model, effort, permission mode and Plan Mode",
+      "• Work directly with your project's files and structure",
+      "• Turn websites into real apps that save data",
+      "• Add features without breaking what works",
+      "• Debug real problems and fix the root cause",
+      "• Take your project live and push updates",
+      "• Connect Claude to real data with MCP connectors",
+      "• Teach Claude your project rules with CLAUDE.md",
+      "• Give Claude reusable expertise with Skills",
+      "• Automate repeatable work with Routines",
+      "• Delegate parallel work to Subagents",
+      "• Extend Claude Code with Plugins",
+      "• Apply it all to real work, responsibly",
+      "Idea → Plan → Build → Edit → Debug → Connect → Automate → Deploy",
+      "Every module includes practice prompts you run in Claude Code straight away, plus a \"Your turn\" task on your own project. The course ends with a capstone where you build and publish a real project using everything you've learned.",
+      "From AI coding assistant to AI development workflow. Don't just generate code. Build something that works."
+    ],
+    "includes": [
+      "20 modules, about 9.5 hours of learning (25–45 minutes per module)",
+      "92 lessons explained in plain language",
+      "36 guided Claude Code practice prompts you run as you learn",
+      "25 hands-on \"Your turn\" tasks on your own project",
+      "Ready-made workflows for 6 roles: student, job seeker, professional, business owner, content creator and freelancer",
+      "A 7-phase capstone project: build and publish a real project from idea to live site",
+      "Knowledge checks in every module",
+      "A prompt library with 83 ready-to-use Claude Code prompts",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "claude-master": {
-    "subtitle": "Master Claude from first prompt to agentic workflows: Projects, Artifacts, analysis, connectors, MCP, Claude Code and Cowork.",
+    "subtitle": "Using Claude like ChatGPT? You're missing most of the point. Learn to use Claude as a real reasoning partner for serious work, mostly on Claude's free plan.",
     "learn": [
-      "Write clear, structured prompts that get reliable answers from Claude",
-      "Organize ongoing work with Projects, knowledge files and custom instructions",
-      "Create documents, apps and visuals with Claude Artifacts",
-      "Analyze PDFs, spreadsheets and data files with Claude's analysis tools",
-      "Connect Claude to Google Drive, Gmail and other apps using connectors",
-      "Understand MCP and add tools that extend what Claude can do",
-      "Hand off multi-step desktop and file tasks to Claude Cowork",
-      "Design agentic workflows that combine research, files and automation"
+      "Understand what makes Claude different: a reasoning partner, not just a faster chatbot",
+      "Turn vague requests into well-framed prompts that get thoughtful answers",
+      "Set up Projects so Claude remembers your files and instructions for recurring work",
+      "Build interactive tools, documents and code with Artifacts, and edit them without starting over",
+      "Use creative techniques (constraints, metaphors and multiple perspectives) to get fresh ideas",
+      "Apply business frameworks with Claude: SWOT, VRIO, Porter's Five Forces, BCG Matrix and scenario planning",
+      "Think in systems: trace second- and third-order effects before you decide",
+      "Revise writing for clarity and tone, and handle sensitive messages with care",
+      "Turn long documents and multiple sources into real insight, not just summaries",
+      "Ask Claude to challenge your reasoning, and explore options beyond yes-or-no decisions",
+      "Use Memory, Connectors (MCP), file and image analysis, Extended Thinking and Skills",
+      "Combine features into complete workflows for your own role",
+      "Know Claude's limits, handle confidential information safely, and cite AI-assisted work properly"
     ],
     "sections": [
       {
-        "title": "Getting Started with Claude",
+        "title": "Module 1: What Is Claude & When to Use It",
         "lectures": [
-          ["Welcome and course roadmap", 5],
-          ["Claude plans, models and where to use Claude", 12],
-          ["A tour of the Claude interface", 14],
-          ["Your first useful conversations", 14]
+          ["What Claude is, in plain words", 5],
+          ["A different design philosophy: a reasoning partner", 5],
+          ["Where Claude excels, and where it struggles", 5],
+          ["Claude vs other AI tools", 5],
+          ["What's free and what's paid", 5]
         ]
       },
       {
-        "title": "Prompting Foundations",
+        "title": "Module 2: Getting Started — Signup, Interface & Plans",
         "lectures": [
-          ["The anatomy of a good prompt", 16],
-          ["Giving context, examples and constraints", 18],
-          ["Asking for formats: tables, lists and drafts", 14],
-          ["Iterating and correcting Claude's answers", 14],
-          ["Prompt templates for everyday work", 14]
+          ["Create your account step by step", 6],
+          ["A tour of the screen", 6],
+          ["Upload a file and ask a question about it", 6],
+          ["Free vs Pro: what you actually get", 6],
+          ["The four building blocks of the course", 6]
         ]
       },
       {
-        "title": "Projects and Knowledge",
+        "title": "Module 3: Structured Prompting — Giving Claude a Frame",
         "lectures": [
-          ["Creating Projects for ongoing work", 14],
-          ["Adding knowledge files and instructions", 16],
-          ["Styles and personal preferences", 10],
-          ["Memory and chat search", 12],
-          ["Example: a client project workspace", 16]
+          ["What a good prompt frame contains", 8],
+          ["Turn a vague request into a framed one", 8],
+          ["When a task needs the full frame, and when it doesn't", 8],
+          ["Why Claude asking you a question is a good sign", 6]
         ]
       },
       {
-        "title": "Artifacts",
+        "title": "Module 4: Projects — Your Persistent Workspace",
         "lectures": [
-          ["What Artifacts are and when they appear", 12],
-          ["Documents, reports and slide outlines", 16],
-          ["Building small apps and calculators", 20],
-          ["Charts, diagrams and visual pages", 16],
-          ["Sharing and remixing Artifacts", 10]
+          ["Set up a Project for recurring work", 8],
+          ["Add files and custom instructions", 8],
+          ["Revise a Project without losing context", 8],
+          ["When a Project beats a plain chat", 6]
         ]
       },
       {
-        "title": "Files, Research and Analysis",
+        "title": "Module 5: Artifacts — Interactive Tools, Documents & Code",
         "lectures": [
-          ["Working with PDFs and long documents", 16],
-          ["Analyzing spreadsheets and CSV data", 20],
-          ["Web search and Research mode", 18],
-          ["Fact-checking and citing sources", 12]
+          ["Build an interactive tool from a plain description", 8],
+          ["What Artifacts can produce", 8],
+          ["Make targeted edits without starting over", 8],
+          ["When to choose Artifacts over plain chat", 6]
         ]
       },
       {
-        "title": "Connectors and MCP",
+        "title": "Module 6: Creative Prompting",
         "lectures": [
-          ["What connectors do", 12],
-          ["Connecting Google Drive, Gmail and Calendar", 18],
-          ["Understanding the Model Context Protocol", 14],
-          ["Adding MCP servers and extensions", 16]
+          ["Use constraints to sharpen creative output", 8],
+          ["Think through metaphors for a fresh angle", 8],
+          ["Ask for multiple perspectives on the same problem", 8],
+          ["When creative techniques help, and when they add noise", 6]
         ]
       },
       {
-        "title": "Claude Code and Cowork",
+        "title": "Module 7: Analytical Frameworks",
         "lectures": [
-          ["Claude Code basics for non-coders and coders", 18],
-          ["Building a small project with Claude Code", 22],
-          ["Cowork: delegating tasks on your computer", 18],
-          ["Organizing files and producing documents with Cowork", 18]
+          ["SWOT: strengths, weaknesses, opportunities, threats", 6],
+          ["VRIO: is your advantage real?", 6],
+          ["Porter's Five Forces: the competitive landscape", 6],
+          ["BCG Matrix: where each product sits", 6],
+          ["Scenario planning for uncertainty", 6],
+          ["Combine two frameworks for richer analysis", 5]
         ]
       },
       {
-        "title": "Agentic AI Workflows",
+        "title": "Module 8: Systems Thinking",
         "lectures": [
-          ["From single prompts to workflows", 14],
-          ["Combining research, files and connectors", 18],
-          ["Recurring tasks and reusable skills", 16],
-          ["Safety, review and human checkpoints", 12]
+          ["Trace cause-and-effect chains", 8],
+          ["Connect one idea across different areas", 8],
+          ["Reason through second- and third-order effects", 8],
+          ["Spot when an analysis has stopped too early", 6]
         ]
       },
       {
-        "title": "Capstone: Your Claude Operating System",
+        "title": "Module 9: Writing & Revision",
         "lectures": [
-          ["Mapping your work to Claude features", 12],
-          ["Building your project, prompts and artifacts", 28],
-          ["Connecting tools and running a full workflow", 24],
-          ["Review and next steps", 8]
+          ["Revise for clarity without losing structure", 8],
+          ["Adjust tone for a different audience", 8],
+          ["Keep long documents consistent", 8],
+          ["Write sensitive messages with care", 6]
+        ]
+      },
+      {
+        "title": "Module 10: Information Synthesis",
+        "lectures": [
+          ["Summary vs interpretation: the real difference", 8],
+          ["Get insight from long documents faster", 8],
+          ["Find unexpected connections between sources", 8],
+          ["When a summary is enough", 6]
+        ]
+      },
+      {
+        "title": "Module 11: Strategic Thinking & Testing Your Reasoning",
+        "lectures": [
+          ["Use Claude as a sounding board that pushes back", 6],
+          ["Tell real pushback from empty disagreement", 6],
+          ["Explore options beyond yes-or-no choices", 6],
+          ["Question constraints you've treated as fixed", 6],
+          ["Clarify what matters most", 6]
+        ]
+      },
+      {
+        "title": "Module 12: Memory & Personalization",
+        "lectures": [
+          ["Turn on Memory and know what it remembers", 6],
+          ["Memory vs Projects", 6],
+          ["View, edit or clear what Claude remembers", 6],
+          ["When to turn Memory off", 7]
+        ]
+      },
+      {
+        "title": "Module 13: Connectors & MCP",
+        "lectures": [
+          ["What MCP does, in plain language", 8],
+          ["Connect a tool such as Google Drive, Gmail or GitHub", 8],
+          ["Local vs remote connectors", 8],
+          ["Which plans support which connectors", 6]
+        ]
+      },
+      {
+        "title": "Module 14: Files, Images & Vision",
+        "lectures": [
+          ["Upload and analyse documents with the right context", 8],
+          ["Read charts, diagrams and photos accurately", 8],
+          ["Work with multiple files at once", 8],
+          ["What the context window means in practice", 6]
+        ]
+      },
+      {
+        "title": "Module 15: Extended Thinking",
+        "lectures": [
+          ["What happens when Claude reasons step by step", 6],
+          ["Turn on Extended Thinking for hard problems", 6],
+          ["Choose the right effort level", 6],
+          ["When it's unnecessary", 7]
+        ]
+      },
+      {
+        "title": "Module 16: Skills — Reusable Instructions for Recurring Work",
+        "lectures": [
+          ["What a Skill is and how it differs from a Project", 8],
+          ["Build a Skill with your own instructions and reference material", 8],
+          ["How Skills activate automatically", 8],
+          ["When a Skill is worth building", 6]
+        ]
+      },
+      {
+        "title": "Module 17: Combining Features into Workflows",
+        "lectures": [
+          ["Decision guide: Project, Skill or plain chat?", 8],
+          ["Decision guide: standard response or Extended Thinking?", 8],
+          ["Decision guide: Claude alone, or with other AI tools?", 8],
+          ["Chain features into one connected workflow", 6]
+        ]
+      },
+      {
+        "title": "Module 18: Professional Use Cases",
+        "lectures": [
+          ["Complete workflow: Student", 4],
+          ["Complete workflow: Job seeker", 4],
+          ["Complete workflow: Working professional", 4],
+          ["Complete workflow: Business owner", 4],
+          ["Complete workflow: Content creator", 4],
+          ["Complete workflow: Freelancer or consultant", 4],
+          ["Hands-on: build a workflow for your own role", 6]
+        ]
+      },
+      {
+        "title": "Module 19: Responsible AI & Limitations",
+        "lectures": [
+          ["Claude's honest limitations", 6],
+          ["When you need a qualified human, not a better prompt", 6],
+          ["Handling confidential information", 6],
+          ["Citing AI-assisted work in academic and professional settings", 7]
+        ]
+      },
+      {
+        "title": "Module 20: Capstone — Build a Strategic Deliverable",
+        "lectures": [
+          ["Phase 1: frame your problem", 6],
+          ["Phase 2: gather and synthesise information", 6],
+          ["Phase 3: apply an analytical framework", 6],
+          ["Phase 4: trace systemic effects", 6],
+          ["Phase 5: stress-test your thinking", 6],
+          ["Phase 6: draft the deliverable", 6],
+          ["Phase 7: final verification check", 9]
+        ]
+      },
+      {
+        "title": "Bonus: Claude Prompt Library",
+        "lectures": [
+          ["106 ready-to-use prompts, filterable by category and audience", 5]
         ]
       }
     ],
     "requirements": [
-      "A free or paid Claude account (some features need a paid plan)",
-      "A computer with internet access",
-      "No coding or AI experience needed"
+      "No AI or technical experience needed",
+      "A laptop, desktop or phone with a browser",
+      "A free Claude account (sign up with email or Google, no card needed)",
+      "The free plan covers almost the whole course: web search, file analysis, Projects, Artifacts, Memory and file creation",
+      "Optional: a paid Claude plan (Pro) for the most capable model (Opus), Deep Research and remote connectors",
+      "Optional: the Claude desktop app for local connectors"
     ],
     "audience": [
-      "Professionals who want to use Claude for real daily work",
-      "Business owners and freelancers saving time on documents and research",
-      "Students and beginners who want a complete Claude foundation",
-      "Intermediate users ready for connectors, MCP and agentic workflows"
+      "Beginners who want to get far more out of Claude than basic questions",
+      "Students who want better research, writing and critical thinking",
+      "Working professionals who need clear analysis, reports and communication",
+      "Business owners and consultants who want a strategic thinking partner",
+      "Content creators and freelancers who want better writing and repeatable workflows"
     ],
     "description": [
-      "This course takes you from your first conversation with Claude to running complete AI workflows. It is designed for beginners, but moves steadily into advanced features so that experienced users also find new ways to work faster and better with Claude.",
-      "You start with prompting foundations: how to give context, examples and constraints, how to ask for the exact format you need and how to iterate when the first answer is not right. You also build a set of prompt templates for writing, planning and analysis tasks.",
-      "Next you organize your work with Projects, knowledge files, styles and memory, then create real outputs with Artifacts, from reports and slide outlines to small interactive apps and charts. You learn to analyze PDFs and spreadsheets and use web search and Research for well sourced answers.",
-      "The advanced half covers connectors for apps like Google Drive, Gmail and Calendar, the Model Context Protocol, Claude Code for building projects and Cowork for delegating multi-step tasks on your computer. Each lesson shows practical examples rather than theory. You will see how each feature fits into a normal working day, so you know when to reach for it.",
-      "Finally you combine everything into agentic workflows with human checkpoints and finish with a capstone: your own Claude operating system for the work you do every week. You map your weekly tasks to the right Claude features, build the prompts, Projects and Artifacts you need, connect your tools and run a full workflow from start to finish. You leave with a setup you can keep improving long after the course ends."
-    ]
+      "Using Claude like ChatGPT? You're missing most of the point.",
+      "Claude can do much more than answer questions. It's built to reason with you: to frame problems, test your thinking, analyse situations with proven frameworks, synthesise information into insight, and help you write with clarity and care.",
+      "This course teaches you to use Claude as a real reasoning partner for serious work.",
+      "What you'll learn:",
+      "• Structured prompting",
+      "• Projects",
+      "• Artifacts",
+      "• Creative prompting",
+      "• Analytical frameworks (SWOT, VRIO, Porter's Five Forces, BCG and more)",
+      "• Systems thinking",
+      "• Writing and revision",
+      "• Information synthesis",
+      "• Strategic thinking",
+      "• Memory and personalization",
+      "• Connectors and MCP",
+      "• Files, images and vision",
+      "• Extended Thinking",
+      "• Skills",
+      "Prompt → Think → Analyse → Create → Build → Connect",
+      "Every module includes practice prompts you run in Claude straight away, plus a \"Your turn\" task on your own real work. The course ends with a capstone where you build a complete strategic deliverable, from framing the problem to a verified final draft.",
+      "Don't use a powerful AI platform only for basic questions. Master Claude. Put it to work."
+    ],
+    "includes": [
+      "20 modules, about 10 hours of learning (25–45 minutes per module)",
+      "96 lessons explained in plain language",
+      "43 guided practice prompts you run in Claude as you learn",
+      "25 hands-on \"Your turn\" tasks on your own real work",
+      "Ready-made workflows for 6 roles: student, job seeker, professional, business owner, content creator and freelancer",
+      "A 7-phase capstone: build a complete strategic deliverable with Claude",
+      "Knowledge checks in every module",
+      "A prompt library with 106 ready-to-use Claude prompts",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "claude-excel": {
-    "subtitle": "Move from manual Excel to AI-assisted Excel: use Claude to write formulas, clean data, build pivots and create dashboards.",
+    "subtitle": "Learn to use Claude for Excel, Anthropic's official Excel add-in, to explain and fix formulas, clean messy data, analyse numbers, build pivot tables and dashboards, and automate recurring reports, all inside your own workbook.",
     "learn": [
-      "Describe spreadsheet problems clearly so Claude returns working Excel formulas",
-      "Write and debug XLOOKUP, IF, SUMIFS and text formulas with Claude",
-      "Clean messy data: duplicates, spacing, dates and inconsistent entries",
-      "Analyze data with pivot tables and summaries guided by Claude",
-      "Upload spreadsheets to Claude for instant analysis and insights",
-      "Build clear charts and dashboards for monthly business reporting",
-      "Automate repetitive tasks with Claude-written macros and Power Query steps",
-      "Complete a full sales report project from raw data to dashboard"
+      "Install Claude for Excel and start safely with any important workbook using the Trust Test",
+      "Get any formula explained in plain language before you change it",
+      "Trace an error to its real root cause, not just the cell where it shows up",
+      "Build new formulas by describing what you need, without writing the syntax yourself",
+      "Test formulas against edge cases before trusting them",
+      "Clean messy data exports, and approve each change before Claude makes it",
+      "Answer business questions properly: define the terms, break down averages, run what-if scenarios and compare options",
+      "Build and reshape pivot tables just by describing your question",
+      "Create charts and one-screen dashboards that tell a clear story",
+      "Audit every number back to its source before presenting it",
+      "Turn your weekly or monthly reports into reusable Skills that run on request or on a schedule"
     ],
     "sections": [
       {
-        "title": "Getting Started: Excel Meets Claude",
+        "title": "Module 1: Meet Claude for Excel",
         "lectures": [
-          ["Welcome and how this course works", 5],
-          ["Setting up Claude and your Excel workspace", 10],
-          ["How to describe a spreadsheet to Claude", 14],
-          ["Sharing data safely with Claude", 10]
+          ["Install the add-in step by step (Windows and Mac)", 6],
+          ["Which plans and Excel versions it works with", 6],
+          ["The Trust Test: start safely with any important workbook", 6],
+          ["Run your first skill and see Claude show its work", 6],
+          ["Where the add-in's limits are", 6],
+          ["Hands-on: run your own Trust Test", 10]
         ]
       },
       {
-        "title": "Formulas and Functions with Claude",
+        "title": "Module 2: Formulas You Can Trust",
         "lectures": [
-          ["Generating formulas from plain English", 14],
-          ["Lookups: XLOOKUP and INDEX MATCH", 14],
-          ["Logic formulas: IF, IFS and nested conditions", 12],
-          ["Explaining and fixing broken formulas", 10]
+          ["The Formula Loop: Explain, Trace, Build, Test", 8],
+          ["Get any formula explained in plain language", 8],
+          ["Trace an error to its real root cause", 8],
+          ["Build a new formula by describing what you need", 8],
+          ["Test it against edge cases before trusting it", 8],
+          ["Hands-on: run the full Formula Loop on your own sheet", 15]
         ]
       },
       {
-        "title": "Text, Dates and Conditional Math",
+        "title": "Module 3: Tame the Messy Export — Data Cleaning",
         "lectures": [
-          ["Text functions for names, codes and emails", 12],
-          ["Working with dates and time periods", 12],
-          ["SUMIFS, COUNTIFS and AVERAGEIFS", 12],
-          ["Formula practice set", 10]
+          ["Audit, Ask, Approve, Verify", 8],
+          ["Audit a messy export before touching anything", 8],
+          ["Treat unclear blanks as questions, not gaps to guess", 8],
+          ["Claude's permission system: approve or deny each change before it happens", 8],
+          ["Verify the cleanup worked", 8],
+          ["Hands-on: clean a real messy dataset", 15]
         ]
       },
       {
-        "title": "Data Cleaning",
+        "title": "Module 4: Answers Your Manager Will Trust — Analysis & What-If",
         "lectures": [
-          ["Spotting messy data with Claude", 10],
-          ["Removing duplicates and fixing spacing", 12],
-          ["Standardizing dates, cases and categories", 12],
-          ["Splitting and combining columns", 10],
-          ["Power Query basics with Claude's help", 12]
+          ["Define, Break Down, Flex, Compare", 8],
+          ["Define what a term means before asking the question", 8],
+          ["Break an average apart to find the real story", 8],
+          ["What-if scenarios: change one assumption and see the impact", 8],
+          ["Compare options side by side before recommending one", 8],
+          ["Hands-on: run the full analysis chain", 15]
         ]
       },
       {
-        "title": "Analysis and Pivot Tables",
+        "title": "Module 5: Pivot Tables Made Simple",
         "lectures": [
-          ["Asking Claude the right analysis questions", 12],
-          ["Building pivot tables step by step", 14],
-          ["Grouping, filtering and calculated fields", 12],
-          ["Uploading files to Claude for analysis", 12]
+          ["A pivot table is a question, not just a report format", 8],
+          ["When to use a pivot table vs a formula", 8],
+          ["Build a pivot summary by describing your question", 8],
+          ["Reshape it: add dimensions, change measures, regroup", 8],
+          ["Reconcile the totals before presenting", 8],
+          ["Hands-on: build and reshape a real pivot", 15]
         ]
       },
       {
-        "title": "Charts, Dashboards and Reports",
+        "title": "Module 6: The Story in One Screen — Charts & Dashboards",
         "lectures": [
-          ["Choosing the right chart for your data", 12],
-          ["Building a one page dashboard", 16],
-          ["Conditional formatting that highlights insights", 10],
-          ["Writing report summaries with Claude", 10]
+          ["The Chart Brief: describe the insight, not just the chart type", 11],
+          ["Build a trend chart, then add a breakdown that explains why", 11],
+          ["Combine several charts into one clear dashboard", 11],
+          ["Audit the dashboard by tracing every number to its source", 11],
+          ["Hands-on: build your own one-screen dashboard", 16]
         ]
       },
       {
-        "title": "Automation",
+        "title": "Module 7: Automate with Skills — Recurring Reports",
         "lectures": [
-          ["Recording and writing simple macros with Claude", 14],
-          ["Reusable templates for monthly reports", 12],
-          ["Prompt library for Excel tasks", 8]
+          ["Save your weekly report routine as a reusable Skill", 8],
+          ["Create a Skill with Claude's guided setup", 8],
+          ["Run it on demand, and spot when it hits an unusual case", 8],
+          ["On request or on a schedule: how to decide", 8],
+          ["Combine everything from Modules 2–6 into one automated process", 8],
+          ["Hands-on: turn your own recurring process into a Skill", 15]
         ]
       },
       {
-        "title": "Capstone: Sales Report from Raw Data",
+        "title": "Module 8: Your Claude for Excel Recap",
         "lectures": [
-          ["Project brief and raw dataset", 6],
-          ["Cleaning and preparing the data", 14],
-          ["Analysis, pivots and dashboard", 18],
-          ["Final report and next steps", 8]
+          ["The 7-word summary of the whole workflow", 6],
+          ["A quick-reference map of every framework", 6],
+          ["Your complete Claude for Excel toolkit", 6],
+          ["The one habit worth keeping: check before you trust", 6],
+          ["Final knowledge check", 11]
         ]
       }
     ],
     "requirements": [
-      "Microsoft Excel (or Google Sheets for most lessons)",
-      "A free or paid Claude account",
-      "Basic comfort opening and editing a spreadsheet"
+      "Basic familiarity with Excel; no formula expertise needed",
+      "A Microsoft 365 subscription with desktop Excel (Windows or Mac). Excel 2016/2019 perpetual versions and Excel on Android aren't supported",
+      "A paid Claude plan (Pro or higher). Claude for Excel isn't available on the free plan",
+      "\"Code execution and file creation\" switched on in Claude settings (for Skills, Module 7)",
+      "Your own spreadsheet data to practise on, or the course examples"
     ],
     "audience": [
-      "Office professionals who spend hours on manual Excel work",
-      "Business owners tracking sales, expenses and inventory",
-      "Students and job seekers improving their spreadsheet skills",
-      "Analysts who want faster formula writing and reporting"
+      "Analysts who want to speed up formulas, cleaning and reporting without losing accuracy",
+      "Managers who need trustworthy numbers and clear dashboards",
+      "Small business owners who track sales, stock or expenses in Excel",
+      "Accountants and finance staff who build recurring reports",
+      "Students and job seekers who want practical Excel + AI skills on their CV"
     ],
     "description": [
-      "Most people use only a small part of Excel because formulas and data work feel slow and confusing. This course shows you how to use Claude as a patient Excel expert sitting beside you, turning plain English requests into working formulas, clean data and clear reports.",
-      "You begin by learning how to describe your spreadsheet so Claude understands your columns and goals. Then you generate and debug lookups, logic formulas, text and date functions, and conditional math like SUMIFS and COUNTIFS, always checking results rather than trusting them blindly.",
-      "Next you tackle data cleaning, the part of Excel work that wastes the most time. You fix duplicates, spacing, dates and inconsistent categories, split and combine columns and get started with Power Query using step by step help from Claude.",
-      "In the analysis and reporting modules you build pivot tables, upload files to Claude for quick insights, choose the right charts and assemble a one page dashboard. You also learn to automate repeated tasks with simple macros and reusable templates.",
-      "The course ends with a capstone project where you take a raw sales dataset through cleaning, analysis and a finished dashboard with a written summary, ready for a real monthly report. Every step is explained, so you can repeat the same process with your own data at work or in your business."
-    ]
+      "What if your manager asks tomorrow, \"Can we automate this report with AI?\" Would you know where to start?",
+      "AI is moving beyond chat and into the tools people use every day, including spreadsheets. Claude for Excel puts an AI assistant directly inside your workbook. It can read your formulas, clean your data, build pivot tables and charts, and automate the reports you rebuild every week.",
+      "But an AI answer is only useful if you can trust it. This course teaches you to use Claude for Excel and to check its work, so the numbers you present are numbers you can stand behind.",
+      "Learn to work with Claude for:",
+      "• Formula explanation and investigation",
+      "• Root-cause analysis of errors",
+      "• Data cleaning",
+      "• What-if scenarios",
+      "• Pivot tables",
+      "• Charts and dashboards",
+      "• Auditing every number back to its source",
+      "• Recurring report Skills",
+      "Every module gives you a simple framework, real worked examples showing the exact prompt and what Claude does in the sheet, and a hands-on task on your own data.",
+      "Formulas you can trust. Answers you can check.",
+      "Don't wait until AI becomes part of your responsibilities to start learning it. Excel + AI is a skillset worth building now."
+    ],
+    "includes": [
+      "8 modules, about 7 hours of learning",
+      "36 lessons with click-by-click instructions",
+      "27 worked prompt examples showing the exact prompt and the real result in Excel",
+      "7 hands-on \"Your turn\" tasks on your own data",
+      "50+ knowledge-check activities (multiple choice, ordering, fill-in-the-blanks and more)",
+      "A simple, memorable framework for every skill",
+      "Real examples for analysts, business owners, students and managers in every module",
+      "A final recap with a quick-reference map",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Intermediate",
+    "language": "English"
   },
   "claude-deep": {
-    "subtitle": "Go from simple chats to complete AI workflows with advanced prompting, Projects, Artifacts, connectors, research and automation in Claude.",
+    "subtitle": "Still using Claude mainly for questions, emails and summaries? Learn to use Claude as a complete work system: files, research, Office documents, interactive tools, code, delegation, design and business workflows.",
     "learn": [
-      "Apply advanced prompting techniques like role, structure, examples and chained prompts",
-      "Use XML-style tags and templates for consistent, repeatable outputs",
-      "Set up Projects with knowledge files and instructions for long-running work",
-      "Build interactive Artifacts such as dashboards, tools and documents",
-      "Run deep research with web search and Research mode, then verify sources",
-      "Connect Claude to Drive, Gmail, Calendar and other apps with connectors",
-      "Extend Claude with MCP servers and reusable skills",
-      "Design and run multi-step automation workflows with human review points"
+      "Choose the right part of Claude for every task (Chat, Connectors, Projects, Skills, Artifacts, Claude Code, Cowork or Claude Design) using a simple 4-question Surface Selector",
+      "Connect Google Drive and other tools so Claude can work with your real files",
+      "Tell Web Search, Extended Thinking and Research apart, and run a full citation-backed Research report",
+      "Check and verify AI answers before you rely on them",
+      "Create real Word documents, Excel sheets with working formulas, and PowerPoint decks straight from Claude",
+      "Stop re-explaining yourself by setting up Memory, Projects and Skills",
+      "Build working interactive tools with Artifacts, and improve them without starting over",
+      "Install Claude Code and build, test and document a working script on your own computer",
+      "Delegate multi-step tasks to Claude Cowork safely, and schedule them once tested",
+      "Build clickable prototypes in Claude Design and hand them off to Canva, Figma or Claude Code",
+      "Combine everything into one weekly workflow, then save it as a reusable Skill (your SOP)",
+      "Use the Claude for Small Business plugin with a safe approval step before anything is sent"
     ],
     "sections": [
       {
-        "title": "Introduction: Thinking in Workflows",
+        "title": "Module 1: Choosing Your Claude Surface",
         "lectures": [
-          ["Welcome and what makes this a deep dive", 5],
-          ["From chat to workflow: the mental shift", 12],
-          ["Choosing the right Claude model and features", 12]
+          ["A tour of Claude's interface", 8],
+          ["The Surface Selector: 4 questions that point every task to the right tool", 8],
+          ["Three people, three different tasks, worked through step by step", 8],
+          ["Build your own surface-selection prompt", 8],
+          ["The two mistakes almost everyone makes", 8]
         ]
       },
       {
-        "title": "Advanced Prompting",
+        "title": "Module 2: Bringing Real Work In — Connectors",
         "lectures": [
-          ["Structured prompts with sections and tags", 15],
-          ["Few-shot examples and output formats", 15],
-          ["Prompt chaining for complex tasks", 15],
-          ["Using extended thinking for hard problems", 12]
+          ["What Connectors are and how they work", 10],
+          ["Hands-on: create a practice tracker in Google Sheets, connect Google Drive, and ask questions about it", 15],
+          ["Combine more than one source in one request", 10],
+          ["The Connector Audit: catch wrong or outdated data", 10],
+          ["When a manual upload works better than a Connector", 10]
         ]
       },
       {
-        "title": "Prompt Systems and Templates",
+        "title": "Module 3: Thinking, Researching, Verifying",
         "lectures": [
-          ["Building a reusable prompt library", 12],
-          ["System style instructions and styles", 12],
-          ["Evaluating and improving prompt results", 12]
+          ["Fact, Think or Investigate? Web Search vs Extended Thinking vs Research", 14],
+          ["Use Extended Thinking on a hard, multi-condition problem", 14],
+          ["Run a full Research task and get a citation-backed report", 14],
+          ["Verify what comes back", 13]
         ]
       },
       {
-        "title": "Projects in Depth",
+        "title": "Module 4: Turning Work into Deliverables — Word, Excel & PowerPoint",
         "lectures": [
-          ["Designing a Project for a real role", 15],
-          ["Knowledge files: what to include and exclude", 12],
-          ["Project instructions that keep quality high", 12],
-          ["Team and shared Project practices", 10]
+          ["Shape, Fill, Finish: get a usable file on the first try", 11],
+          ["Create a real Word document", 11],
+          ["Create an Excel spreadsheet with working formulas", 11],
+          ["Create a PowerPoint deck", 11],
+          ["What to check before sending any AI-generated file", 11]
         ]
       },
       {
-        "title": "Artifacts in Depth",
+        "title": "Module 5: Personalizing Claude — Projects, Memory & Skills",
         "lectures": [
-          ["Interactive tools and calculators", 17],
-          ["Dashboards and data visualizations", 15],
-          ["Long documents and reports", 12],
-          ["Iterating and publishing Artifacts", 10]
+          ["The blank-slate problem", 13],
+          ["The Personalization Stack: Memory, Projects and Skills", 13],
+          ["Hands-on: set up a Project, add a Memory fact, and build a Skill", 20],
+          ["Which layer to use for which kind of context", 14]
         ]
       },
       {
-        "title": "Research and Analysis",
+        "title": "Module 6: Building Interactive Tools — Artifacts",
         "lectures": [
-          ["Web search vs Research mode", 12],
-          ["Running a multi-source research task", 17],
-          ["Analyzing files and datasets", 15],
-          ["Checking claims and citations", 10]
+          ["From a document to something you can click", 12],
+          ["The Build Loop: Spec, Build, Test, Iterate, Publish", 12],
+          ["Write a clear spec for a tool", 12],
+          ["Improve an existing Artifact without starting over", 12],
+          ["Publish and share your tool", 12]
         ]
       },
       {
-        "title": "Connectors",
+        "title": "Module 7: Claude as a Coding Partner — Claude Code",
         "lectures": [
-          ["Connecting Google Workspace apps", 15],
-          ["Working across email, calendar and documents", 15],
-          ["Connector permissions and good habits", 8]
+          ["How Claude Code differs from everything else in Claude", 12],
+          ["Install Claude Code step by step", 12],
+          ["Spec, Build, Test, Document, Handoff", 12],
+          ["How the approval system keeps you in control of your files", 12],
+          ["Hands-on: build, test and document a working script", 17]
         ]
       },
       {
-        "title": "MCP and Skills",
+        "title": "Module 8: Delegating Work — Cowork",
         "lectures": [
-          ["How MCP extends Claude", 12],
-          ["Adding MCP servers in Claude Desktop", 15],
-          ["Skills for repeatable, specialised tasks", 15]
+          ["From approving each step to describing the outcome", 9],
+          ["The Trust Ladder: Cowork's three permission modes, and why you start with Manual", 9],
+          ["Hands-on: delegate a real multi-step task", 14],
+          ["Global Instructions so you stop repeating context", 9],
+          ["Using Connectors inside Cowork", 9],
+          ["Scheduling tasks only after real testing", 10]
         ]
       },
       {
-        "title": "Automation Workflows",
+        "title": "Module 9: Claude as a Design Partner — Claude Design",
         "lectures": [
-          ["Mapping a workflow end to end", 12],
-          ["Research to report workflow", 17],
-          ["Inbox and meeting prep workflow", 15],
-          ["Content production workflow", 15],
-          ["Review checkpoints and quality control", 8]
+          ["Brief, Build, Draw, Test, Handoff", 10],
+          ["Write a clear design brief", 10],
+          ["Build a clickable prototype", 10],
+          ["Use the Draw tool for precise changes", 10],
+          ["Generate alternative designs before committing", 10],
+          ["Hand off to Canva, Figma, HTML, PowerPoint or Claude Code", 10]
         ]
       },
       {
-        "title": "Capstone: Your Complete AI Workflow",
+        "title": "Module 10: Designing Workflows & SOPs",
         "lectures": [
-          ["Choosing your workflow project", 8],
-          ["Building it with Projects, connectors and Artifacts", 25],
-          ["Testing, refining and documenting", 15],
-          ["Next steps", 6]
+          ["Combine Connectors, Research and file creation into one weekly workflow", 15],
+          ["Clarify, Design, Stress-Test, Document", 15],
+          ["Find where a workflow could break before it does", 15],
+          ["Turn a working workflow into a reusable Skill", 15]
+        ]
+      },
+      {
+        "title": "Module 11: Claude for Small Business",
+        "lectures": [
+          ["Install the Claude for Small Business plugin", 10],
+          ["What's inside: ready-made business skills and tool connections (e.g. QuickBooks, PayPal)", 10],
+          ["Run a skill with an approval step before anything is sent", 10],
+          ["The Approval Tiers: Read, Prepare or Never Automate", 10],
+          ["Hands-on: sort your own business tasks into tiers", 15]
+        ]
+      },
+      {
+        "title": "Module 12: Your Claude Mastery Recap",
+        "lectures": [
+          ["The 8-word summary of the whole course", 7],
+          ["A quick-reference map of every framework", 7],
+          ["Your complete Claude Work System: everything you built", 7],
+          ["The one habit worth keeping", 7],
+          ["Final knowledge check", 12]
         ]
       }
     ],
     "requirements": [
-      "A paid Claude plan is recommended for Projects, Research and connectors",
-      "Basic experience chatting with Claude or another AI assistant",
-      "A computer with internet access"
+      "No coding experience needed",
+      "A laptop or desktop computer (Windows or Mac)",
+      "A Claude account. The free plan covers Chat, Projects, Artifacts and file creation",
+      "A paid Claude plan (Pro or higher) is needed for Claude Code (Module 7), Cowork (Module 8) and Claude Design (Module 9)",
+      "A Google account for the Google Drive Connector practice",
+      "For Claude Code: Node.js 18 or higher (free; installation is covered), plus Git on Windows",
+      "Claude desktop app (free download) for Cowork"
     ],
     "audience": [
-      "Intermediate Claude users ready to work at an advanced level",
-      "Consultants, analysts and managers who handle research and reports",
-      "Business owners building repeatable AI processes",
-      "Anyone who wants Claude to do multi-step work, not just answer questions"
+      "People who already use Claude occasionally and want to use it properly",
+      "Professionals who want to automate recurring reports, documents and research",
+      "Small business owners who want Claude to handle routine business tasks safely",
+      "Students who want a reliable system for research and coursework",
+      "Freelancers and IT professionals who want to build tools, scripts and prototypes faster"
     ],
     "description": [
-      "You already know how to chat with Claude. This deep dive teaches you how to turn those chats into complete workflows that research, analyze, create and deliver finished work with far less manual effort. Every module builds on the last, and each lesson uses realistic tasks from business, consulting and everyday knowledge work.",
-      "The first modules sharpen your prompting with structure, tags, examples, chaining and extended thinking. You then build a prompt library and learn to evaluate outputs so quality stays consistent, not just occasionally good. By the end you will have tested templates you can reuse for research, writing, analysis and planning.",
-      "Next you go deep on Projects and Artifacts. You design Projects for real roles with the right knowledge and instructions, and build interactive Artifacts such as calculators, dashboards and long reports that you can iterate on and share. You will also learn how to keep Projects tidy and useful as files and conversations pile up over weeks of real work.",
-      "The research and connectors modules show you how to run multi-source research, analyze files, verify citations and connect Claude to Google Workspace apps. You also learn how MCP servers and skills extend Claude with new tools and specialised abilities. Each lesson includes good habits for permissions and privacy so you stay in control of what Claude can access.",
-      "Finally you map and build automation workflows for research reports, inbox and meeting preparation and content production, each with review checkpoints. The capstone has you design, build and document a complete workflow for your own work. You leave with a working system, not just a list of tips, and a clear method for building more workflows later."
-    ]
+      "Still using Claude mainly for questions, emails and summaries? That's only the beginning.",
+      "AI at work is moving beyond basic prompting. Claude can work with your real files, research with citations, create documents you can send, build tools you can click, write and test code, carry out multi-step tasks, and design prototypes. Most people never get past the chat box.",
+      "This course teaches you to use Claude as a complete work system. In every module, you build something real and usable, not just practice exercises.",
+      "Learn how to use Claude across:",
+      "• Connectors",
+      "• Research & Verification",
+      "• Word, Excel & PowerPoint",
+      "• Projects & Memory",
+      "• Skills",
+      "• Interactive Artifacts",
+      "• Claude Code",
+      "• Cowork & Delegation",
+      "• Claude Design",
+      "• Workflows & SOPs",
+      "• Small-Business Workflows",
+      "Each skill comes with a simple framework you can remember, real worked examples showing the exact prompt and result, and a hands-on task on your own work.",
+      "The AI skill gap is changing. Knowing how to prompt is useful. Knowing how to put AI to work is the bigger skill.",
+      "Don't wait until your workplace expects more from AI than basic chat. Go beyond prompting. Become AI-ready."
+    ],
+    "includes": [
+      "12 modules, about 11 hours of learning",
+      "80 lessons with click-by-click instructions",
+      "26 worked prompt examples showing the exact prompt and the real result",
+      "24 step-by-step setup guides",
+      "11 hands-on \"Your turn\" tasks on your own real work",
+      "55+ knowledge-check activities (multiple choice, ordering, fill-in-the-blanks and more)",
+      "Easy-to-remember frameworks for every skill: Shape, Fill, Finish; the Build Loop; the Trust Ladder; and more",
+      "Real examples for students, business owners, IT professionals and freelancers in every module",
+      "A final recap with a quick-reference map of everything you learned",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "perplexity": {
-    "subtitle": "Use Perplexity AI to search smarter, run deep research, organize Spaces and files, and build reliable research workflows.",
+    "subtitle": "Learn to research with Perplexity AI: ask sharper questions, check every source, go deeper with Pro Search and Deep Research, organise your work in Spaces, and turn your findings into shareable reports.",
     "learn": [
-      "Ask precise questions that get accurate, well sourced Perplexity answers",
-      "Evaluate sources and citations to separate reliable facts from weak claims",
-      "Use focus options for web, academic, finance and social sources",
-      "Run Deep Research to produce detailed, cited reports in minutes",
-      "Organize ongoing topics with Spaces, custom instructions and files",
-      "Analyze uploaded PDFs and documents alongside live web results",
-      "Create Pages to turn research into shareable articles",
-      "Build repeatable research workflows for work, study and business decisions"
+      "Understand how Perplexity differs from a search engine and from a regular AI chatbot",
+      "Use the 4-step research loop on every question: Ask, Read, Verify, Refine",
+      "Turn vague questions into strong research prompts with the 4-part structure: context, question, constraints, format",
+      "Judge any source in seconds with the CARR check: Credibility, Authority, Recency, Relevance",
+      "Confirm important facts by cross-checking several sources (triangulation)",
+      "Choose the right search mode: Web, Academic, Pro Search or Deep Research",
+      "Run multi-step Deep Research reports, and turn research directly into a presentation",
+      "Upload your own documents, combine them with live web research, and compare two files side by side",
+      "Organise recurring research in Spaces with custom instructions and files",
+      "Publish your research as a formatted, shareable Page with citations",
+      "Pick the right AI model (GPT, Claude, Gemini, Grok or Sonar) and use Model Council",
+      "Use Comet, Perplexity's free AI browser, to work with any web page",
+      "Research on the go with voice, camera and Memory",
+      "Know Perplexity's limits, protect confidential information, and cite AI-assisted research properly"
     ],
     "sections": [
       {
-        "title": "Getting Started with Perplexity",
+        "title": "Module 1: What Is Perplexity & When to Use It",
         "lectures": [
-          ["Welcome and course overview", 5],
-          ["Perplexity vs search engines vs chatbots", 10],
-          ["Account, plans and settings tour", 10],
-          ["Your first searches and follow-ups", 12]
+          ["Not a search engine, not just a chatbot", 7],
+          ["Why citations matter more than they seem to", 6],
+          ["When Perplexity is the right tool, and when something else fits better", 6],
+          ["What's free before you pay for anything", 6]
         ]
       },
       {
-        "title": "AI Search and Sources",
+        "title": "Module 2: Getting Started — Signup, Interface & Plans",
         "lectures": [
-          ["Writing better search questions", 12],
-          ["Reading and checking citations", 12],
-          ["Focus modes: web, academic, finance and social", 14],
-          ["Choosing models and Pro Search", 10]
+          ["Sign up step by step", 6],
+          ["A tour of the screen: search bar, mode selector, sidebar, source panel", 6],
+          ["Write and run your first research question", 6],
+          ["Read the source panel properly", 6],
+          ["Free vs Pro vs Max, with prices", 6]
         ]
       },
       {
-        "title": "Deep Research",
+        "title": "Module 3: The Core Research Loop",
         "lectures": [
-          ["What Deep Research does", 10],
-          ["Running a Deep Research task", 14],
-          ["Refining and extending research reports", 12],
-          ["Exporting and sharing results", 8]
+          ["Ask, Read, Verify, Refine", 8],
+          ["Tell a strong citation from a weak one", 8],
+          ["Use follow-up questions to go deeper without starting over", 7],
+          ["Know when a research thread is finished", 7]
         ]
       },
       {
-        "title": "Spaces and Files",
+        "title": "Module 4: Writing Powerful Research Prompts",
         "lectures": [
-          ["Creating Spaces for ongoing topics", 12],
-          ["Custom instructions for a Space", 10],
-          ["Uploading PDFs and documents", 12],
-          ["Combining files with web search", 12]
+          ["Weak → Better → Strong: one real example", 7],
+          ["The 4-part structure: context, question, constraints, format", 7],
+          ["Three common mistakes and how to avoid them", 6],
+          ["Hands-on: rewrite your own questions", 10]
         ]
       },
       {
-        "title": "Pages and Content Creation",
+        "title": "Module 5: Source Literacy — The Takxila Verification Framework",
         "lectures": [
-          ["Turning research into Pages", 12],
-          ["Editing and structuring a Page", 10],
-          ["Summaries, briefs and comparison tables", 12]
+          ["Seven kinds of sources: primary, secondary, official, academic, news, commercial, community", 8],
+          ["The CARR check: your four-second source test", 8],
+          ["Triangulation: when one citation isn't enough", 7],
+          ["When this level of checking is really needed", 7]
         ]
       },
       {
-        "title": "Research Workflows",
+        "title": "Module 6: Focus Modes — Web, Academic & Targeted Search",
         "lectures": [
-          ["Market and competitor research", 14],
-          ["Study and academic research", 12],
-          ["News tracking and fact-checking", 12],
-          ["Buying decisions and product comparisons", 10]
+          ["What Focus modes change", 7],
+          ["Web mode as your default", 6],
+          ["Academic mode for peer-reviewed sources", 6],
+          ["Why you set Focus before asking", 6]
         ]
       },
       {
-        "title": "Capstone: Full Research Project",
+        "title": "Module 7: Pro Search — Deeper Multi-Source Investigation",
         "lectures": [
-          ["Defining your research question", 6],
-          ["Researching and organizing in a Space", 14],
-          ["Building the final report and Page", 12],
-          ["Review and next steps", 6]
+          ["What changes when Pro Search is on", 7],
+          ["How many free Pro Searches you get each day", 6],
+          ["When the extra depth is worth it", 6],
+          ["The mistake of using Pro Search for everything", 6]
+        ]
+      },
+      {
+        "title": "Module 8: Deep Research & Deliverables",
+        "lectures": [
+          ["How Deep Research differs from Pro Search", 8],
+          ["Run a full Deep Research report", 8],
+          ["Turn research directly into a presentation with Deliverables", 7],
+          ["Which plan Deep Research needs", 7]
+        ]
+      },
+      {
+        "title": "Module 9: Working with Files & Documents",
+        "lectures": [
+          ["Upload documents, images and PDFs", 8],
+          ["What you can ask about an uploaded file", 8],
+          ["Combine a file with live web research", 7],
+          ["Compare two documents directly", 7]
+        ]
+      },
+      {
+        "title": "Module 10: Spaces — Organising Recurring Research",
+        "lectures": [
+          ["Set up a Space for a recurring need", 10],
+          ["Custom instructions: set the rules once", 10],
+          ["Add files every question can use", 10]
+        ]
+      },
+      {
+        "title": "Module 11: Pages — Publishing Research as a Shareable Document",
+        "lectures": [
+          ["Turn a research thread into a formatted Page", 7],
+          ["When a Page is the right format", 6],
+          ["Edit before you share", 6],
+          ["Share with a public link, citations included", 6]
+        ]
+      },
+      {
+        "title": "Module 12: Choosing Your AI Model",
+        "lectures": [
+          ["What changes when you switch models", 7],
+          ["Available models: Sonar, GPT, Claude, Gemini and Grok", 6],
+          ["Model Council: compare several models at once", 6],
+          ["When model choice really matters", 6]
+        ]
+      },
+      {
+        "title": "Module 13: Comet — Perplexity's Free AI Browser",
+        "lectures": [
+          ["What Comet is and how it differs from perplexity.ai", 6],
+          ["The sidebar Assistant for any page you're viewing", 6],
+          ["Multi-step tasks, not just questions", 6],
+          ["What Comet Plus adds", 6],
+          ["When a regular browser is still fine", 6]
+        ]
+      },
+      {
+        "title": "Module 14: Voice, Mobile & Memory",
+        "lectures": [
+          ["Turn on Memory and control what it remembers", 9],
+          ["Ask questions by voice and camera on mobile", 8],
+          ["Continue research between phone and computer", 8]
+        ]
+      },
+      {
+        "title": "Module 15: Combining Features into Workflows",
+        "lectures": [
+          ["A complete Deep Research + Spaces + Pages workflow", 8],
+          ["Decision guide: which search depth?", 8],
+          ["Decision guide: thread or Space?", 7],
+          ["Decision guide: keep as a thread or turn into a Page?", 7]
+        ]
+      },
+      {
+        "title": "Module 16: Professional Use Cases",
+        "lectures": [
+          ["Research workflow: Student", 4],
+          ["Research workflow: Job seeker", 4],
+          ["Research workflow: Working professional", 4],
+          ["Research workflow: Business owner", 4],
+          ["Research workflow: Content creator", 4],
+          ["Research workflow: Freelancer or consultant", 4],
+          ["Hands-on: build a workflow for your own role", 6]
+        ]
+      },
+      {
+        "title": "Module 17: Responsible AI Research & Limitations",
+        "lectures": [
+          ["Perplexity's honest limitations", 7],
+          ["When you need a qualified human", 6],
+          ["Handling confidential information", 6],
+          ["Citing AI-assisted research properly", 6]
+        ]
+      },
+      {
+        "title": "Module 18: Capstone — Build a Verified Research Brief",
+        "lectures": [
+          ["Phase 1: choose and frame your topic", 7],
+          ["Phase 2: initial research and mode selection", 7],
+          ["Phase 3: verify sources with CARR", 7],
+          ["Phase 4: follow up and check for conflicting information", 6],
+          ["Phase 5: bring in your own files", 6],
+          ["Phase 6: organise and finalise", 6],
+          ["Phase 7: final verification check", 6]
+        ]
+      },
+      {
+        "title": "Bonus: Perplexity Prompt Library",
+        "lectures": [
+          ["141 ready-to-use research prompts, filterable by category and audience", 5]
         ]
       }
     ],
     "requirements": [
-      "A free Perplexity account (Pro recommended for Deep Research and file limits)",
-      "A computer or phone with internet access",
-      "No prior AI experience needed"
+      "No AI or research experience needed",
+      "A computer or phone with a browser",
+      "A free Perplexity account (Google, Apple, Microsoft or email sign-in)",
+      "The free plan includes unlimited standard search with citations, about 5 Pro Searches a day, limited file uploads, Pages and the Comet browser",
+      "Some modules use paid features: Deep Research (Module 8), full Spaces (Module 10) and model selection (Module 12) need Perplexity Pro. You can still follow those lessons without paying",
+      "Optional: Comet browser (free download) for Module 13"
     ],
     "audience": [
-      "Students and researchers who need fast, cited answers",
-      "Professionals preparing reports, briefs and market research",
-      "Business owners comparing options and tracking competitors",
-      "Anyone who wants to search smarter than a regular search engine"
+      "Students who want faster, better-sourced research for assignments and projects",
+      "Job seekers researching companies, roles and interviews",
+      "Working professionals who need reliable information for reports and decisions",
+      "Business owners researching markets, competitors and suppliers",
+      "Content creators and freelancers who need accurate, citable facts"
     ],
     "description": [
-      "Perplexity combines live web search with AI so you get direct answers backed by citations. This course shows you how to use it properly, so your research is faster, better sourced and easier to trust. Whether you are studying, working or running a business, you will learn habits that make every search more useful and every answer easier to verify.",
-      "You start with the basics of asking strong questions, reading citations and choosing focus options for web, academic, finance and social sources. You also learn when Pro Search and different models make a difference. Simple exercises after each lesson help you compare answers and build the habit of checking where information comes from.",
-      "Next you learn Deep Research, which reads many sources and produces a detailed, cited report. You practise running, refining and exporting reports, and learn to check claims before you rely on them. You will see how to steer a report with follow-up questions and how to turn long findings into short, decision-ready summaries.",
-      "The Spaces and files module shows you how to organize ongoing topics, set custom instructions and analyze uploaded PDFs alongside the web. You then turn findings into clear Pages, briefs and comparison tables. These features turn Perplexity from a one-off search box into a research workspace you can return to every day.",
-      "Finally you build research workflows for markets and competitors, study, news tracking and buying decisions, and complete a capstone research project from question to finished report. You finish with a finished report, an organized Space and a research process you can reuse for any topic in the future."
-    ]
+      "Still doing research with 20 browser tabs open? There's a smarter way.",
+      "Perplexity gives you researched answers with citations you can click and check. But getting reliable results takes more than typing a question. You need to ask well, read the sources, verify what matters, and know when to go deeper.",
+      "This course teaches you to research with AI, not just ask it for answers.",
+      "Learn how to:",
+      "• Search smarter with strong research prompts",
+      "• Work with sources and judge them quickly",
+      "• Verify answers with the CARR check and triangulation",
+      "• Ask better follow-up questions",
+      "• Go deeper with Pro Search and Deep Research",
+      "• Compare information and documents",
+      "• Organise research in Spaces",
+      "• Turn findings into shareable Pages and presentations",
+      "• Work with any web page using the free Comet browser",
+      "Ask → Read → Verify → Refine",
+      "Every module includes practice prompts you run in Perplexity straight away, plus a \"Your turn\" task on your own research. The course ends with a capstone where you build a complete, verified research brief you can share.",
+      "Don't just ask AI for an answer. Learn how to research with AI."
+    ],
+    "includes": [
+      "18 modules, about 8 hours 40 minutes of learning (25–45 minutes per module)",
+      "87 lessons explained in plain language",
+      "28 guided practice prompts you run in Perplexity as you learn",
+      "22 hands-on \"Your turn\" tasks on your own research questions",
+      "Ready-made research workflows for 6 roles: student, job seeker, professional, business owner, content creator and freelancer",
+      "A 7-phase capstone: build a verified, shareable research brief",
+      "Knowledge checks in every module",
+      "A prompt library with 141 ready-to-use research prompts",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "deepseek": {
-    "subtitle": "Use DeepSeek for search, DeepThink reasoning, research, business, marketing, coding, files and vision in practical workflows.",
+    "subtitle": "Learn to use DeepSeek, a free and capable AI tool, the right way: choose the right mode for each task, research current information, solve hard problems with step-by-step reasoning, and apply it to learning, business, marketing and coding.",
     "learn": [
-      "Navigate DeepSeek chat, settings and models with confidence",
-      "Use Search mode to get current information with linked sources",
-      "Apply DeepThink reasoning to solve complex, multi-step problems",
-      "Write structured prompts that produce consistent, high quality outputs",
-      "Create business plans, marketing copy and campaign ideas with DeepSeek",
-      "Write, explain and debug code with DeepSeek's coding abilities",
-      "Extract insights from uploaded files, documents and images",
-      "Build end to end workflows that combine research, analysis and content"
+      "Understand what DeepSeek is and how it differs from \"just another ChatGPT\"",
+      "Use the Three Switches (Speed, Depth and Currency) to set up any question correctly",
+      "Research current information with Search, and check answers with the Search Checklist",
+      "Solve hard problems with Expert Mode and DeepThink, and read its reasoning to catch mistakes",
+      "Break complex requests into steps with the Layer Stack, and get structured comparisons with the Comparison Grid",
+      "Study hard topics properly, and create teaching material, with the Learning Loop",
+      "Run business operations with the Business Loop: Listen, Create, Analyse, Improve",
+      "Research markets and competitors with the Market Lens: Landscape, Audience, Position, Calendar",
+      "Debug code in chat, and set up DeepSeek inside VS Code",
+      "Analyse documents, spreadsheets and code files, and use Vision Mode for photos and handwriting",
+      "Understand where your data is stored, and what you should never upload",
+      "Check any AI use with the Four Guards: transparency, equity, responsibility and privacy",
+      "Combine everything into your own weekly DeepSeek workflow"
     ],
     "sections": [
       {
-        "title": "Getting Started with DeepSeek",
+        "title": "Module 1: Understanding DeepSeek",
         "lectures": [
-          ["Welcome and course overview", 5],
-          ["What DeepSeek is and how it differs", 12],
-          ["Interface, app and account setup", 12],
-          ["Your first useful conversations", 14]
+          ["What DeepSeek is and how it's different", 9],
+          ["The Three Switches: Speed (Instant/Expert), Depth (DeepThink) and Currency (Search)", 9],
+          ["A tour of the current interface", 9],
+          ["Hands-on: test all three switches on one question", 13]
         ]
       },
       {
-        "title": "Search Mode",
+        "title": "Module 2: Search & Research",
         "lectures": [
-          ["When to turn Search on", 12],
-          ["Getting current, sourced answers", 16],
-          ["Checking sources and accuracy", 14],
-          ["Search exercises", 14]
+          ["Use the Search toggle for current information", 8],
+          ["Where DeepSeek Search is strong, and where a dedicated research tool does better", 8],
+          ["The Search Checklist: verify before you trust", 8],
+          ["Combine Search with Speed and Depth", 8],
+          ["Hands-on: run a search-grounded question", 13]
         ]
       },
       {
-        "title": "DeepThink Reasoning",
+        "title": "Module 3: DeepThink & Expert Mode for Hard Problems",
         "lectures": [
-          ["How DeepThink reasoning works", 14],
-          ["Reading the reasoning process", 14],
-          ["Solving logic and math problems", 17],
-          ["Decision making with DeepThink", 16],
-          ["When not to use DeepThink", 8]
+          ["DeepSeek's biggest strength: deep reasoning at low cost", 13],
+          ["The Reasoning Read: check the thinking, not just the final answer", 13],
+          ["Solve a hard problem and spot where DeepSeek corrects itself", 12],
+          ["When Expert Mode + DeepThink is overkill", 12]
         ]
       },
       {
-        "title": "Prompting Mastery",
+        "title": "Module 4: Advanced Prompting — Layering & Comparison",
         "lectures": [
-          ["Prompt structure for DeepSeek", 16],
-          ["Roles, context and constraints", 14],
-          ["Output formats and templates", 14],
-          ["Iterating to better answers", 12]
+          ["The Layer Stack: break a big request into steps that build on each other", 11],
+          ["The Comparison Grid: structured comparisons instead of vague summaries", 11],
+          ["Combine both for complex decisions", 11],
+          ["Hands-on: run a layered comparison", 17]
         ]
       },
       {
-        "title": "Research and Analysis",
+        "title": "Module 5: DeepSeek for Learning & Teaching",
         "lectures": [
-          ["Combining Search and DeepThink for research", 17],
-          ["Comparing options and building tables", 16],
-          ["Problem solving frameworks", 16],
-          ["Summaries and briefing notes", 12]
+          ["The Learning Loop: understand a topic instead of copying an answer", 11],
+          ["A full worked example for teachers and coaches", 11],
+          ["Use DeepThink for concepts that need deeper reasoning", 11],
+          ["Hands-on: run a full Learning Loop", 17]
         ]
       },
       {
-        "title": "Business and Marketing",
+        "title": "Module 6: DeepSeek for Business Operations",
         "lectures": [
-          ["Business ideas and plans", 16],
-          ["Marketing strategy and audience research", 16],
-          ["Copywriting for ads, emails and social", 17],
-          ["Content calendars and campaigns", 14]
+          ["The Business Loop: Listen, Create, Analyse, Improve", 12],
+          ["One business taken through all four stages", 12],
+          ["Use DeepThink and layered prompting for operational decisions", 12],
+          ["Hands-on: run a Business Loop for your own work", 19]
         ]
       },
       {
-        "title": "Coding with DeepSeek",
+        "title": "Module 7: DeepSeek for Marketing & Market Research",
         "lectures": [
-          ["Writing code from plain English", 16],
-          ["Explaining and debugging code", 16],
-          ["Small automation scripts", 16],
-          ["Building a simple web page", 14]
+          ["The Market Lens: Landscape, Audience, Position, Calendar", 12],
+          ["Competitor research with the Comparison Grid and Search Checklist", 12],
+          ["Use DeepThink for positioning and differentiation", 12],
+          ["Hands-on: run the full Market Lens", 19]
         ]
       },
       {
-        "title": "Files and Vision",
+        "title": "Module 8: DeepSeek for IT & Developers",
         "lectures": [
-          ["Uploading PDFs, documents and spreadsheets", 14],
-          ["Extracting data and summaries from files", 14],
-          ["Reading text and details from images", 14]
+          ["Debug code in chat using the Reasoning Read", 11],
+          ["Get a DeepSeek API key", 11],
+          ["Set up DeepSeek in VS Code with the Continue extension", 11],
+          ["When not to send code to DeepSeek (data residency)", 11],
+          ["Hands-on: debug something real", 16]
         ]
       },
       {
-        "title": "Practical AI Workflows",
+        "title": "Module 9: Files, Documents & Vision Mode",
         "lectures": [
-          ["Designing a repeatable workflow", 12],
-          ["Research to report workflow", 16],
-          ["Marketing content workflow", 16],
-          ["Privacy and data handling good practice", 10]
+          ["Upload PDFs, Word files, spreadsheets and code", 11],
+          ["Vision Mode for photos, screenshots and handwriting", 11],
+          ["What to check before uploading sensitive files", 11],
+          ["Hands-on: try both document and image analysis", 17]
         ]
       },
       {
-        "title": "Capstone: Real-World Project",
+        "title": "Module 10: Ethics & Responsible AI Use",
         "lectures": [
-          ["Choosing your project", 6],
-          ["Research and planning with DeepSeek", 16],
-          ["Building the final deliverables", 19],
-          ["Review and next steps", 6]
+          ["The full data-residency picture", 13],
+          ["The Four Guards: transparency, equity, responsibility and privacy", 13],
+          ["What not to upload or ask, and why", 12],
+          ["Verify before you act", 12]
+        ]
+      },
+      {
+        "title": "Module 11: Designing Your Own DeepSeek Workflow",
+        "lectures": [
+          ["The Workflow Build: Define, Assemble, Verify, Repeat", 11],
+          ["Combine techniques from earlier modules into one routine", 11],
+          ["Run the Four Guards on a whole workflow", 11],
+          ["Hands-on: design your own weekly workflow", 17]
+        ]
+      },
+      {
+        "title": "Module 12: Your DeepSeek Mastery Recap",
+        "lectures": [
+          ["The 11-word summary, one word per module", 8],
+          ["A quick-reference map of every framework", 8],
+          ["Your complete DeepSeek toolkit", 8],
+          ["The one habit worth keeping", 8],
+          ["Final knowledge check", 8]
         ]
       }
     ],
     "requirements": [
-      "A free DeepSeek account",
-      "A computer or phone with internet access",
-      "No coding or AI experience required"
+      "No AI or coding experience needed",
+      "A computer or phone with a browser",
+      "DeepSeek is free to use at chat.deepseek.com, with sign-in by email, Google or Apple ID",
+      "Optional, for developers (Module 8): VS Code (free) and a DeepSeek API key, which needs a small top-up of a few dollars",
+      "Important: DeepSeek stores user data on servers in China. The course explains what this means and what you should never upload"
     ],
     "audience": [
-      "Professionals who want a capable, free AI assistant for daily work",
-      "Business owners and marketers creating plans and content",
-      "Students solving problems and researching topics",
-      "Beginner coders who want help writing and debugging code"
+      "Students who want help understanding hard topics, not just answers",
+      "Teachers and coaches who want to prepare lessons and materials faster",
+      "Business owners who want a free AI tool for operations and decisions",
+      "Marketers who want faster competitor research and positioning",
+      "IT professionals and developers who want a low-cost reasoning and coding assistant"
     ],
     "description": [
-      "DeepSeek is a powerful AI assistant with web search, a DeepThink reasoning mode, file reading and strong coding ability. This course teaches you to use each of these features for real tasks, not just casual chat. Each module mixes short explanations with practical exercises, so you build real skill quickly even if you have never used an AI tool before.",
-      "You start with the interface and simple conversations, then learn when to use Search for current, sourced answers and when to switch on DeepThink for logic, math and multi-step decisions. You also learn to read the reasoning DeepSeek shows and spot where it might be wrong. By the end of these modules you will know which mode to choose for a task and how to combine them.",
-      "The prompting module gives you a clear structure for roles, context, constraints and formats. You apply it in research and analysis lessons, building comparison tables, problem solving frameworks and briefing notes. Each lesson comes with ready-to-use prompt examples that you can adapt for your own work and studies.",
-      "Next you use DeepSeek for business and marketing work such as plans, audience research, ad and email copy and content calendars. The coding module covers writing, explaining and debugging code and building small scripts and a simple web page. You will also learn practical checks for accuracy before using any output.",
-      "Finally you work with files and images, design repeatable workflows and complete a capstone project that combines research, analysis and finished deliverables. You pick a real task from your work or business, research and plan it with DeepSeek, produce the final deliverables and review them carefully. You leave with practical skills and a process you can reuse."
-    ]
+      "Your job may not change. But the speed and depth expected from you might.",
+      "Research faster. Analyse faster. Compare options faster. Understand documents faster. Solve problems faster. AI is changing what can be done before the deadline arrives.",
+      "So stop asking only, \"What answer can AI give me?\" Start asking, \"What problem can I solve with AI?\"",
+      "DeepSeek is free, fast and capable, but it's also easy to use badly. This course teaches you to use it properly: the right mode for each task, the right way to check its answers, and the right situations to use it for.",
+      "You follow Karan, who runs operations at a small business, as he builds his own DeepSeek workflow through the course.",
+      "What you'll learn:",
+      "• Search for current information",
+      "• DeepThink and Expert Mode for hard problems",
+      "• Research and verification",
+      "• Advanced prompting: layering and comparison",
+      "• Learning and teaching",
+      "• Business operations",
+      "• Marketing and market research",
+      "• Coding and VS Code setup",
+      "• Files, documents and Vision Mode",
+      "• Responsible use and data privacy",
+      "• Your own repeatable workflow",
+      "Every module gives you a simple framework, real worked examples showing the exact prompt and result, and a hands-on task on your own work.",
+      "Don't wait until deeper AI use becomes part of your job. Learn it before you're expected to know it."
+    ],
+    "includes": [
+      "12 modules, about 10 hours of learning",
+      "68 lessons with click-by-click instructions",
+      "28 worked prompt examples showing the exact prompt and the real result",
+      "11 hands-on \"Your turn\" tasks on your own work",
+      "55+ knowledge-check activities (multiple choice, ordering, fill-in-the-blanks and more)",
+      "A simple, memorable framework for every skill",
+      "Real examples for students, teachers, business owners, marketers and IT professionals in every module",
+      "A final recap with a quick-reference map",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Advanced",
+    "language": "English"
   },
   "lovable": {
-    "subtitle": "Turn ideas into live products with Lovable: prompting, editing, importing, integrations, copy, publishing and MVP building.",
+    "subtitle": "Turn your ideas into live websites and MVPs, faster with AI: go from a first prompt to a published product, with no coding needed.",
     "learn": [
-      "Write clear Lovable prompts that turn an idea into a working app",
-      "Edit layouts, styles and components using chat and visual edits",
-      "Import designs and existing projects into Lovable",
-      "Connect Supabase for databases, authentication and storage",
-      "Add integrations like Stripe payments and GitHub sync",
-      "Write conversion-focused copy for websites and landing pages",
-      "Publish projects and connect a custom domain",
-      "Plan, build, test and launch a complete MVP"
+      "Understand what Lovable really is: a tool that writes real code (React, TypeScript and a Supabase database), not a drag-and-drop template builder",
+      "Decide in minutes whether your idea suits Lovable, or whether a simpler website builder would be cheaper and easier",
+      "Write a first prompt that names your exact sections, so the first version comes out close to what you want",
+      "Check every build against what you asked for, and fix problems in small, safe steps",
+      "Make four kinds of edits precisely (Style, Section, Layout and Content) without breaking the rest of your site",
+      "Turn a Figma design or a screenshot into a working website, and add features the design didn't have",
+      "Know the difference between Chat Connectors (help while you build) and App Connectors (features in your live site)",
+      "Add real payments with Stripe, and connect services that aren't in Lovable's catalogue, such as an Indian UPI payment gateway, using their API documentation",
+      "Write website copy that gets visitors to take one clear action, and add it without disturbing your design",
+      "Publish your site live, connect your own domain, and update it safely after launch",
+      "Save money with the free GitHub + Vercel/Netlify route instead of a paid custom-domain plan",
+      "Recognise when a project has outgrown Lovable, and hand the real code to a developer without starting over"
     ],
     "sections": [
       {
-        "title": "Getting Started with Lovable",
+        "title": "Module 1: What Is Lovable, and When to Use It",
         "lectures": [
-          ["Welcome and what you will build", 5],
-          ["How Lovable works", 12],
-          ["Account, credits and workspace tour", 10],
-          ["Your first app in 15 minutes", 18]
+          ["Not a template picker: how Lovable writes real code, a database and user logins", 6],
+          ["When Lovable fits best: startup MVPs, business tools with real logic, fast changes", 6],
+          ["When it isn't the best choice: simple blogs, static pages, very complex logic", 7],
+          ["How credits work, what the free plan includes and what paid plans add", 7],
+          ["Framework: The Right Fit Check (Understand → Match → Flag → Start)", 7],
+          ["Hands-on: run the Right Fit Check on your own idea", 7]
         ]
       },
       {
-        "title": "Prompting for Apps",
+        "title": "Module 2: Your First Prompt",
         "lectures": [
-          ["Writing a strong first prompt", 14],
-          ["Breaking features into steps", 14],
-          ["Using Chat mode to plan", 12],
-          ["Fixing errors with prompts", 12]
+          ["Sign up and start your first project", 6],
+          ["Write a specific first prompt that names your sections", 6],
+          ["The two-pane editor: chat on the left, live preview on the right", 6],
+          ["Check the first version against what you asked for", 6],
+          ["Why 2–3 changes at a time works better than one giant request", 6],
+          ["Framework: The First Build (Describe → Watch → Check → Edit in Small Steps)", 6],
+          ["Worked example: Ritika's portfolio, from first build to focused fix", 7],
+          ["Hands-on: build and check the first version of your project", 7]
         ]
       },
       {
-        "title": "Editing and Design",
+        "title": "Module 3: Editing Like You Mean It",
         "lectures": [
-          ["Visual edits for quick changes", 12],
-          ["Layouts, themes and responsive design", 14],
-          ["Components, images and icons", 12],
-          ["Keeping design consistent", 10]
+          ["Style edits: change colours and fonts across the whole site", 6],
+          ["Section edits: add, remove or move a section exactly where you want", 7],
+          ["Layout edits: rearrange items without changing the content", 7],
+          ["Content edits: update only the words, not design or structure", 7],
+          ["Say what should stay unchanged, so edits don't break other parts", 7],
+          ["Framework: The Edit Menu (Style • Section • Layout • Content)", 7],
+          ["Worked example: Takshika's theme, testimonials, layout and copy edits", 7],
+          ["Hands-on: make one of each edit type on your project", 7]
         ]
       },
       {
-        "title": "Websites and Landing Pages",
+        "title": "Module 4: Importing Designs",
         "lectures": [
-          ["Landing page structure that converts", 14],
-          ["Writing headlines, offers and CTAs", 14],
-          ["Building a full marketing website", 16],
-          ["SEO basics and page settings", 10]
+          ["Paste a Figma link and turn it into a working website", 6],
+          ["Use the Builder.io plugin for a more precise Figma conversion", 6],
+          ["Upload a screenshot of a site you like as style inspiration", 6],
+          ["The truth about \"cloning\" websites, and what actually works", 6],
+          ["Add features a static design doesn't have, such as a contact form", 6],
+          ["Compare the result with the original and fix the differences", 6],
+          ["Framework: The Import Path (Capture → Choose the Method → Describe What's Different → Refine)", 6],
+          ["Worked examples: Karan's Figma import and Ritika's screenshot inspiration", 6],
+          ["Hands-on: import a real Figma design or screenshot", 7]
         ]
       },
       {
-        "title": "Importing and Integrations",
+        "title": "Module 5: Lovable as Part of Your Toolkit — Integrations",
         "lectures": [
-          ["Importing designs and screenshots", 12],
-          ["Supabase: database and authentication", 18],
-          ["Stripe payments setup", 14],
-          ["GitHub sync and version history", 12],
-          ["Using APIs and other integrations", 12]
+          ["Chat Connectors: give Lovable information while you build (Notion, design files, trackers)", 6],
+          ["App Connectors: payments, email, CRM data and Slack notifications in your live site", 7],
+          ["Custom API: connect services outside the catalogue using their API documentation", 7],
+          ["Connecting tools doesn't use credits; only code generation does", 7],
+          ["Check that each connection actually works", 7],
+          ["Framework: Two Kinds of Connection (Chat Connectors • App Connectors • Custom API)", 7],
+          ["Worked examples: a Notion spec, a Stripe deposit payment and a UPI payment gateway", 7],
+          ["Hands-on: connect a real tool the right way for your project", 7]
         ]
       },
       {
-        "title": "Publishing",
+        "title": "Module 6: Words That Convert — Website Copy",
         "lectures": [
-          ["Publishing your project", 10],
-          ["Custom domains", 10],
-          ["Testing on devices and fixing bugs", 14]
+          ["Decide the one action you want every visitor to take", 7],
+          ["Draft copy in ChatGPT or Claude, then bring it into Lovable", 7],
+          ["Replace generic lines with specific, concrete ones", 7],
+          ["Add the finished copy as a Content edit, so your design stays untouched", 7],
+          ["Framework: The Conversion Copy Check (Clarify the Goal → Draft with the Right Tool → Cut the Fluff → Integrate as Content)", 7],
+          ["Worked example: Takshika's \"Reserve My Spot\" landing page copy", 7],
+          ["Hands-on: write and add real conversion copy to your page", 8]
         ]
       },
       {
-        "title": "MVP Building",
+        "title": "Module 7: Publishing Your Site",
         "lectures": [
-          ["From idea to MVP scope", 12],
-          ["User flows and core features", 16],
-          ["Data, login and payments together", 18],
-          ["Testing with real users", 12]
+          ["Publish with the right audience: public, or limited to specific people", 6],
+          ["Option 1: Lovable's built-in custom domain (paid plan)", 6],
+          ["Option 2: free GitHub sync, then deploy on Vercel or Netlify", 6],
+          ["Connect a domain step by step: A record, TXT record, automatic SSL", 6],
+          ["Avoid a common mistake with domains behind Cloudflare or another CDN", 6],
+          ["Update a live site safely with \"Publish changes\"", 6],
+          ["Framework: The Launch Checklist (Publish First → Choose Your Domain Path → Connect → Update After Launch)", 6],
+          ["Worked example: Karan compares the paid and free domain routes", 6],
+          ["Hands-on: publish your project and choose your domain path", 7]
         ]
       },
       {
-        "title": "Capstone: Launch Your MVP",
+        "title": "Module 8: Real-World Fit — MVP Building & Growing Beyond",
         "lectures": [
-          ["Planning your MVP", 8],
-          ["Building the product", 24],
-          ["Copy, polish and publish", 14],
-          ["Launch checklist and next steps", 8]
+          ["Where Lovable works best: MVPs, small business tools, event and programme sites", 6],
+          ["Clear signs a project has outgrown Lovable", 7],
+          ["Hand over the real code to developers through GitHub, with no lock-in", 7],
+          ["Work with a designer: Figma import as the bridge to a working product", 7],
+          ["Reassess fit as your project grows", 7],
+          ["Framework: The Growth Signal (Recognise → Exit Cleanly → Collaborate → Reassess)", 7],
+          ["Worked example: Karan exports his booking tool to GitHub for a development team", 7],
+          ["Hands-on: reassess the fit of your own project", 7]
+        ]
+      },
+      {
+        "title": "Module 9: Your Lovable Mastery Recap",
+        "lectures": [
+          ["The 8-word journey: Fit → Build → Edit → Import → Connect → Convert → Publish → Grow", 7],
+          ["A one-page quick-reference map of all 8 frameworks", 7],
+          ["Your complete Lovable toolkit: everything you built", 7],
+          ["The one habit worth keeping: check before you assume", 7],
+          ["Final knowledge check", 7]
         ]
       }
     ],
     "requirements": [
-      "A free Lovable account (a paid plan helps for larger builds)",
-      "A computer with internet access",
-      "No coding experience needed"
+      "No coding experience needed",
+      "A computer with a modern browser",
+      "A free Lovable account (sign up with email, Google, GitHub or Apple). The free plan includes daily credits, public projects and a free Lovable web address",
+      "A paid Lovable plan is optional, needed only for a custom domain through Lovable and for private projects",
+      "Optional free accounts: Figma (design import), GitHub (code sync and free hosting), Notion (build context)",
+      "Optional: a Stripe account for the payments example",
+      "Credit amounts and prices change often. Check Lovable's pricing page before buying a plan"
     ],
     "audience": [
-      "Founders and entrepreneurs who want to launch faster",
-      "Freelancers building websites and apps for clients",
-      "Marketers creating landing pages without developers",
-      "Non-technical creators with app ideas"
+      "Beginners who want to build websites with AI, without learning to code",
+      "Entrepreneurs and startup founders who want to validate an idea with a working MVP",
+      "Small business owners who want a website, booking tool or client portal of their own",
+      "Freelancers exploring AI-powered website projects for clients",
+      "Marketers creating landing pages and campaign pages quickly",
+      "Coaches and trainers launching programme and workshop pages",
+      "Students building portfolio websites",
+      "Designers who want to turn Figma designs into working sites"
     ],
     "description": [
-      "Lovable lets you build web apps and websites by describing what you want. This 7 hour course takes you from idea to a live product, teaching you to prompt, edit, integrate and publish with confidence. No coding experience is required, and every lesson is hands-on, so you build real projects as you learn instead of just watching.",
-      "You start by building a first app in minutes, then learn how to write strong prompts, break features into steps, plan in Chat mode and fix errors without getting stuck in loops. You also learn how to keep projects organized so later changes stay easy as your app grows.",
-      "The design and website modules cover visual edits, layouts, responsive design and the copy that makes landing pages work: headlines, offers and calls to action. You build a full marketing site and set up basic SEO. Each step is shown on screen so you can follow along and build your own version at the same time.",
-      "Next you connect real functionality: Supabase for databases and logins, Stripe for payments, GitHub sync and other APIs. You then publish your work, connect a custom domain and test on different devices. These lessons explain each integration in simple language and show safe, step by step setup.",
-      "Finally you learn a simple MVP process, scoping features, building user flows and testing with real users, and finish by launching your own MVP in the capstone. You plan the product, build it, polish the copy and publish it live, then follow a simple launch checklist so real users can start trying it."
-    ]
+      "💡 Your idea deserves more than a notebook.",
+      "Have a website idea, landing page concept or app idea but don't know how to build it? With Lovable, you can turn written instructions into working websites and apps without traditional coding.",
+      "But generating a first draft is only the beginning.",
+      "Most people stop at Lovable's first version, and it shows: placeholder text, sections in the wrong place, no payments, no domain, no visitors. Lovable Deep Dive takes you through the whole journey, from your first prompt to a published product real people can use.",
+      "Inside the course:",
+      "• ✍️ Prompting: turn ideas into clear instructions Lovable can build from",
+      "• 🎨 Editing: change themes, sections, layouts and content without rebuilding",
+      "• 🖼️ Importing: turn Figma designs and screenshots into working sites",
+      "• 🔗 Integrations: connect Stripe, Notion, Slack and custom APIs",
+      "• 💬 Conversion copy: write headlines and calls to action that get clicks",
+      "• 🌐 Publishing: go live, connect your domain (including a free route) and update safely",
+      "• 🛠️ MVP building: test your idea, and know when it's ready for the next step",
+      "Your learning journey: Idea → Prompt → Build → Edit → Import → Connect → Publish → Grow",
+      "What you'll build: by the end of the course, you'll have built and launched a real project of your own, such as:",
+      "• A portfolio website with a projects showcase and a working contact form",
+      "• A booking or client-intake tool with real logic and a Stripe deposit payment",
+      "• A programme or workshop landing page with testimonials and a \"Reserve My Spot\" button",
+      "• A working MVP to test your startup idea with real users",
+      "You'll follow three learners throughout the course: Ritika, a business analytics student building her portfolio; Karan, a small business owner building a client booking tool; and Takshika, a trainer launching a leadership programme page.",
+      "8 frameworks you'll master:",
+      "• Right Fit Check: is Lovable right for this idea?",
+      "• The First Build: get a strong first version",
+      "• The Edit Menu: Style, Section, Layout, Content",
+      "• The Import Path: from Figma or screenshot to working site",
+      "• Two Kinds of Connection: Chat Connectors, App Connectors, Custom API",
+      "• Conversion Copy Check: words that get clicks",
+      "• Launch Checklist: publish, domain, update",
+      "• Growth Signal: MVP to next stage",
+      "Why this course is different:",
+      "• Learn by doing. Every module ends with a hands-on task on your own project, so you finish with something real.",
+      "• Real worked examples. See the exact prompt, what Lovable built, what went wrong, and how it was fixed.",
+      "• Honest advice. Learn when Lovable isn't the right tool, how to save money on domains, and how to avoid common mistakes, so you don't waste credits.",
+      "• No lock-in. Lovable writes real code, so you can always hand your project to a developer later.",
+      "Don't stop at the first draft. A generated website is a starting point. Learn to refine it, make better decisions, test the experience and move toward a real launch.",
+      "Start building. Keep improving. Launch your idea."
+    ],
+    "includes": [
+      "9 modules, about 7.5 hours of learning",
+      "47 short lessons with click-by-click instructions",
+      "22 worked examples showing the exact prompt and what Lovable built",
+      "8 hands-on \"Your turn\" tasks on your own website or app idea",
+      "55+ knowledge-check activities (multiple choice, ordering, fill-in-the-blanks and more)",
+      "8 easy-to-remember frameworks, one for each stage of building",
+      "Real examples for students, small business owners, coaches and startup founders in every module",
+      "Ready-to-adapt prompt templates for first builds, edits, imports, integrations and copy",
+      "Honest guidance on credits, plans and costs, so you don't waste money",
+      "A final recap with a one-page quick-reference map",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Intermediate",
+    "language": "English"
   },
   "chatgpt-deep": {
-    "subtitle": "Go beyond basic prompting with ChatGPT: build GPTs, connect apps, create, code, research, analyze data and automate work.",
+    "subtitle": "Learn to use ChatGPT as a complete work system: Custom GPTs and Actions, connected Apps, Skills, consistent images, live websites and apps, ChatGPT Work, Codex, Deep Research and data analysis.",
     "learn": [
-      "Write advanced prompts and custom instructions for consistent results",
-      "Use ChatGPT memory and Projects to organize long-running work",
-      "Build custom GPTs with instructions, knowledge files and actions",
-      "Connect ChatGPT to Google Drive, Gmail and other apps with connectors",
-      "Create images, documents and presentations with ChatGPT",
-      "Write and debug code and build small apps using Canvas",
-      "Run deep research and analyze spreadsheets and data files",
-      "Automate recurring work with scheduled tasks and agent mode"
+      "Write Custom GPT instructions that hold up in real use, and handle the four common ways GPTs fail",
+      "Connect a Custom GPT to live outside data with Actions, safely and within its job",
+      "Connect your tools (Google Drive, Notion, GitHub and more) with Apps, and build a daily or weekly brief",
+      "Chain several apps together so one tool's output feeds the next, checking every handoff",
+      "Understand when to use a Custom GPT, a Skill or a Project, and how they work together",
+      "Create a matching set of images with a consistent character, product or brand look in ChatGPT Images 2.0",
+      "Build and publish a real website with a live URL using ChatGPT Sites",
+      "\"Vibe code\" interactive apps and games, and play-test them properly",
+      "Hand off complete tasks to ChatGPT Work with a clear deliverable, the right files and safe permissions",
+      "Delegate coding tasks to Codex, review changes before they merge, and schedule recurring jobs",
+      "Scope Deep Research questions precisely and check the quality of every source",
+      "Analyse data properly: find the real story behind averages, trace wrong numbers, and write an actionable findings brief"
     ],
     "sections": [
       {
-        "title": "Beyond Basic Prompting",
+        "title": "Module 1: Custom GPTs for Multi-Step Workflows",
         "lectures": [
-          ["Welcome and course roadmap", 5],
-          ["Models and when to use each", 15],
-          ["Advanced prompt structures", 20],
-          ["Custom instructions and personalization", 15],
-          ["Memory and Projects", 18]
+          ["What a Custom GPT is, and who can currently create new ones", 9],
+          ["The Custom GPT Backbone: Purpose, Routing, Test, Refine", 9],
+          ["The four failure modes: missing input, contradictory input, scope creep and underflow", 9],
+          ["Edit an existing GPT step by step", 9],
+          ["Hands-on: apply the Backbone to your own GPT", 9]
         ]
       },
       {
-        "title": "Build: Custom GPTs",
+        "title": "Module 2: Custom GPTs with Actions",
         "lectures": [
-          ["What GPTs are and when to build one", 13],
-          ["Writing GPT instructions", 20],
-          ["Knowledge files and capabilities", 18],
-          ["Actions and sharing your GPT", 18]
+          ["What Actions do, and how they differ from Apps", 13],
+          ["The Live Data Guard: connect outside data safely", 14],
+          ["Handle unclear data, incomplete data and off-scope requests", 14],
+          ["Set an access policy so a GPT stays within its job", 14]
         ]
       },
       {
-        "title": "Connect: Apps and Connectors",
+        "title": "Module 3: Apps — Connecting Your Tools",
         "lectures": [
-          ["How connectors work", 13],
-          ["Google Drive, Gmail and Calendar", 20],
-          ["Working with your own files", 15],
-          ["Privacy and permission basics", 11]
+          ["Why \"connectors\" are now called Apps", 13],
+          ["The Brief Builder: connect only what the task needs", 14],
+          ["Set rules for combining several sources", 14],
+          ["Hands-on: build a daily or weekly brief", 14]
         ]
       },
       {
-        "title": "Create: Images and Content",
+        "title": "Module 4: Chaining Apps Together",
         "lectures": [
-          ["Image generation and editing", 20],
-          ["Writing documents and reports", 18],
-          ["Presentations and visual content", 18],
-          ["Brand voice and content systems", 15]
+          ["The Handoff Chain: map, sequence, check, close the loop", 13],
+          ["Make one app's output become the next app's input", 14],
+          ["Check every handoff before trusting the result", 14],
+          ["Hands-on: build and check a real chain", 14]
         ]
       },
       {
-        "title": "Code: Canvas and Programming",
+        "title": "Module 5: Skills — Reusable Capabilities",
         "lectures": [
-          ["Canvas for writing and code", 15],
-          ["Writing and explaining code", 18],
-          ["Debugging and improving code", 18],
-          ["Building a small web app", 22]
+          ["What a Skill is, and who currently has access", 12],
+          ["Persona, Method or Workspace? Custom GPT vs Skill vs Project", 12],
+          ["What makes a good Skill", 13],
+          ["How the three work together", 13]
         ]
       },
       {
-        "title": "Research: Search and Deep Research",
+        "title": "Module 6: Consistent Visual Identity — ChatGPT Images 2.0",
         "lectures": [
-          ["Web search for current information", 13],
-          ["Running deep research", 20],
-          ["Verifying sources and claims", 13]
+          ["Generate images with ChatGPT Images 2.0", 11],
+          ["The Style Lock: keep a character, product or brand consistent", 11],
+          ["Catch and fix style drift", 11],
+          ["Build a reusable reference sheet", 11],
+          ["Hands-on: create a matching 3-image set", 11]
         ]
       },
       {
-        "title": "Analyze: Data and Files",
+        "title": "Module 7: Build and Publish a Live Site — ChatGPT Sites",
         "lectures": [
-          ["Uploading spreadsheets and CSVs", 15],
-          ["Charts and data insights", 20],
-          ["Analyzing PDFs and reports", 15],
-          ["Business analysis examples", 15]
+          ["What ChatGPT Sites is, and where it's available", 11],
+          ["Define audience, purpose and main action before building", 11],
+          ["Refine in a private preview, then publish with the right audience", 11],
+          ["What ChatGPT doesn't handle once a site is live", 11],
+          ["Hands-on: build and publish a real site", 11]
         ]
       },
       {
-        "title": "Automate: Tasks and Agent",
+        "title": "Module 8: Vibe Coding — Apps and Games",
         "lectures": [
-          ["Scheduled tasks and reminders", 15],
-          ["Agent mode for multi-step tasks", 20],
-          ["Workflow design for productivity", 18]
+          ["Build interactive apps and games with Sites", 13],
+          ["Define rules and win/lose conditions before building", 14],
+          ["The Play Test: test the logic, not just the look", 14],
+          ["Hands-on: build and play-test your own app", 14]
         ]
       },
       {
-        "title": "Practical Workplace Applications",
+        "title": "Module 9: ChatGPT Work",
         "lectures": [
-          ["Email and meeting workflows", 15],
-          ["Sales and marketing workflows", 15],
-          ["Operations and HR workflows", 15]
+          ["How Work mode differs from regular Chat", 11],
+          ["The Work Order: define the deliverable, link files, verify the output", 11],
+          ["Review permissions before granting access to sensitive files", 11],
+          ["How Work compares to similar agent tools", 11],
+          ["Hands-on: run a real Work task", 11]
         ]
       },
       {
-        "title": "Capstone: Your Connected AI Workflow",
+        "title": "Module 10: Codex — Repeatable Workflows",
         "lectures": [
-          ["Planning the workflow", 9],
-          ["Building GPT, connectors and outputs", 26],
-          ["Testing and next steps", 11]
+          ["What Codex does, and what belongs in Work instead", 11],
+          ["The Repo Loop: delegate coding tasks with review before anything merges", 11],
+          ["Codex's four access options: CLI, IDE extension, cloud and more", 11],
+          ["Set up background or scheduled coding tasks", 11],
+          ["Hands-on: run a scoped Codex task", 11]
+        ]
+      },
+      {
+        "title": "Module 11: Deep Research",
+        "lectures": [
+          ["Scope your research question precisely", 13],
+          ["Access limits and usage caps", 14],
+          ["The Source Check: judge source quality, not just count citations", 14],
+          ["Turn findings into a structured, actionable brief", 14]
+        ]
+      },
+      {
+        "title": "Module 12: Data Analysis",
+        "lectures": [
+          ["Segment, Trace, Correlate Carefully, Brief", 12],
+          ["Find the real story behind a misleading average", 12],
+          ["Trace a wrong number to its root cause", 12],
+          ["Chart relationships carefully: correlation isn't proof", 12],
+          ["Hands-on: run a full data analysis", 12]
+        ]
+      },
+      {
+        "title": "Module 13: Your ChatGPT Mastery Recap",
+        "lectures": [
+          ["The 12-word summary, one word per module", 8],
+          ["A quick-reference map of every framework", 8],
+          ["The four corrections this course made, and why they matter", 8],
+          ["The one habit worth keeping: verify", 8],
+          ["Final knowledge check", 8]
         ]
       }
     ],
     "requirements": [
-      "A ChatGPT account (a paid plan is needed for some features like GPT building and agent mode)",
-      "A computer with internet access",
-      "Basic experience using ChatGPT"
+      "Some experience using ChatGPT; no coding needed for most modules",
+      "A computer with a modern browser; the ChatGPT desktop app is recommended",
+      "A paid ChatGPT plan (Plus or Pro) is recommended. Several features covered aren't available on Free or Go",
+      "Plan and region limits to know before you buy:",
+      "Creating new Custom GPTs: Team, Business or Enterprise accounts only (personal accounts can edit existing GPTs)",
+      "Skills: Business, Enterprise and Edu workspaces only",
+      "Sites: Plus, Pro and workspace plans only, not yet available in the EEA, Switzerland or the UK",
+      "Deep Research and Codex usage depend on your plan",
+      "Where you don't have access to a feature, each module gives you an alternative task"
     ],
     "audience": [
-      "Professionals who want ChatGPT to handle real workplace tasks",
-      "Business owners automating content, research and admin",
-      "Team leads building GPTs and workflows for their teams",
-      "Users who know the basics and want to go much further"
+      "Professionals who already use ChatGPT and want to do much more with it",
+      "Freelancers who want to build sites, tools and client deliverables faster",
+      "Business owners who want connected workflows, briefs and automated tasks",
+      "Analysts and managers who need research and data analysis they can trust",
+      "Students and developers who want to build apps and use Codex"
     ],
     "description": [
-      "Most people use ChatGPT for quick questions. This deep dive shows you how to use the full platform to build, connect, create, code, research, analyze and automate, so it becomes a real part of how you work. The course is organized around seven verbs, so each module adds a new capability you can use right away in your job or business.",
-      "You begin with advanced prompting, custom instructions, memory and Projects. Then you build your own custom GPTs with instructions, knowledge files and actions, and connect ChatGPT to apps such as Google Drive, Gmail and Calendar. Each step is demonstrated with practical examples you can copy and adapt for your own tasks.",
-      "In the create and code modules you generate and edit images, write documents and presentations, use Canvas for writing and coding, and build a small web app even if you are new to programming. You also learn how to keep a consistent brand voice across everything you create.",
-      "The research and analysis modules cover web search, deep research, source checking and data analysis on spreadsheets and PDFs, with charts and business insights. Then you automate recurring work with scheduled tasks and agent mode. You learn where human review is still needed and how to set up tasks so results stay reliable.",
-      "The course closes with practical workplace workflows for email, meetings, sales, marketing, operations and HR, plus a capstone where you build a connected AI workflow for your own role. You plan the workflow, build the GPT and connections it needs, test the outputs and refine it until it saves you real time every week."
-    ]
+      "Your job may not disappear. But the way you do it can change fast.",
+      "Research is changing. Analysis is changing. Website creation is changing. Coding is changing. Content creation is changing. Connected workflows are changing. AI is moving beyond simply answering questions.",
+      "So stop asking only, \"Can ChatGPT help me write this?\" Start asking, \"What else can I get done with ChatGPT?\"",
+      "This course teaches you to use ChatGPT as a complete work system, building real, usable output in every module.",
+      "Learn to:",
+      "• 🛠️ BUILD Custom GPTs, live websites, apps and games",
+      "• 🔗 CONNECT your tools with Apps and Actions, and chain them together",
+      "• 🎨 CREATE consistent images for your brand",
+      "• 💻 CODE with Codex, with proper review",
+      "• 🔎 RESEARCH with Deep Research and source checks",
+      "• 📊 ANALYSE data and find the real story",
+      "• ⚡ AUTOMATE complete tasks with ChatGPT Work and scheduled jobs",
+      "You learn alongside Karan, who runs operations at a small business, plus Ritika, a student, and Takshika, who designs training programmes, as they build real output with ChatGPT.",
+      "Every module gives you a simple framework, real worked examples showing the exact prompt and result, and a hands-on task on your own work. The course also tells you honestly which features need which plan, so you know what you can use before you start.",
+      "Don't wait until your manager, client or next role expects more than basic AI skills. Learn before you're expected to know it."
+    ],
+    "includes": [
+      "13 modules, about 11.5 hours of learning",
+      "61 lessons with click-by-click instructions",
+      "43 worked prompt examples showing the exact prompt and the real result",
+      "12 hands-on \"Your turn\" tasks on your own work",
+      "80+ knowledge-check activities (multiple choice, ordering, fill-in-the-blanks and more)",
+      "A simple, memorable framework for every skill",
+      "Real examples for professionals, freelancers, students and business owners in every module",
+      "A final recap with a quick-reference map",
+      "Certificate of completion"
+    ],
+    "level": "Intermediate to Advanced",
+    "language": "English"
   },
   "omni-basics": {
-    "subtitle": "Learn Google's AI image tools to create consistent characters, outfits, scenes, product visuals and story series with reusable workflows.",
+    "subtitle": "Direct cinematic AI video with Gemini Omni: plan, prompt and direct real videos, control the camera, lighting and sound, keep characters and products consistent, and connect scenes into a complete short story.",
     "learn": [
-      "Understand how reference images guide Google's AI image generation and editing",
-      "Create a consistent character with stable facial identity across images",
-      "Change outfits, poses and expressions without losing the character",
-      "Place characters in new scenes, environments and lighting",
-      "Produce product and brand visuals with consistent styling",
-      "Build multi-image visual stories and content series",
-      "Write editing prompts that make precise, controlled changes",
-      "Save reusable consistency workflows and prompt templates"
+      "Understand what Gemini Omni is, how it differs from earlier tools like Veo, and when to use it",
+      "Generate your first video and refine it conversationally, without starting over",
+      "Write strong video prompts with the Director's Blueprint: subject, action, setting and style",
+      "Direct camera movement: pan, dolly and tracking shots, and when each one fits",
+      "Set the mood with lighting: golden hour, soft window light, cinematic and neon",
+      "Turn still photos into moving video, directing exactly what moves",
+      "Direct sound: ambient audio, sound effects and dialogue, layered together",
+      "Keep the same character or product consistent across multiple videos",
+      "Create smooth transitions with start and end frames",
+      "Plan multi-scene stories with storyboards and control the total length",
+      "Use AI video responsibly: consent, honest labelling and copyright"
     ],
     "sections": [
       {
-        "title": "Getting Started",
+        "title": "Module 1: What Is Gemini Omni & When to Use It",
         "lectures": [
-          ["Welcome and course overview", 5],
-          ["Accessing Google's AI image tools", 12],
-          ["How image generation and editing prompts work", 16],
-          ["Your first edits with a reference image", 16]
+          ["What Gemini Omni is, in plain words", 6],
+          ["How it differs from earlier video tools like Veo", 6],
+          ["What \"intelligent\" video generation really means", 6],
+          ["What Omni is good for, and what you need before you start", 7]
         ]
       },
       {
-        "title": "Consistent Characters and Facial Identity",
+        "title": "Module 2: Getting Started — Access, Interface & Your First Video",
         "lectures": [
-          ["Designing a character reference", 16],
-          ["Character sheets and multiple angles", 18],
-          ["Keeping the face consistent", 18],
-          ["Fixing identity drift", 14]
+          ["Turn on Omni in the Gemini app (\"Create Videos\")", 7],
+          ["Generate your first video from a plain-English prompt", 7],
+          ["Refine it conversationally in the same session", 8],
+          ["Google AI Plus vs Pro vs Ultra", 8]
         ]
       },
       {
-        "title": "Outfits, Poses and Expressions",
+        "title": "Module 3: The Director's Blueprint — Better Video Prompts",
         "lectures": [
-          ["Changing outfits while keeping identity", 16],
-          ["Poses and body language", 16],
-          ["Facial expressions and emotions", 14],
-          ["Accessories and styling details", 12]
+          ["The cost of a vague prompt", 7],
+          ["The four Blueprint elements: subject, action, setting, style", 7],
+          ["Why style shapes the whole feeling of a video", 8],
+          ["Hands-on: build a complete Blueprint prompt", 8]
         ]
       },
       {
-        "title": "Scenes and Environments",
+        "title": "Module 4: Camera Movement — Pan, Dolly & Tracking",
         "lectures": [
-          ["Placing characters in new locations", 16],
-          ["Lighting and time of day", 14],
-          ["Background replacement and blending", 14],
-          ["Combining multiple reference images", 16]
+          ["Why camera movement changes how a video feels", 6],
+          ["Direct a pan shot", 6],
+          ["Direct a dolly shot", 6],
+          ["Direct a tracking shot", 6],
+          ["Choose the right movement for each scene", 6]
         ]
       },
       {
-        "title": "Product and Brand Visuals",
+        "title": "Module 5: Lighting & Mood",
         "lectures": [
-          ["Product shots from a single photo", 16],
-          ["Lifestyle and in-use scenes", 16],
-          ["Brand colors and consistent styling", 14],
-          ["Ad and social media formats", 14]
+          ["How light shapes atmosphere", 5],
+          ["Golden hour lighting", 5],
+          ["Soft window light", 5],
+          ["Cinematic lighting", 5],
+          ["Neon and other moods", 5],
+          ["Choose the right lighting for the mood you want", 5]
         ]
       },
       {
-        "title": "Visual Stories and Content Series",
+        "title": "Module 6: Bringing Photos to Life — Image-to-Video",
         "lectures": [
-          ["Planning a visual story", 12],
-          ["Storyboards and sequential images", 18],
-          ["Content series for social media", 16]
+          ["Turn a still photo into a moving video", 6],
+          ["Direct specific motion instead of leaving it to chance", 6],
+          ["Animate personal photos thoughtfully", 6],
+          ["Professional uses, such as product videos", 6],
+          ["Hands-on: animate a photo of your own", 6]
         ]
       },
       {
-        "title": "Reusable Consistency Workflows",
+        "title": "Module 7: Directing Sound — Ambient, Dialogue & Effects",
         "lectures": [
-          ["Building prompt templates", 12],
-          ["Organizing references and assets", 12],
-          ["Quality checks before publishing", 10]
+          ["Why directing audio matters", 6],
+          ["Ambient sound to set the scene", 6],
+          ["Sound effects for action", 6],
+          ["Dialogue", 6],
+          ["Layer several audio elements together", 6]
         ]
       },
       {
-        "title": "Capstone: Character Story Series",
+        "title": "Module 8: Keeping Subjects Consistent — Characters & Products",
         "lectures": [
-          ["Planning the series", 8],
-          ["Creating the character and scenes", 20],
-          ["Finishing and exporting the series", 12]
+          ["Why a character's face and look change between videos", 6],
+          ["Keep a character consistent by staying in the same session", 6],
+          ["Build a consistent product video series with reference images", 6],
+          ["What makes a strong reference image", 6],
+          ["Hands-on: build a consistent video series", 6]
+        ]
+      },
+      {
+        "title": "Module 9: Transitions — Start and End Frames",
+        "lectures": [
+          ["Direct a transition with a start frame", 8],
+          ["Control exactly where a video ends", 8],
+          ["Why this matters when connecting several clips", 9]
+        ]
+      },
+      {
+        "title": "Module 10: Planning Your Story — Storyboards & Pacing",
+        "lectures": [
+          ["Ask Gemini for a storyboard before generating", 6],
+          ["Control total video length across scenes", 6],
+          ["Combine several scenes into one sequence", 6],
+          ["Audio when combining scenes", 6],
+          ["Hands-on: plan and generate a multi-scene story", 6]
+        ]
+      },
+      {
+        "title": "Module 11: Combining Techniques into Workflows",
+        "lectures": [
+          ["Decision guide: start from text or an image?", 7],
+          ["Decision guide: which camera and lighting?", 7],
+          ["Decision guide: single clip or planned sequence?", 8],
+          ["When a simple prompt is enough", 8]
+        ]
+      },
+      {
+        "title": "Module 12: Professional Use Cases",
+        "lectures": [
+          ["Video workflow: student", 5],
+          ["Video workflow: job seeker", 5],
+          ["Video workflow: working professional", 5],
+          ["Video workflow: business owner", 5],
+          ["Video workflow: content creator", 5],
+          ["Video workflow: freelancer or consultant", 5]
+        ]
+      },
+      {
+        "title": "Module 13: Responsible Use & Safety",
+        "lectures": [
+          ["Gemini Omni's honest limitations", 6],
+          ["Consent before showing a real person", 6],
+          ["Avoiding misleading content, and labelling AI video", 6],
+          ["Copyright before commercial use", 7]
+        ]
+      },
+      {
+        "title": "Module 14: Capstone — Direct and Produce a Short Video",
+        "lectures": [
+          ["Phase 1: plan your story", 7],
+          ["Phase 2: direct the first scene", 6],
+          ["Phase 3: add camera and lighting direction", 6],
+          ["Phase 4: direct sound", 6],
+          ["Phase 5: keep characters and products consistent", 7],
+          ["Phase 6: connect scenes with transitions", 7],
+          ["Phase 7: final check and responsible review", 6]
+        ]
+      },
+      {
+        "title": "Bonus: Gemini Omni Prompt Library",
+        "lectures": [
+          ["67 ready-to-use video prompts, filterable by category and audience", 5]
         ]
       }
     ],
     "requirements": [
-      "A Google account with access to Gemini",
-      "A computer or phone with internet access",
-      "No design experience needed"
+      "No video or AI experience needed",
+      "A computer or phone with the Gemini app or gemini.google.com",
+      "A Google account",
+      "A paid Google AI plan (Plus, Pro or Ultra). Gemini Omni video generation isn't available on the free plan",
+      "A few of your own photos for the image-to-video module"
     ],
     "audience": [
-      "Content creators who need consistent characters for social media",
-      "Small business owners creating product and brand visuals",
-      "Marketers producing campaign images quickly",
-      "Storytellers and educators creating visual series"
+      "Beginners who want to create AI videos that look intentional, not random",
+      "Content creators making Reels, Shorts and social video",
+      "Small business owners who want product and promotional videos without a film crew",
+      "Marketers creating campaign videos quickly",
+      "Students and job seekers who want creative portfolio pieces"
     ],
     "description": [
-      "Keeping a character or product consistent across many images is one of the hardest parts of AI image creation. This course teaches you how to do it with Google's AI image generation and editing tools, step by step. It is designed for beginners, with clear demonstrations and practical exercises in every module.",
-      "You begin with how image prompts and reference images work, then create a character reference and character sheet. You learn how to keep the face consistent across images and how to fix drift when the identity starts to change. These techniques form the foundation for everything else in the course.",
-      "Next you change outfits, poses, expressions and accessories while keeping the same character, then move them into new scenes with different lighting, backgrounds and combined reference images. Each lesson shows before and after examples so you can see exactly how a prompt change affects the result, and how to recover when an edit goes wrong.",
-      "The product and brand module applies the same skills to business: product shots, lifestyle scenes, brand colors and ad formats. You then plan visual stories, storyboards and social content series. You will learn which details to repeat in every prompt so your series stays visually connected.",
-      "Finally you build reusable consistency workflows with prompt templates and organized references, and complete a capstone character story series ready to publish. You plan the series, create the character and scenes and finish with a set of consistent images you can publish or present, along with templates you can reuse for future projects."
-    ]
+      "Great AI video. But can you direct it?",
+      "Typing \"make a video of…\" gives you a random clip. Directing gives you the video you actually had in mind, with the right camera movement, the right light, the right sound, and the same character or product from one clip to the next.",
+      "This course teaches you to direct AI video with Gemini Omni, step by step.",
+      "What you'll learn:",
+      "• 🎬 The Director's Blueprint: subject, action, setting, style",
+      "• 🎥 Camera movement: pan, dolly, tracking",
+      "• 💡 Lighting and mood: golden hour, window light, cinematic, neon",
+      "• 🖼️ Image-to-video: bring photos and products to life",
+      "• 🎙️ Sound: ambient audio, effects and dialogue",
+      "• 👤 Consistency: the same character and product across clips",
+      "• 🔄 Transitions: start and end frames",
+      "• 📖 Storyboards: plan and pace multi-scene stories",
+      "Prompt → Direct → Light → Sound → Consistency → Transition → Story",
+      "Every module includes practice prompts you run in Gemini Omni straight away, plus a \"Your turn\" task. The course ends with a capstone where you direct and produce your own short video from idea to finished sequence.",
+      "Don't just generate a clip. Learn to direct the video."
+    ],
+    "includes": [
+      "14 modules, about 7 hours of learning (25–45 minutes per module)",
+      "67 lessons explained in plain language",
+      "33 guided video prompts you run in Gemini Omni as you learn",
+      "19 hands-on \"Your turn\" tasks",
+      "Ready-made video workflows for 6 roles: student, job seeker, professional, business owner, content creator and freelancer",
+      "A 7-phase capstone: direct and produce your own short video",
+      "Knowledge checks in every module",
+      "A prompt library with 67 ready-to-use video prompts",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Intermediate",
+    "language": "English"
   },
   "mj-entry": {
-    "subtitle": "Learn Midjourney from the ground up: prompting, composition, lighting, style, character consistency, Remix and image-to-video.",
+    "subtitle": "Learn Midjourney V8.1 step by step: write precise prompts, control framing and light, adjust style, build your own visual look, keep characters consistent, refine without restarting, and turn images into short videos.",
     "learn": [
-      "Navigate the Midjourney web app and create your first images",
-      "Write prompts with clear subject, composition and camera framing",
-      "Control lighting, color and style to set the mood of an image",
-      "Use aspect ratio, stylize, chaos and other key parameters",
-      "Keep characters consistent with Omni Reference and image prompts",
-      "Refine images through variations, Remix and Vary Region",
-      "Animate still images into short clips with image-to-video",
-      "Build a small professional portfolio using a repeatable workflow"
+      "Understand what Midjourney is, what's new in V8.1, and when to use it",
+      "Find your way around the Midjourney web app and use Vary Subtle, Vary Strong and Animate",
+      "Structure prompts with subject, setting and specific detail, and avoid common mistakes",
+      "Control the frame with aspect ratio and camera viewpoint",
+      "Direct light: its direction, shadows and intensity",
+      "Fine-tune results with Raw mode, Stylization and Weirdness",
+      "Train personalization profiles and build moodboards that reflect your taste",
+      "Create and reuse your own style with Style Creator and style references",
+      "Explore ideas fast with Draft Mode, and get native 2K HD images",
+      "Test several creative directions at once with Permutations",
+      "Keep the same character across different scenes with Omni Reference",
+      "Refine images with Remix instead of starting over",
+      "Animate still images into short video clips, up to about 21 seconds",
+      "Use AI images responsibly: consent, honest labelling and copyright"
     ],
     "sections": [
       {
-        "title": "Getting Started with Midjourney",
+        "title": "Module 1: What Is Midjourney & When to Use It",
         "lectures": [
-          ["Welcome and what you will create", 5],
-          ["Plans and setting up your account", 12],
-          ["Tour of the Midjourney web app", 16],
-          ["Creating your first images", 19]
+          ["What Midjourney is, in plain words", 7],
+          ["What's new in the V8.1 model", 6],
+          ["When to use Midjourney over other tools", 6],
+          ["What you need before your first image", 6]
         ]
       },
       {
-        "title": "Professional Prompting and Composition",
+        "title": "Module 2: Getting Started: Interface, First Image & Plans",
         "lectures": [
-          ["The structure of a good prompt", 19],
-          ["Subject and composition basics", 19],
-          ["Camera framing and angles", 19],
-          ["Image prompts and blending", 16]
+          ["The three main areas of the web app", 8],
+          ["Generate your first image and read the four-image grid", 8],
+          ["Vary Subtle, Vary Strong and Animate", 7],
+          ["The four plans compared: Basic, Standard, Pro, Mega", 7]
         ]
       },
       {
-        "title": "Lighting, Style and Output Control",
+        "title": "Module 3: Prompting Fundamentals",
         "lectures": [
-          ["Lighting that sets the mood", 19],
-          ["Color and artistic styles", 19],
-          ["Aspect ratio, stylize and chaos", 21],
-          ["Style Reference basics", 16],
-          ["Raw mode and model versions", 14]
+          ["Prompt structure: subject, setting and detail", 8],
+          ["Replace vague words with specific ones", 8],
+          ["Why \"no\" instructions can add the thing you don't want", 7],
+          ["Fix a prompt that gave an unexpected result", 7]
         ]
       },
       {
-        "title": "Character Consistency and Omni Reference",
+        "title": "Module 4: Composition: Aspect Ratio & Viewpoint",
         "lectures": [
-          ["Why characters change between images", 12],
-          ["Using Omni Reference", 21],
-          ["Same character, different scenes", 19],
-          ["Tips for stable results", 14]
+          ["Choose the right aspect ratio for where the image will be used", 8],
+          ["Compare one prompt across different aspect ratios", 8],
+          ["Direct the camera viewpoint", 7],
+          ["How viewpoint changes the emotion of an image", 7]
         ]
       },
       {
-        "title": "Remix and Iterative Refinement",
+        "title": "Module 5: Lighting: Direction, Shadows & Intensity",
         "lectures": [
-          ["Variations: subtle and strong", 14],
-          ["Remix mode", 16],
-          ["Vary Region for fixes", 16],
-          ["Upscaling your best images", 14]
+          ["Direct where the light comes from", 8],
+          ["Control shadow contrast and length", 8],
+          ["Set light intensity for different moods", 7],
+          ["Combine lighting with subject and setting", 7]
         ]
       },
       {
-        "title": "Image-to-Video",
+        "title": "Module 6: Parameters: Raw Mode, Stylization & Weirdness",
         "lectures": [
-          ["Animating an image", 16],
-          ["Motion settings and prompts", 16],
-          ["Extending and saving clips", 14]
+          ["Raw mode for literal, less stylised results", 8],
+          ["Stylization: how much artistic interpretation to apply", 8],
+          ["Weirdness: push toward unusual results", 7],
+          ["How these settings work with personalization", 7]
         ]
       },
       {
-        "title": "Professional Creative Workflows",
+        "title": "Module 7: Personalization: Profiles & Moodboards",
         "lectures": [
-          ["Social media visuals", 16],
-          ["Product and brand images", 16],
-          ["Organizing and exporting work", 12]
+          ["Why personalization matters more in V8.1", 8],
+          ["Train a profile by rating images", 8],
+          ["Separate profiles for different projects", 7],
+          ["Build a moodboard to guide a project's look", 7]
         ]
       },
       {
-        "title": "Capstone: Your First Portfolio",
+        "title": "Module 8: Style References",
         "lectures": [
-          ["Planning your portfolio set", 9],
-          ["Creating the images and a short clip", 28],
-          ["Review and next steps", 9]
+          ["Build a custom style with Style Creator", 8],
+          ["Apply a style reference to a new prompt", 8],
+          ["Reuse a style across a new project", 7],
+          ["Style references are now stable in V8.1", 7]
+        ]
+      },
+      {
+        "title": "Module 9: Draft Mode & HD",
+        "lectures": [
+          ["How Draft Mode's role has changed in V8.1", 7],
+          ["Explore ideas quickly and cheaply", 6],
+          ["Native 2K HD as the default", 6],
+          ["Choose the right speed vs quality trade-off", 6]
+        ]
+      },
+      {
+        "title": "Module 10: Permutations: Test Several Directions at Once",
+        "lectures": [
+          ["What Permutations do", 7],
+          ["Build a permutation prompt", 6],
+          ["Read the result grid", 6],
+          ["Pick variables worth testing", 6]
+        ]
+      },
+      {
+        "title": "Module 11: Character Consistency: Omni Reference",
+        "lectures": [
+          ["Set up a character as a reference", 8],
+          ["Reuse the same character in different scenes", 8],
+          ["Adjust reference weight to protect the character's identity", 7],
+          ["Build a consistent character series for stories", 7]
+        ]
+      },
+      {
+        "title": "Module 12: Remix & Iterative Refinement",
+        "lectures": [
+          ["Edit the prompt behind an existing image with Remix", 7],
+          ["When Remix beats starting over", 6],
+          ["Run a deliberate second pass", 6],
+          ["Build a habit of refining, not one-shot generating", 6]
+        ]
+      },
+      {
+        "title": "Module 13: Image to Video",
+        "lectures": [
+          ["Animate a still image into a short clip", 9],
+          ["Extend a clip up to about 21 seconds", 8],
+          ["What works well, and current limits", 8]
+        ]
+      },
+      {
+        "title": "Module 14: Combining Features into Workflows",
+        "lectures": [
+          ["Decision guide: explore fast or commit to full quality?", 8],
+          ["Decision guide: one-off image or consistent series?", 8],
+          ["Decision guide: still or moving?", 7],
+          ["Chain several features into one project", 7]
+        ]
+      },
+      {
+        "title": "Module 15: Professional Use Cases",
+        "lectures": [
+          ["Student workflow", 5],
+          ["Job seeker workflow", 5],
+          ["Working professional workflow", 5],
+          ["Business owner workflow", 5],
+          ["Content creator workflow", 5],
+          ["Freelancer or consultant workflow", 5]
+        ]
+      },
+      {
+        "title": "Module 16: Responsible Use & Safety",
+        "lectures": [
+          ["Midjourney's honest limitations", 7],
+          ["Consent before showing a real person", 6],
+          ["Avoiding misleading images, and labelling AI content", 6],
+          ["Copyright before commercial use", 6]
+        ]
+      },
+      {
+        "title": "Module 17: Capstone: Design a Visual Campaign",
+        "lectures": [
+          ["Phase 1: frame your campaign", 7],
+          ["Phase 2: explore with Draft Mode", 7],
+          ["Phase 3: direct composition and lighting", 7],
+          ["Phase 4: set a consistent style", 6],
+          ["Phase 5: refine through iteration", 6],
+          ["Phase 6: add motion", 6],
+          ["Phase 7: final check and responsible review", 6]
+        ]
+      },
+      {
+        "title": "Bonus: Midjourney Prompt Library",
+        "lectures": [
+          ["65 ready-to-use prompts, filterable by category and audience", 5]
         ]
       }
     ],
     "requirements": [
-      "A paid Midjourney subscription",
-      "A computer with internet access",
-      "No design or AI experience needed"
+      "No art, design or AI experience needed",
+      "A computer or phone with a modern browser",
+      "A paid Midjourney subscription. Midjourney has no free plan; plans start with Basic at about US$10/month",
+      "Check Midjourney's current pricing before subscribing, as it can change"
     ],
     "audience": [
-      "Complete beginners who want to create AI art and visuals",
-      "Social media creators and small business owners",
-      "Designers exploring AI image tools",
-      "Students building a creative portfolio"
+      "Complete beginners who want to create AI images with real control",
+      "Content creators who want striking visuals and consistent characters for their channels",
+      "Small business owners who want product and campaign images without a photoshoot",
+      "Marketers who need on-brand visuals quickly",
+      "Students and job seekers who want a creative portfolio project"
     ],
     "description": [
-      "This course is the easiest way to start creating professional images with Midjourney. You learn the tools and techniques in a clear order, so you go from your first image to a small portfolio with confidence. No design background is needed, and every lesson includes simple exercises you can follow on screen.",
-      "You begin with account setup and a tour of the Midjourney web app, then learn how to write prompts with a clear subject, composition and camera framing. You also try image prompts and blending. Each idea is shown with clear before and after examples, so you understand what every change in your prompt does.",
-      "Next you control lighting, color and style, and learn the key parameters such as aspect ratio, stylize and chaos, plus Style Reference basics, raw mode and model versions. You will practise each setting on the same subject, which makes the differences easy to see and remember.",
-      "Then you tackle character consistency with Omni Reference, refine images with variations, Remix and Vary Region, and upscale your best work. You also animate images with image-to-video. These are the techniques that turn a lucky image into a result you can repeat on purpose whenever you need it.",
-      "The course ends with workflows for social media and product visuals and a capstone where you build your first portfolio set, including a short animated clip. You plan the set, create the images and clip and review your work against simple quality checks. You leave with a portfolio and a workflow you can use for future projects."
-    ]
+      "Not just prompts. This is what you'll actually control.",
+      "Anyone can generate an AI image. Can you control the result? Stop hoping for a great generation, and learn how to direct one.",
+      "What you'll control:",
+      "• Prompts: structure, precision and common pitfalls",
+      "• The frame: composition, aspect ratio and viewpoint",
+      "• The light: direction, shadows and intensity",
+      "• The output: Raw mode, Stylization and Weirdness",
+      "• Your visual style: personalization, profiles, moodboards and style references",
+      "• Faster exploration: Draft Mode, HD and Permutations",
+      "• Consistent characters: Omni Reference for stories and visual series",
+      "• Refinement: Remix and iterative improvement",
+      "• Motion: image-to-video",
+      "• Real work: combined workflows, professional use cases and responsible creation",
+      "Prompt → Compose → Light → Style → Control → Consistency → Refine → Animate",
+      "Every module includes practice prompts you run in Midjourney straight away, plus a \"Your turn\" task. The course ends with a capstone where you design and produce your own complete visual campaign.",
+      "Stop hoping for a great generation. Learn how to direct one."
+    ],
+    "includes": [
+      "17 modules, about 8 hours of learning (25–45 minutes per module)",
+      "68 lessons explained in plain language",
+      "41 guided Midjourney prompts you run as you learn",
+      "22 hands-on \"Your turn\" tasks",
+      "Ready-made creative workflows for 6 roles: student, job seeker, professional, business owner, content creator and freelancer",
+      "A 7-phase capstone: design and produce your own visual campaign",
+      "Knowledge checks in every module",
+      "A prompt library with 65 ready-to-use Midjourney prompts",
+      "Certificate of completion"
+    ],
+    "level": "Beginner",
+    "language": "English"
   },
   "kling-basics": {
-    "subtitle": "Create cinematic AI videos with Kling: text-to-video, image-to-video, camera motion, character consistency and refinement.",
+    "subtitle": "Learn Kling AI from the ground up: write directed prompts with the 5W1H formula, generate images and videos, control the camera and motion, build talking AI avatars, and bring it all together in Kling Canvas.",
     "learn": [
-      "Navigate Kling AI and understand its video models and settings",
-      "Generate clips from text prompts with clear subject, action and setting",
-      "Animate still images into video with image-to-video",
-      "Direct camera motion like pans, zooms, tracking and orbit shots",
-      "Keep characters consistent across multiple clips using references",
-      "Write prompts that tell a visual story shot by shot",
-      "Refine results with negative prompts, start and end frames and motion control",
-      "Assemble clips into a short finished AI film"
+      "Understand what Kling AI is: one platform for images, video and AI avatars",
+      "Find your way around Kling's sidebar and top bar, and create your first image and video",
+      "Write directed prompts with Kling's 5W1H formula (who, what, where, when, why, how)",
+      "Turn rough ideas into professional prompts with DeepSeek, built into Kling, and use the Inspiration Word Bank",
+      "Generate images and variations for real professional uses",
+      "Edit images without starting over, apply style transfer, and keep a logo or brand element consistent",
+      "Create videos two ways, from text and from an image, and control duration and shot type",
+      "Direct shot types and camera movement like a filmmaker",
+      "Use Motion Control for precise camera paths, speed and movement copied from a reference video",
+      "Build a talking AI avatar from a photo and a script, with accurate lip-sync, in videos up to 5 minutes",
+      "Combine images and video clips in one project with Kling Canvas",
+      "Use AI video responsibly: consent, honest labelling and commercial use"
     ],
     "sections": [
       {
-        "title": "Getting Started with Kling AI",
+        "title": "Module 1: What Is Kling AI & When to Use It",
         "lectures": [
-          ["Welcome and course overview", 5],
-          ["Kling account, credits and plans", 10],
-          ["Interface tour and video settings", 14],
-          ["Your first AI video", 15]
+          ["What Kling AI is, in plain words", 7],
+          ["One platform, three outputs: images, video and avatars", 6],
+          ["When Kling is the right choice", 6],
+          ["What you need before you start", 6]
         ]
       },
       {
-        "title": "Text-to-Video",
+        "title": "Module 2: Getting Started: Interface, First Image & Plans",
         "lectures": [
-          ["Prompt structure for video", 15],
-          ["Subject, action and setting", 15],
-          ["Duration, aspect ratio and quality modes", 14],
-          ["Text-to-video exercises", 15]
+          ["The five sidebar items and five top-bar tools", 8],
+          ["Generate your first image", 8],
+          ["Turn that image into your first video", 7],
+          ["How to check current pricing before choosing a plan", 7]
         ]
       },
       {
-        "title": "Image-to-Video",
+        "title": "Module 3: Prompting Fundamentals: The 5W1H Formula",
         "lectures": [
-          ["Choosing good source images", 12],
-          ["Animating images with motion prompts", 15],
-          ["Start and end frames", 15],
-          ["Image-to-video exercises", 14]
+          ["Why a bare prompt leaves results to chance", 8],
+          ["Build a prompt with 5W1H: who, what, where, when, why, how", 8],
+          ["Rebuild a vague prompt into a fully directed one", 7],
+          ["Use the formula flexibly, not rigidly", 7]
         ]
       },
       {
-        "title": "Camera Motion and Cinematic Shots",
+        "title": "Module 4: DeepSeek Inside Kling: AI-Assisted Prompting",
         "lectures": [
-          ["Camera language for AI video", 14],
-          ["Pans, tilts, zooms and tracking", 17],
-          ["Cinematic shot types", 15],
-          ["Mood, lighting and pacing", 14]
+          ["What the built-in DeepSeek assistant does", 7],
+          ["Turn a rough idea into a professional prompt", 6],
+          ["The Inspiration Word Bank for fine creative control", 6],
+          ["When writing your own prompt is still better", 6]
         ]
       },
       {
-        "title": "Character Consistency",
+        "title": "Module 5: Image Generation",
         "lectures": [
-          ["Why consistency is hard in video", 10],
-          ["Using reference images for characters", 17],
-          ["Same character across shots", 15]
+          ["Generate an image with a complete 5W1H prompt", 8],
+          ["Create several variations from one prompt", 8],
+          ["Images for real professional uses", 7],
+          ["When to refine vs start a new prompt", 7]
         ]
       },
       {
-        "title": "Prompting and Visual Storytelling",
+        "title": "Module 6: Editing & Style Transfer",
         "lectures": [
-          ["Planning a story in shots", 14],
-          ["Writing a shot list", 14],
-          ["Transitions and continuity", 14]
+          ["Make targeted edits without regenerating", 8],
+          ["Change an image's visual style with style transfer", 8],
+          ["Keep a logo or brand element consistent across edits", 7],
+          ["When an edit beats a fresh prompt", 7]
         ]
       },
       {
-        "title": "Refinement and Motion Control",
+        "title": "Module 7: Video Generation: Two Ways into a Video",
         "lectures": [
-          ["Negative prompts and fixes", 12],
-          ["Motion brush and controlled movement", 15],
-          ["Extending and upscaling clips", 14]
+          ["Text-to-video", 8],
+          ["Image-to-video", 8],
+          ["When to use each", 7],
+          ["Control duration and shot type", 7]
         ]
       },
       {
-        "title": "Professional AI Video Workflows",
+        "title": "Module 8: Camera & Shot Control",
         "lectures": [
-          ["Editing clips together", 14],
-          ["Adding music, voice and text", 14],
-          ["Formats for social media and ads", 12]
+          ["Shot types: close-up, medium, wide and more", 7],
+          ["Camera movement within a video", 6],
+          ["Combine shot type and movement in one request", 6],
+          ["How camera choices shape the viewer's experience", 6]
         ]
       },
       {
-        "title": "Capstone: Your First AI Short Film",
+        "title": "Module 9: Motion Control: Precise, Directed Movement",
         "lectures": [
-          ["Planning your short", 8],
-          ["Generating all shots", 19],
-          ["Editing and final export", 12]
+          ["How Motion Control differs from standard video generation", 8],
+          ["Direct exact camera path and speed", 8],
+          ["Copy movement from a reference video", 7],
+          ["When Motion Control is worth the extra setup", 7]
+        ]
+      },
+      {
+        "title": "Module 10: Building AI Avatars: Photo, Script & Speech",
+        "lectures": [
+          ["What Avatar 2.0 does: videos up to 5 minutes", 6],
+          ["Build an avatar from a photo and a script", 6],
+          ["Add speech with accurate lip-sync", 6],
+          ["What to know about multilingual delivery", 6],
+          ["A consistent, reusable presenter for multiple videos", 6]
+        ]
+      },
+      {
+        "title": "Module 11: Kling Canvas: Multi-Layer Creative Workspace",
+        "lectures": [
+          ["What Canvas solves", 7],
+          ["Combine several generated assets in one project", 6],
+          ["Arrange images and video clips together", 6],
+          ["When a project needs Canvas", 6]
+        ]
+      },
+      {
+        "title": "Module 12: Combining Features into Workflows",
+        "lectures": [
+          ["Decision guide: image first, or straight to video?", 8],
+          ["Decision guide: standard direction or Motion Control?", 8],
+          ["Decision guide: single asset or Canvas project?", 7],
+          ["Chain several features into one project", 7]
+        ]
+      },
+      {
+        "title": "Module 13: Professional Use Cases",
+        "lectures": [
+          ["Student workflow", 5],
+          ["Job seeker workflow", 5],
+          ["Working professional workflow", 5],
+          ["Business owner workflow", 5],
+          ["Content creator workflow", 5],
+          ["Freelancer or consultant workflow", 5]
+        ]
+      },
+      {
+        "title": "Module 14: Responsible Use & Safety",
+        "lectures": [
+          ["Kling's honest limitations", 7],
+          ["Consent before building an avatar of a real person", 6],
+          ["Avoiding misleading content, and labelling AI content", 6],
+          ["Commercial-use considerations", 6]
+        ]
+      },
+      {
+        "title": "Module 15: Capstone: Produce a Campaign or Story",
+        "lectures": [
+          ["Phase 1: frame your project", 7],
+          ["Phase 2: explore with images", 7],
+          ["Phase 3: refine with editing or style transfer", 7],
+          ["Phase 4: produce the video", 6],
+          ["Phase 5: add Motion Control or an avatar", 6],
+          ["Phase 6: organise everything in Canvas", 6],
+          ["Phase 7: final check and responsible review", 6]
+        ]
+      },
+      {
+        "title": "Bonus: Kling AI Prompt Library",
+        "lectures": [
+          ["68 ready-to-use prompts, filterable by category and audience", 5]
         ]
       }
     ],
     "requirements": [
-      "A Kling AI account (paid credits recommended)",
-      "A computer with internet access",
-      "Free video editing software such as CapCut is helpful"
+      "No video, design or AI experience needed",
+      "A computer with a modern browser (Kling runs in the browser, no download needed)",
+      "A Kling AI account",
+      "Kling's pricing changes often. Check the current plans on klingai.com before choosing one"
     ],
     "audience": [
-      "Content creators who want cinematic AI video",
-      "Marketers producing short ads and reels",
-      "Filmmakers and storytellers exploring AI tools",
-      "Beginners curious about AI video creation"
+      "Beginners who want to start creating AI video",
+      "Content creators making Reels, Shorts and social videos",
+      "Small business owners who want product videos and ads without a film crew",
+      "Marketers who need video content and AI presenters quickly",
+      "Students and job seekers who want creative portfolio projects"
     ],
     "description": [
-      "Kling AI turns text and images into realistic video clips. This course teaches you the fundamentals of creating cinematic AI video, from your first clip to a finished short film. Every lesson is practical and beginner friendly, with exercises that help you understand exactly how prompts and settings change your results.",
-      "You start with the interface, credits and settings, then learn text-to-video prompting: subject, action, setting, duration, aspect ratio and quality modes. Hands-on exercises help you see what each choice changes. You also learn how to choose settings that save credits while you are still experimenting with ideas.",
-      "Next you animate still images with image-to-video, use start and end frames and direct the camera with pans, tilts, zooms, tracking and cinematic shot types that give your clips a professional feel. Each technique is demonstrated with examples you can recreate in your own Kling account.",
-      "The middle modules focus on character consistency with reference images and visual storytelling with shot lists, transitions and continuity. You then refine results with negative prompts, motion control, extending and upscaling. These lessons help you plan before you generate, which saves credits and gives you better results.",
-      "Finally you learn a professional workflow for editing clips together with music, voice and text, and complete a capstone AI short film ready for social media. You plan your story, generate every shot, edit the clips together and export a final film. You leave with a portfolio piece and a repeatable workflow for future AI video projects."
-    ]
+      "Still creating static AI images? Make them move.",
+      "Anyone can generate an AI image. Can you bring it to life? Kling AI lets you create images, turn them into cinematic video, direct the camera, and even build an AI presenter who speaks your script, all on one platform.",
+      "This course takes you from your first prompt to a finished multi-asset project.",
+      "What you'll learn:",
+      "• Prompt with direction: the 5W1H formula, with DeepSeek built in",
+      "• Create and refine images: generation, editing, style transfer",
+      "• Turn ideas into video: text-to-video and image-to-video",
+      "• Think like a director: shot types and camera movement",
+      "• Control motion precisely: camera paths, speed and reference movement",
+      "• Build AI avatars: photo + script + lip-synced speech",
+      "• Bring it together: Kling Canvas",
+      "• Create content that moves: social ads, product videos, Reels, brand content",
+      "Idea → Prompt → Image → Video → Camera → Motion → Avatar → Final project",
+      "Every module includes practice prompts you run in Kling straight away, plus a \"Your turn\" task. The course ends with a capstone where you produce your own campaign or story.",
+      "Don't stop at the frame. Bring it to life."
+    ],
+    "includes": [
+      "15 modules, about 7 hours 20 minutes of learning (25–45 minutes per module)",
+      "69 lessons explained in plain language",
+      "32 guided Kling prompts you run as you learn",
+      "20 hands-on \"Your turn\" tasks",
+      "Ready-made video workflows for 6 roles: student, job seeker, professional, business owner, content creator and freelancer",
+      "A 7-phase capstone: produce your own campaign or story",
+      "Knowledge checks in every module",
+      "A prompt library with 68 ready-to-use Kling prompts",
+      "Certificate of completion"
+    ],
+    "level": "Beginner",
+    "language": "English"
   },
   "canva-ai": {
-    "subtitle": "Design faster with Canva AI: Magic Design, Magic Write, AI images, Brand Kits and a full month of social content in hours.",
+    "subtitle": "Learn Canva AI 2.0, Canva's new conversational design assistant: describe your idea and get a finished design, keep it on-brand, create videos and copy, and launch a complete campaign from one conversation.",
     "learn": [
-      "Generate polished first drafts of posts, decks and flyers with Magic Design",
-      "Write captions, headlines and slide copy quickly using Magic Write prompts",
-      "Create original images with Canva's AI image generator and Dream Lab",
-      "Edit photos with Magic Edit, Magic Eraser, Magic Expand and Background Remover",
-      "Set up a Brand Kit with logos, colours and fonts for consistent designs",
-      "Resize one design into every social format instantly with Magic Switch",
-      "Build reusable templates that keep your whole team on brand",
-      "Plan, design and schedule a month of social media content inside Canva"
+      "Understand what Canva AI 2.0 is, and how it differs from the older Canva AI 1.0",
+      "Create designs by describing your goal, instead of searching through templates",
+      "Refine designs through back-and-forth conversation",
+      "Change one element precisely without affecting the rest of the design (object-based editing)",
+      "Generate and refine images in the style and aspect ratio you choose",
+      "Teach Canva AI your style with the Memory Library and an \"About Me\" profile",
+      "Keep every design on-brand automatically with Brand Intelligence, and update old designs to a refreshed brand",
+      "Create a complete multi-piece campaign from one conversation (agentic orchestration)",
+      "Turn a meeting transcript or content from connected apps into a finished design",
+      "Ground designs in current facts with Web Research, including scheduled background research",
+      "Generate video from text, animate still images, and add AI voiceovers",
+      "Write, brainstorm and rewrite copy with Magic Write",
+      "Build interactive elements (quizzes, calculators and more) with Canva Code 2.0, no coding needed",
+      "Turn spreadsheet data into visuals with Sheets AI, and schedule recurring tasks",
+      "Use Canva AI responsibly: consent, labelling and data privacy"
     ],
     "sections": [
       {
-        "title": "Getting Started with Canva AI",
+        "title": "Module 1: What Is Canva AI & When to Use It",
         "lectures": [
-          ["Welcome and how this course works", 4],
-          ["Tour of the Canva editor and Magic Studio", 9],
-          ["Free vs Pro: which AI features you get", 6],
-          ["Setting up your workspace and folders", 6]
+          ["Canva AI: a creative partner built into the editor", 7],
+          ["Canva AI 1.0 vs 2.0: the honest difference", 6],
+          ["Which plans get which features", 6],
+          ["When Canva AI is the right choice", 6]
         ]
       },
       {
-        "title": "Magic Design: AI-Generated Layouts",
+        "title": "Module 2: Getting Started: The Conversational Interface",
         "lectures": [
-          ["What Magic Design does well and where it needs you", 6],
-          ["Turning a prompt into a social post design", 9],
-          ["Generating presentations from a short brief", 11],
-          ["Customising AI layouts so they look like yours", 9],
-          ["Practice: three designs from one idea", 7]
+          ["A tour of the Canva AI chat interface", 8],
+          ["Generate your first design from a plain description", 8],
+          ["Attach files to give Canva AI more context", 7],
+          ["Return to past conversations", 7]
         ]
       },
       {
-        "title": "Magic Write: AI Copy Inside Your Designs",
+        "title": "Module 3: Conversational Design: Ideas, Not Templates",
         "lectures": [
-          ["Magic Write basics and good prompts", 7],
-          ["Captions, hooks and headlines for social posts", 9],
-          ["Rewriting tone: formal, friendly, persuasive", 7],
-          ["Writing slide content and speaker notes", 7],
-          ["Translating designs with Magic Switch", 6]
+          ["Describe your goal instead of a layout", 10],
+          ["Refine through back-and-forth conversation", 10],
+          ["Why describing intent gets better results", 10]
         ]
       },
       {
-        "title": "AI Images and Graphics",
+        "title": "Module 4: Object-Based Editing",
         "lectures": [
-          ["Text to image: writing prompts that work", 9],
-          ["Choosing styles and aspect ratios", 7],
-          ["Dream Lab for richer, realistic images", 9],
-          ["Generating icons, patterns and backgrounds", 7],
-          ["Using AI images responsibly and legally", 6]
+          ["Every generated element stays individually editable", 9],
+          ["Change one element without affecting the rest", 8],
+          ["Collaborate on a design mid-edit", 8]
         ]
       },
       {
-        "title": "AI Photo Editing Tools",
+        "title": "Module 5: Image Generation & Refinement",
         "lectures": [
-          ["Background Remover for clean product shots", 7],
-          ["Magic Eraser to remove distractions", 7],
-          ["Magic Edit to replace or add objects", 8],
-          ["Magic Expand and Magic Grab for flexible layouts", 8],
-          ["Before and after editing practice", 7]
+          ["Generate standalone images with a chosen style and aspect ratio", 8],
+          ["Refine by adding detail in conversation", 8],
+          ["Use Canva AI's own suggestions to improve results", 7],
+          ["Image mode vs full design generation", 7]
         ]
       },
       {
-        "title": "Brand Kits and Consistent Design",
+        "title": "Module 6: The Memory Library: Teaching Canva AI Your Style",
         "lectures": [
-          ["Why brand consistency matters online", 5],
-          ["Building your Brand Kit: logo, colours, fonts", 11],
-          ["Brand templates your team can reuse", 9],
-          ["Applying brand styles to AI generated designs", 8]
+          ["What the Memory Library does", 8],
+          ["Personalise Canva AI with your existing designs", 8],
+          ["Build an \"About Me\" profile", 7],
+          ["Update it without starting over", 7]
         ]
       },
       {
-        "title": "Social Media Content at Speed",
+        "title": "Module 7: Brand Intelligence: Every Design On-Brand",
         "lectures": [
-          ["Planning a content calendar with AI", 9],
-          ["Instagram posts, carousels and Reels covers", 11],
-          ["Resizing for LinkedIn, Facebook and YouTube with Magic Switch", 8],
-          ["Short videos with Canva's video editor and AI tools", 11],
-          ["Scheduling posts with Canva Content Planner", 7]
+          ["Apply your brand automatically to new designs", 9],
+          ["Update existing work to a refreshed brand", 8],
+          ["Connect brand data instead of describing it each time", 8]
         ]
       },
       {
-        "title": "Capstone: Your 30-Day Content Pack",
+        "title": "Module 8: Agentic Orchestration: One Conversation, a Complete Campaign",
         "lectures": [
-          ["Project brief: one brand, one month of posts", 5],
-          ["Building the content pack step by step", 19],
-          ["Review checklist and quality fixes", 7],
-          ["Exporting, sharing and next steps", 6]
+          ["Describe a multi-part goal and let Canva AI coordinate the tools", 10],
+          ["Turn a rough sketch or brief into finished designs", 10],
+          ["When orchestration is worth it", 10]
+        ]
+      },
+      {
+        "title": "Module 9: Connectors: Bringing In Your Real Work",
+        "lectures": [
+          ["What Connectors do", 7],
+          ["Turn a meeting transcript into a finished design", 6],
+          ["Pull content from a connected app into a new design", 6],
+          ["Which connections are supported", 6]
+        ]
+      },
+      {
+        "title": "Module 10: Web Research: Designs Grounded in Current Facts",
+        "lectures": [
+          ["Research on demand inside a design request", 9],
+          ["Schedule background research for ongoing needs", 8],
+          ["When Web Research is worth the extra step", 8]
+        ]
+      },
+      {
+        "title": "Module 11: Video & Motion Generation",
+        "lectures": [
+          ["Generate a short video from a text description", 8],
+          ["Add setting and tone to shape the clip", 8],
+          ["Animate an existing still image", 7],
+          ["Add an AI voiceover", 7]
+        ]
+      },
+      {
+        "title": "Module 12: Writing Tools: Magic Write & Conversational Copy",
+        "lectures": [
+          ["Generate copy from a plain description", 8],
+          ["Set tone and length", 8],
+          ["Brainstorm ideas with Magic Write", 7],
+          ["Rewrite copy into a different format", 7]
+        ]
+      },
+      {
+        "title": "Module 13: Canva Code 2.0: Interactive Elements",
+        "lectures": [
+          ["Build interactive elements from a description, with no coding", 8],
+          ["Refine them through conversation", 8],
+          ["Start from ready-made templates", 7],
+          ["Share and publish", 7]
+        ]
+      },
+      {
+        "title": "Module 14: Sheets AI & Scheduling",
+        "lectures": [
+          ["Work with spreadsheet data inside Canva", 7],
+          ["Turn data into a visual design", 6],
+          ["Schedule a recurring Canva AI task", 6],
+          ["When automation is worth setting up", 6]
+        ]
+      },
+      {
+        "title": "Module 15: Combining Features into Workflows",
+        "lectures": [
+          ["Decision guide: new idea or existing context?", 8],
+          ["Decision guide: one output or a coordinated set?", 8],
+          ["Decision guide: one-off or recurring?", 7],
+          ["Chain several features into one project", 7]
+        ]
+      },
+      {
+        "title": "Module 16: Professional Use Cases",
+        "lectures": [
+          ["Student workflow", 5],
+          ["Job seeker workflow", 5],
+          ["Working professional workflow", 5],
+          ["Business owner workflow", 5],
+          ["Content creator workflow", 5],
+          ["Freelancer or consultant workflow", 5]
+        ]
+      },
+      {
+        "title": "Module 17: Responsible Use & Safety",
+        "lectures": [
+          ["Canva AI's honest limitations", 7],
+          ["Consent before showing a real person", 6],
+          ["How Canva labels AI-generated content", 6],
+          ["Data considerations when connecting accounts", 6]
+        ]
+      },
+      {
+        "title": "Module 18: Capstone: Launch a Campaign from One Conversation",
+        "lectures": [
+          ["Phase 1: frame your campaign", 7],
+          ["Phase 2: ground it in real context", 7],
+          ["Phase 3: build the coordinated set", 7],
+          ["Phase 4: apply your brand", 6],
+          ["Phase 5: refine through conversation", 6],
+          ["Phase 6: add motion or automation", 6],
+          ["Phase 7: final check and responsible review", 6]
+        ]
+      },
+      {
+        "title": "Bonus: Canva AI Prompt Library",
+        "lectures": [
+          ["60 ready-to-use prompts, filterable by category and audience", 5]
         ]
       }
     ],
     "requirements": [
-      "A free Canva account (Canva Pro unlocks more AI features)",
-      "A laptop or desktop with a modern browser",
-      "No design experience needed"
+      "No design experience needed",
+      "A computer with a modern browser",
+      "A Canva account",
+      "A paid Canva plan (Pro, Teams, Business or Nonprofit) is needed for full Canva AI 2.0 features, including the Memory Library and Connectors",
+      "Canva Free and Education plans get Canva AI 1.0 only, with limited monthly use of Magic Write and Background Remover. You can follow the lessons, but not every feature will be available"
     ],
     "audience": [
-      "Small business owners who create their own marketing posts",
-      "Students and professionals who need clean presentations fast",
-      "Social media managers and freelancers handling multiple brands",
-      "Beginners who want to design without learning complex software"
+      "Canva users who want to move beyond templates to AI-powered design",
+      "Small business owners who want on-brand social posts, flyers and campaigns fast",
+      "Content creators producing visuals and short videos regularly",
+      "Marketers who need coordinated campaign assets quickly",
+      "Students and job seekers who want polished projects and portfolios"
     ],
     "description": [
-      "Canva has quietly become one of the most useful AI tools for anyone who needs to look professional online. This course shows you how to use Canva's AI features, collected under Magic Studio, to go from a blank page to a finished, on-brand design in minutes rather than hours. You will work through real tasks such as social posts, presentations, flyers and short videos.",
-      "We start with Magic Design, which turns a short prompt into ready-made layouts, and Magic Write, which drafts captions, headlines and slide text inside your design. You will learn how to guide these tools with clear prompts, and how to edit the results so they reflect your own style instead of looking generic.",
-      "Next you will create original visuals with Canva's AI image generator and fix photos using Background Remover, Magic Eraser, Magic Edit, Magic Expand and Magic Grab. These tools let you produce clean product shots and banners without opening any other software.",
-      "Consistency is what makes a brand recognisable, so a full module covers Brand Kits and brand templates. You will set up your logo, colours and fonts once, then apply them across everything you create, including designs that AI generates for you.",
-      "The course ends with a capstone project where you plan and design a 30-day social media content pack, resize it for every platform with Magic Switch and schedule it using Canva's Content Planner. You leave with a working system you can reuse every month."
-    ]
+      "You know Canva. But do you know Canva AI?",
+      "Canva has changed. With Canva AI 2.0, you don't start with a template. You start with a conversation. Describe what you need, and Canva AI builds it, edits it, keeps it on-brand, and can even produce a full campaign of matching pieces at once.",
+      "This course shows you how to use it properly.",
+      "What you'll learn:",
+      "• Turn ideas into designs: conversational, prompt-to-design creation",
+      "• Edit precisely: change any single element without starting over",
+      "• Create AI visuals: images in your chosen style",
+      "• Teach Canva your style: Memory Library and \"About Me\" profile",
+      "• Keep your brand consistent: Brand Intelligence",
+      "• Build whole campaigns: one conversation, many coordinated pieces",
+      "• Use your real work: Connectors and Web Research",
+      "• Move beyond static: video generation, animation and AI voiceovers",
+      "• Write with AI: Magic Write for copy, brainstorming and rewriting",
+      "• Go interactive: Canva Code 2.0",
+      "• Design with data: Sheets AI and scheduled tasks",
+      "Idea → Generate → Design → Edit → Brand → Publish",
+      "Every module includes practice prompts you run in Canva AI straight away, plus a \"Your turn\" task. The course ends with a capstone where you launch a complete campaign from a single conversation.",
+      "Stop designing everything manually. Learn to turn ideas into polished content with Canva AI."
+    ],
+    "includes": [
+      "18 modules, about 8 hours 40 minutes of learning (25–45 minutes per module)",
+      "74 lessons explained in plain language",
+      "39 guided Canva AI prompts you run as you learn",
+      "23 hands-on \"Your turn\" tasks",
+      "Ready-made design workflows for 6 roles: student, job seeker, professional, business owner, content creator and freelancer",
+      "A 7-phase capstone: launch a complete campaign from one conversation",
+      "Knowledge checks in every module",
+      "A prompt library with 60 ready-to-use Canva AI prompts",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Intermediate",
+    "language": "English"
   },
   "gemini": {
-    "subtitle": "Use Google Gemini like a pro: better prompts, custom Gems, Deep Research, Gmail, Docs and Sheets, and multimodal tasks.",
+    "subtitle": "Master Google Gemini beyond chat: combine documents into one answer, run Deep Research, build web pages in Canvas, create and edit images with Nano Banana, make music with Lyria, build custom Gems, automate Google Workspace, and talk to Gemini Live.",
     "learn": [
-      "Write clear, structured prompts that get reliable answers from Gemini",
-      "Build custom Gems that act as reusable assistants for repeated tasks",
-      "Run Deep Research to produce sourced reports on any topic",
-      "Draft, summarise and reply to emails faster with Gemini in Gmail",
-      "Write and edit documents with Gemini in Google Docs",
-      "Organise data, build formulas and summarise tables with Gemini in Sheets",
-      "Analyse images, PDFs, audio and video files with Gemini's multimodal abilities",
-      "Combine Gemini tools into a personal workflow that saves hours each week"
+      "Understand what makes Gemini different: it connects information from many files and formats into one answer",
+      "Attach several files at once and ask one connected question, then check the answer against your sources",
+      "Write strong prompts with role, context and constraints",
+      "Turn scattered notes into a polished draft, adjust tone, and get feedback on your own writing",
+      "Pull exactly what you need from long documents, and compare several documents at once",
+      "Run Deep Research reports, then turn them into an Audio Overview, a Canvas page or a quiz",
+      "Build web pages and simple tools in Canvas, and fix code by describing the problem in plain English",
+      "Create and edit images by talking to Gemini (Nano Banana), keeping a character consistent across images",
+      "Make original music from a description or an image with Lyria, free on the Gemini app",
+      "Use ready-made Gems, and build your own custom assistant with saved instructions",
+      "Chain research, writing and visuals into one repeatable workflow",
+      "Use Gemini inside Gmail, Docs, Sheets and Drive: create documents, analyse spreadsheets without formulas, and search your files",
+      "Talk to Gemini Live hands-free in 45+ languages, and share your camera or screen",
+      "Know Gemini's limits, protect confidential information, and verify AI content"
     ],
     "sections": [
       {
-        "title": "Introduction to Gemini",
+        "title": "Module 1: What Is Gemini & When to Use It",
         "lectures": [
-          ["Welcome and course roadmap", 4],
-          ["Gemini app, models and plans explained", 11],
-          ["Setting up your account and settings", 8],
-          ["Your first useful conversation", 8]
+          ["Not just a chatbot: a tool that combines information", 7],
+          ["Why connecting information matters", 6],
+          ["When Gemini is the right tool, and when something else fits better", 6],
+          ["What's free before you pay for anything", 6]
         ]
       },
       {
-        "title": "Prompting Fundamentals",
+        "title": "Module 2: Getting Started — Signup, Interface & Plans",
         "lectures": [
-          ["Anatomy of a good prompt: role, task, context, format", 13],
-          ["Giving examples and constraints", 11],
-          ["Iterating: follow-ups that improve answers", 11],
-          ["Common prompting mistakes and fixes", 8],
-          ["Prompt library you can reuse", 8]
+          ["Sign in and tour the screen", 8],
+          ["Attach several files and ask one connected question", 8],
+          ["Free vs Google AI Pro vs Google AI Ultra", 7],
+          ["Check sources before trusting an important answer", 7]
         ]
       },
       {
-        "title": "Gems: Your Custom AI Assistants",
+        "title": "Module 3: The Core Synthesis Loop",
         "lectures": [
-          ["What Gems are and when to use them", 6],
-          ["Building your first Gem step by step", 13],
-          ["Writing strong Gem instructions", 11],
-          ["Adding files and knowledge to a Gem", 8],
-          ["Five practical Gems for work and study", 13]
+          ["Gather → Attach → Ask → Verify", 8],
+          ["Prepare inputs so Gemini can connect them", 8],
+          ["Ask connecting questions, not just \"summarise\"", 7],
+          ["Check answers against the original sources", 7]
         ]
       },
       {
-        "title": "Deep Research",
+        "title": "Module 4: Writing Powerful Prompts — Role, Context, Constraints",
         "lectures": [
-          ["How Deep Research works", 8],
-          ["Planning a research question", 8],
-          ["Reviewing the research plan and sources", 11],
-          ["Turning reports into summaries and slides", 11],
-          ["Checking facts and citations", 8]
+          ["How a role changes the answer", 8],
+          ["Add context from your real situation", 8],
+          ["Combine role, context and constraints", 7],
+          ["When a plain question is enough", 7]
         ]
       },
       {
-        "title": "Gemini in Gmail",
+        "title": "Module 5: Writing & Editing with Confidence",
         "lectures": [
-          ["Enabling Gemini in Google Workspace", 6],
-          ["Summarising long email threads", 8],
-          ["Drafting replies with Help me write", 11],
-          ["Searching your inbox with natural language", 8]
+          ["Turn scattered notes into a structured draft", 8],
+          ["Adapt tone and audience", 8],
+          ["Get honest feedback on your own writing", 7],
+          ["Expanding vs correcting content", 7]
         ]
       },
       {
-        "title": "Gemini in Docs and Sheets",
+        "title": "Module 6: Working with Large Documents",
         "lectures": [
-          ["Drafting and rewriting in Google Docs", 13],
-          ["Summaries, outlines and tone changes", 11],
-          ["Gemini in Sheets: tables, formulas and insights", 15],
-          ["Cleaning and organising data with prompts", 13],
-          ["Linking Drive files to your prompts", 8]
+          ["Pull out only the relevant information", 9],
+          ["Structure findings in a usable format", 8],
+          ["Analyse several large documents together", 8]
         ]
       },
       {
-        "title": "Multimodal Tasks",
+        "title": "Module 7: Deep Research",
         "lectures": [
-          ["Analysing images and screenshots", 11],
-          ["Working with PDFs and long documents", 11],
-          ["Audio and video understanding", 11],
-          ["Generating images in the Gemini app", 11],
-          ["Gemini Live for voice conversations", 8]
+          ["What happens during a Deep Research run", 8],
+          ["Free vs paid limits (about 5 reports a month on the free plan)", 8],
+          ["Turn a report into an Audio Overview, Canvas page or quiz", 7],
+          ["Visual exploration (Ultra plan only)", 7]
         ]
       },
       {
-        "title": "Capstone: Your Gemini Workflow",
+        "title": "Module 8: Canvas — Code, Web Pages & Documents",
         "lectures": [
-          ["Mapping your weekly tasks to Gemini tools", 8],
-          ["Building a research to report pipeline", 16],
-          ["Privacy, accuracy and responsible use", 8],
-          ["Final checklist and next steps", 5]
+          ["Build a web page from a plain-English description", 8],
+          ["Fix code problems without coding knowledge", 8],
+          ["Edit code with plain-English instructions", 7],
+          ["Use images and files as input for web building", 7]
+        ]
+      },
+      {
+        "title": "Module 9: Creating & Editing Images — Nano Banana",
+        "lectures": [
+          ["Generate images and edit them by talking", 6],
+          ["Keep a character consistent across images", 6],
+          ["Nano Banana vs Nano Banana Pro", 6],
+          ["Text and infographics, and an honest limitation", 6],
+          ["Google's guidance on verifying generated images", 6]
+        ]
+      },
+      {
+        "title": "Module 10: Creating Music — Lyria",
+        "lectures": [
+          ["Generate a track from a description or an image", 7],
+          ["Genre, vocal/instrumental and length controls", 6],
+          ["What's free right now", 6],
+          ["What to know about commercial use", 6]
+        ]
+      },
+      {
+        "title": "Module 11: Gems — Your Own Custom Assistant",
+        "lectures": [
+          ["Use ready-made Gems for recurring tasks", 8],
+          ["Create your own Gem with saved instructions", 8],
+          ["Give a Gem the right tools for its job", 7],
+          ["What free accounts can and can't do", 7]
+        ]
+      },
+      {
+        "title": "Module 12: Multi-Step Workflows",
+        "lectures": [
+          ["Chain research, writing and visuals into one workflow", 10],
+          ["Build a workflow you can reuse", 10],
+          ["When chaining is worth the extra steps", 10]
+        ]
+      },
+      {
+        "title": "Module 13: Google Workspace Automation — Docs, Sheets, Drive",
+        "lectures": [
+          ["Create a document from a plain description", 8],
+          ["Analyse spreadsheet data without formulas", 8],
+          ["Search and reason across your Drive files", 7],
+          ["Build a reusable automation for a recurring task", 7]
+        ]
+      },
+      {
+        "title": "Module 14: Gemini Live & Voice",
+        "lectures": [
+          ["Start a voice conversation with Gemini Live", 7],
+          ["Share your camera or screen live", 6],
+          ["45+ languages supported", 6],
+          ["When talking beats typing", 6]
+        ]
+      },
+      {
+        "title": "Module 15: Combining Features into Workflows",
+        "lectures": [
+          ["Decision guide: chat, Live or Workspace?", 10],
+          ["Decision guide: Canvas, Nano Banana or Lyria?", 10],
+          ["Decision guide: how much research depth?", 10]
+        ]
+      },
+      {
+        "title": "Module 16: Professional Use Cases",
+        "lectures": [
+          ["Workflow: Student", 5],
+          ["Workflow: Job seeker", 5],
+          ["Workflow: Working professional", 5],
+          ["Workflow: Business owner", 5],
+          ["Workflow: Content creator", 5],
+          ["Workflow: Freelancer or consultant", 5]
+        ]
+      },
+      {
+        "title": "Module 17: Responsible AI & Limitations",
+        "lectures": [
+          ["Gemini's honest limits across text, images and audio", 7],
+          ["When you need a qualified human", 6],
+          ["Handling confidential information, especially in Workspace", 6],
+          ["Citing AI-assisted work properly", 6]
+        ]
+      },
+      {
+        "title": "Module 18: Capstone — Build a Complete Multimedia Deliverable",
+        "lectures": [
+          ["Phase 1: frame your project", 7],
+          ["Phase 2: gather and synthesise materials", 7],
+          ["Phase 3: draft written content", 7],
+          ["Phase 4: create a visual", 6],
+          ["Phase 5: add audio", 6],
+          ["Phase 6: build a reusable Gem", 6],
+          ["Phase 7: final verification", 6]
+        ]
+      },
+      {
+        "title": "Bonus: Gemini Prompt Library",
+        "lectures": [
+          ["126 ready-to-use prompts, filterable by category and audience", 5]
         ]
       }
     ],
     "requirements": [
-      "A Google account (some features need a Google AI or Workspace plan)",
-      "Basic comfort with Gmail, Docs and Sheets",
-      "No AI or coding experience required"
+      "No AI experience needed",
+      "A computer or phone with a browser or the Gemini app",
+      "A free Google account",
+      "The free plan covers most of the course: Gemini Live, basic image generation, Lyria music, Canvas, Workspace file access and about 5 Deep Research reports a month",
+      "Some features need Google AI Pro or higher: creating your own Gems, Nano Banana Pro and higher Deep Research limits. Visual exploration needs Google AI Ultra"
     ],
     "audience": [
-      "Professionals who live in Gmail, Docs and Sheets every day",
-      "Students and researchers who want faster, sourced research",
-      "Business owners looking to automate routine writing and analysis",
-      "Anyone new to AI who wants a practical starting point"
+      "Gemini users who want to go far beyond basic questions",
+      "Students who want faster research, better writing and study aids",
+      "Working professionals who use Google Workspace every day",
+      "Business owners who want research, content, visuals and automation in one tool",
+      "Content creators who want images, music and written content from one place"
     ],
     "description": [
-      "Gemini is Google's AI assistant, and it now sits inside the tools many of us already use every day. This course teaches you how to use it properly, from writing good prompts in the Gemini app to getting real work done in Gmail, Docs and Sheets. Every lesson is practical, with examples you can copy and adapt.",
-      "You will begin with prompting fundamentals: how to give Gemini a role, a clear task, enough context and the right output format. Then you will learn to save that effort by building Gems, custom assistants that remember your instructions so you can reuse them for repeated tasks like content drafting, study help or report writing.",
-      "The Deep Research module shows you how to turn a single question into a structured, sourced report, and how to check the sources before you rely on them. This is one of the most valuable features for students, consultants and anyone who regularly needs to understand a new topic quickly.",
-      "Next you will bring Gemini into Google Workspace. You will summarise long email threads, draft replies, write and edit documents, and use Gemini in Sheets to organise data and explain formulas. You will also explore multimodal tasks such as analysing images, PDFs, audio and video files.",
-      "In the final capstone you will design your own Gemini workflow based on your weekly tasks, so the course ends with a system you actually use, not just a list of features. Each lesson includes ready-to-use prompts and short exercises, so you can apply what you learn to your own work the same day."
-    ]
+      "Still using Gemini just to ask questions?",
+      "Ask a question. Write an email. Summarise something. Generate some ideas. That's useful, but it's only one part of what Gemini can do.",
+      "What if the same AI could help you:",
+      "• Combine notes, PDFs and images into one connected answer",
+      "• Run deeper research, with a full report",
+      "• Build web pages and prototypes in Canvas",
+      "• Create and edit images by talking",
+      "• Create original music",
+      "• Build your own specialised assistant",
+      "• Work inside Gmail, Docs, Sheets and Drive",
+      "• Talk naturally and show it what you're seeing",
+      "Welcome to Gemini Deep Dive. This practical course takes you beyond basic prompting and into Gemini's most useful capabilities, step by step.",
+      "Research → Write → Build → Create → Automate → Talk",
+      "Every module includes practice prompts you run in Gemini straight away, plus a \"Your turn\" task. The course ends with a capstone where you build a complete project with text, visuals and audio.",
+      "From business idea to creative output. Master Gemini beyond chat."
+    ],
+    "includes": [
+      "18 modules, about 8 hours 50 minutes of learning (25–45 minutes per module)",
+      "80 lessons explained in plain language",
+      "35 guided Gemini prompts you run as you learn",
+      "22 hands-on \"Your turn\" tasks",
+      "Ready-made workflows for 6 roles: student, job seeker, professional, business owner, content creator and freelancer",
+      "A 7-phase capstone: build a complete multimedia project with text, images and audio",
+      "Knowledge checks in every module",
+      "A prompt library with 126 ready-to-use Gemini prompts",
+      "Certificate of completion"
+    ],
+    "level": "Beginner to Intermediate",
+    "language": "English"
   },
   "portfolio": {
     "subtitle": "Use AI to build a professional portfolio, job-ready case studies, a strong personal brand and confident interview skills.",

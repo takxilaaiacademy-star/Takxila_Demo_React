@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Button, Card, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
+import { Alert, Button, Card, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, Link, Stack, Typography } from '@mui/material';
 import LockIcon from '@mui/icons-material/LockOutlined';
 import LocalOfferIcon from '@mui/icons-material/LocalOfferOutlined';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
@@ -12,6 +12,11 @@ import type { Course } from '../types';
 import { CUSTOM_MIN, PACKS, priceCart } from '../data/showcase';
 import { useUser } from '../context/AuthContext';
 import { isTestKey, payWithRazorpay, razorpayReady } from '../utils/razorpay';
+import { academyAddUrl, academyLoginUrl } from '../utils/academy';
+import { useAppDispatch } from '../store';
+import { checkoutOnAcademy } from '../store/learnerThunks';
+import StorefrontIcon from '@mui/icons-material/StorefrontOutlined';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 export default function Cart() {
   const nav = useNavigate();
@@ -19,6 +24,8 @@ export default function Cart() {
   const { cart, owned, removeFromCart, checkout, referralOpen, addMany, toast } = useStore();
   const [paying, setPaying] = useState(false);
   const [setup, setSetup] = useState(false);
+  const [academy, setAcademy] = useState(false);
+  const dispatch = useAppDispatch();
   const items = cart.map(courseById).filter((c): c is Course => !!c);
   const was = items.reduce((a, c) => a + (c.was || c.price), 0);
   const priced = priceCart(cart, owned, referralOpen);
@@ -27,6 +34,7 @@ export default function Cart() {
   const near = PACKS.map((p) => ({ p, missing: p.courses.filter((id) => !cart.includes(id) && !owned.includes(id)) }))
     .filter((x) => x.missing.length > 0 && x.missing.length < x.p.courses.length - 1 && x.missing.length <= 2)
     .sort((a, b) => a.missing.length - b.missing.length)[0];
+  const unlinked = items.filter((c) => !academyAddUrl(c.id));
   const packed = priced.lines.some((l) => /pack/i.test(l.label));
 
   const done = (paymentId?: string) => {
@@ -136,23 +144,61 @@ export default function Cart() {
                 <Typography sx={{ fontWeight: 800, fontSize: 20 }}>Total</Typography>
                 <Typography sx={{ fontWeight: 800, fontSize: 20 }}>₹{total}</Typography>
               </Stack>
+              {total > 0 && (
+                <Button fullWidth variant="contained" color="secondary" size="large" startIcon={<StorefrontIcon />} onClick={() => setAcademy(true)} sx={{ mb: 1.25 }}>
+                  Proceed to checkout
+                </Button>
+              )}
               <Button
                 fullWidth
-                variant="contained"
+                variant={total > 0 ? 'outlined' : 'contained'}
                 size="large"
                 disabled={paying}
                 startIcon={paying ? <CircularProgress size={18} color="inherit" /> : <LockIcon />}
                 onClick={pay}
               >
-                {paying ? 'Opening Razorpay…' : total > 0 ? 'Pay ₹' + total + ' securely' : 'Enroll now'}
+                {paying ? 'Opening Razorpay…' : total > 0 ? 'Pay ₹' + total + ' here' : 'Enroll now'}
               </Button>
               <Typography variant="caption" color="text.secondary" component="p" sx={{ mt: 1.5, textAlign: 'center' }}>
-                Payments by Razorpay: UPI, cards, net banking and wallets.{isTestKey ? ' Test mode: no real money is charged.' : ''}
+                <b>Proceed to checkout</b> pays on academy.takxila.in. Payments by Razorpay: UPI, cards, net banking and wallets.{isTestKey ? ' Test mode: no real money is charged here.' : ''}
               </Typography>
             </Card>
           </Grid>
         </Grid>
       )}
+      <Dialog open={academy} onClose={() => setAcademy(false)} maxWidth="xs" fullWidth>
+        <DialogTitle>Checkout on Takxila Academy</DialogTitle>
+        <DialogContent>
+          <Typography sx={{ mb: 1.5 }}>
+            We open <b>academy.takxila.in</b> in a new tab, add {items.length === 1 ? 'this course' : `these ${items.length} courses`} to your academy cart and take you to its checkout. Press <b>Pay</b> there to pay with Razorpay.
+          </Typography>
+          <Typography color="text.secondary" sx={{ fontSize: 14 }}>
+            Not logged in to the academy in this browser?{' '}
+            <Link href={academyLoginUrl()} target="_blank" rel="noopener">
+              Log in there first
+            </Link>
+            , then come back and continue.
+          </Typography>
+          {unlinked.length > 0 && (
+            <Alert severity="info" sx={{ mt: 1.5 }}>
+              Not linked to the academy yet, add by hand: {unlinked.map((c) => c.title).join(', ')}
+            </Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAcademy(false)}>Cancel</Button>
+          <Button
+            variant="contained"
+            startIcon={<OpenInNewIcon />}
+            onClick={() => {
+              setAcademy(false);
+              void dispatch(checkoutOnAcademy());
+            }}
+          >
+            Continue to checkout
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Dialog open={setup} onClose={() => setSetup(false)} maxWidth="xs" fullWidth>
         <DialogTitle>Razorpay is not connected yet</DialogTitle>
         <DialogContent>

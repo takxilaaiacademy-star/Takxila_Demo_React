@@ -8,12 +8,16 @@ import { BlobImg } from '../components/Media';
 import { CountUp, Reveal } from '../components/Motion';
 import { usePreview } from '../components/Preview';
 import Faq from '../components/Faq';
+import CoursePromo from '../components/CoursePromo';
 import { Heading } from '../components/Section';
 import { useUser } from '../context/AuthContext';
 import { useStore } from '../context/StoreContext';
 import { COURSES } from '../data/courses';
 import { PERSONAS, STEPS, TOOLS } from '../data/content';
 import { courseById } from '../data/recommend';
+
+// Courses shown as promo cards on Home (the first three the learner does not own yet).
+const SPOTLIGHT = ['lovable', 'ready', 'agentic', 'n8n-agents', 'claude-code', 'wa-mastery', 'mastery-14'];
 
 export default function Home() {
   const theme = useTheme();
@@ -101,6 +105,21 @@ export default function Home() {
           <Button variant="outlined" size="large" onClick={() => nav('/courses')}>
             See all {COURSES.length} courses
           </Button>
+        </Box>
+
+        {/* Course offers, in the academy's promo-card style */}
+        <Box sx={{ mt: { xs: 7, md: 10 } }}>
+          <Heading kick="SPECIAL OFFERS" title="Pick a skill." hl="Start building." sub="Limited-time prices on our most loved courses." />
+          <Grid container spacing={2.5}>
+            {SPOTLIGHT.map(courseById)
+              .filter((c): c is NonNullable<typeof c> => !!c && !owned.includes(c.id))
+              .slice(0, 3)
+              .map((c) => (
+                <Grid item xs={12} md={4} key={c.id}>
+                  <CoursePromo c={c} compact onEnroll={() => addToCart(c.id)} />
+                </Grid>
+              ))}
+          </Grid>
         </Box>
 
         {/* Course finder */}

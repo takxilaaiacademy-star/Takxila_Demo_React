@@ -1,7 +1,8 @@
 // "Log in with Google / Facebook / Microsoft" without a backend.
 // Each provider opens in a popup (OAuth implicit flow) and returns to public/oauth-callback.html,
-// which hands the result back to this window. Add the app IDs to a .env file (see README):
-//   VITE_GOOGLE_CLIENT_ID, VITE_FACEBOOK_APP_ID, VITE_MICROSOFT_CLIENT_ID
+// which hands the result back to this window. The public client IDs live in src/data/oauth.json
+// (or .env: VITE_GOOGLE_CLIENT_ID, VITE_FACEBOOK_APP_ID, VITE_MICROSOFT_CLIENT_ID).
+// Client secrets are never used here: anything in website code can be read by every visitor.
 // Note: without a server the ID token's signature is not verified, so treat this as a demo login.
 
 export type Provider = 'google' | 'facebook' | 'microsoft';
@@ -12,25 +13,28 @@ export interface SocialProfile {
   avatar?: string;
 }
 
+import oauth from '../data/oauth.json';
+
 const env = import.meta.env;
-const CFG: Record<Provider, { id?: string; label: string; envKey: string; url: string; params: Record<string, string> }> = {
+type Cfg = { id?: string; label: string; envKey: string; url: string; logo: string; params: Record<string, string> };
+const P = oauth.providers;
+// Client IDs come from .env when set, otherwise from src/data/oauth.json. Both are public values.
+const CFG: Record<Provider, Cfg> = {
   google: {
-    id: env.VITE_GOOGLE_CLIENT_ID, label: 'Google', envKey: 'VITE_GOOGLE_CLIENT_ID',
-    url: 'https://accounts.google.com/o/oauth2/v2/auth',
+    id: env.VITE_GOOGLE_CLIENT_ID || P.google.clientId, label: P.google.label, envKey: 'VITE_GOOGLE_CLIENT_ID', url: P.google.authUrl, logo: P.google.logoUrl,
     params: { response_type: 'id_token', scope: 'openid email profile', prompt: 'select_account' },
   },
   microsoft: {
-    id: env.VITE_MICROSOFT_CLIENT_ID, label: 'Microsoft', envKey: 'VITE_MICROSOFT_CLIENT_ID',
-    url: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+    id: env.VITE_MICROSOFT_CLIENT_ID || P.microsoft.clientId, label: P.microsoft.label, envKey: 'VITE_MICROSOFT_CLIENT_ID', url: P.microsoft.authUrl, logo: P.microsoft.logoUrl,
     params: { response_type: 'id_token', response_mode: 'fragment', scope: 'openid email profile', prompt: 'select_account' },
   },
   facebook: {
-    id: env.VITE_FACEBOOK_APP_ID, label: 'Facebook', envKey: 'VITE_FACEBOOK_APP_ID',
-    url: 'https://www.facebook.com/v19.0/dialog/oauth',
+    id: env.VITE_FACEBOOK_APP_ID || P.facebook.clientId, label: P.facebook.label, envKey: 'VITE_FACEBOOK_APP_ID', url: P.facebook.authUrl, logo: P.facebook.logoUrl,
     params: { response_type: 'token', scope: 'email,public_profile' },
   },
 };
 
+export const providerLogo = (p: Provider) => CFG[p].logo;
 export const providerLabel = (p: Provider) => CFG[p].label;
 export const providerEnvKey = (p: Provider) => CFG[p].envKey;
 export const isConfigured = (p: Provider) => !!CFG[p].id;
@@ -53,7 +57,7 @@ export function socialSignIn(provider: Provider): Promise<SocialProfile> {
   if (!cfg.id) return Promise.reject(new Error(`${cfg.label} sign-in is not set up yet.`));
   const state = rand();
   const nonce = rand();
-  const redirect = location.origin + '/oauth-callback.html';
+  const redirect = location.origin + oauth.redirectPath;
   const q = new URLSearchParams({ client_id: cfg.id, redirect_uri: redirect, state, nonce, ...cfg.params });
   const w = 500, h = 640;
   const popup = window.open(`${cfg.url}?${q}`, 'tx-oauth', `width=${w},height=${h},left=${(screen.width - w) / 2},top=${(screen.height - h) / 2}`);

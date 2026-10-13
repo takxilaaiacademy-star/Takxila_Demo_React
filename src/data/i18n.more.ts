@@ -1,0 +1,48 @@
+import type { StrKey } from "./i18n";
+
+// Menu labels for the languages added in round 10, in this column order:
+// es_ar, es, fr_ca, fr, ru, ko, ja, zh_cn. The rest of each page is translated live (see src/utils/siteTranslate.ts).
+export const MORE_COLS = ["es_ar", "es", "fr_ca", "fr", "ru", "ko", "ja", "zh_cn"] as const;
+
+export const MORE_STRINGS: Record<StrKey, readonly [string, string, string, string, string, string, string, string]> = {
+  home: ["Inicio", "Inicio", "Accueil", "Accueil", "Главная", "홈", "ホーム", "首页"],
+  courses: ["Cursos", "Cursos", "Cours", "Cours", "Курсы", "강좌", "コース", "课程"],
+  dashboard: ["Panel", "Panel", "Tableau de bord", "Tableau de bord", "Панель", "대시보드", "ダッシュボード", "仪表板"],
+  myCourses: ["Mis cursos", "Mis cursos", "Mes cours", "Mes cours", "Мои курсы", "내 강좌", "マイコース", "我的课程"],
+  calculator: ["Calculadora IA", "Calculadora IA", "Calculateur IA", "Calculateur IA", "ИИ-калькулятор", "AI 계산기", "AI計算ツール", "AI 计算器"],
+  announcements: ["Anuncios", "Anuncios", "Annonces", "Annonces", "Объявления", "공지사항", "お知らせ", "公告"],
+  about: ["Sobre nosotros", "Sobre nosotros", "À propos", "À propos", "О нас", "회사 소개", "私たちについて", "关于我们"],
+  helpdesk: ["Mesa de ayuda", "Centro de ayuda", "Centre d’aide", "Centre d’aide", "Служба поддержки", "헬프데스크", "ヘルプデスク", "帮助中心"],
+  policies: ["Políticas", "Políticas", "Politiques", "Politiques", "Правила", "정책", "ポリシー", "政策"],
+  contact: ["Contacto", "Contacto", "Nous joindre", "Contact", "Контакты", "문의하기", "お問い合わせ", "联系我们"],
+  purchases: ["Mis compras", "Mis compras", "Mes achats", "Mes achats", "Мои покупки", "내 구매", "購入履歴", "我的购买"],
+  profile: ["Perfil", "Perfil", "Profil", "Profil", "Профиль", "프로필", "プロフィール", "个人资料"],
+  grades: ["Calificaciones", "Calificaciones", "Notes", "Notes", "Оценки", "성적", "成績", "成绩"],
+  calendar: ["Calendario", "Calendario", "Calendrier", "Calendrier", "Календарь", "캘린더", "カレンダー", "日历"],
+  files: ["Archivos privados", "Archivos privados", "Fichiers personnels", "Fichiers personnels", "Личные файлы", "개인 파일", "プライベートファイル", "私人文件"],
+  reports: ["Informes", "Informes", "Rapports", "Rapports", "Отчёты", "보고서", "レポート", "报告"],
+  preferences: ["Preferencias", "Preferencias", "Préférences", "Préférences", "Настройки", "환경설정", "設定", "偏好设置"],
+  language: ["Idioma", "Idioma", "Langue", "Langue", "Язык", "언어", "言語", "语言"],
+  logout: ["Cerrar sesión", "Cerrar sesión", "Se déconnecter", "Se déconnecter", "Выйти", "로그아웃", "ログアウト", "退出登录"],
+  search: ["Buscar cursos", "Buscar cursos", "Rechercher des cours", "Rechercher des cours", "Поиск курсов", "강좌 검색", "コースを検索", "搜索课程"],
+  cart: ["Carrito", "Carrito", "Panier", "Panier", "Корзина", "장바구니", "カート", "购物车"],
+  notifications: ["Notificaciones", "Notificaciones", "Notifications", "Notifications", "Уведомления", "알림", "通知", "通知"],
+  course: ["Curso", "Curso", "Cours", "Cours", "Курс", "강좌", "コース", "课程"],
+  updateAnswers: ["Actualizar mis respuestas", "Actualizar mis respuestas", "Mettre à jour mes réponses", "Mettre à jour mes réponses", "Изменить мои ответы", "내 답변 수정", "回答を更新", "更新我的回答"],
+  noNotifications: ["Estás al día.", "Estás al día.", "Vous êtes à jour.", "Vous êtes à jour.", "Новых уведомлений нет.", "모두 확인했습니다.", "新しい通知はありません。", "暂无新通知。"],
+  seeAll: ["Ver todos los anuncios", "Ver todos los anuncios", "Voir toutes les annonces", "Voir toutes les annonces", "Все объявления", "모든 공지 보기", "すべてのお知らせを見る", "查看所有公告"],
+  certificates: ["Certificados", "Certificados", "Certificats", "Certificats", "Сертификаты", "수료증", "修了証", "证书"],
+  refer: ["Recomendá y ganá", "Recomienda y gana", "Parrainez et gagnez", "Parrainez et gagnez", "Пригласи и заработай", "추천하고 받기", "紹介して獲得", "推荐赚取"],
+  resume: ["Crear CV", "Crear CV", "Créer un CV", "Créer un CV", "Создать резюме", "이력서 만들기", "履歴書を作成", "创建简历"],
+  leaderboard: ["Ranking", "Clasificación", "Classement", "Classement", "Рейтинг", "리더보드", "ランキング", "排行榜"],
+  showcase: ["Vitrina", "Escaparate", "Vitrine", "Vitrine", "Витрина", "쇼케이스", "ショーケース", "展示"],
+  support: ["Soporte", "Soporte", "Soutien", "Assistance", "Поддержка", "지원", "サポート", "支持"],
+  explore: ["Explorar", "Explorar", "Explorer", "Explorer", "Обзор", "둘러보기", "探す", "探索"],
+  company: ["Empresa", "Empresa", "Entreprise", "Entreprise", "Компания", "회사", "会社", "公司"],
+  legal: ["Legal", "Legal", "Mentions légales", "Mentions légales", "Правовая информация", "법적 고지", "法的情報", "法律"],
+  followUs: ["Seguinos", "Síguenos", "Suivez-nous", "Suivez-nous", "Мы в соцсетях", "팔로우하기", "フォローする", "关注我们"],
+  mentorship: ["Mentoría", "Mentoría", "Mentorat", "Mentorat", "Наставничество", "멘토링", "メンタリング", "导师辅导"],
+  needHelp: ["¿Necesitás ayuda?", "¿Necesitas ayuda?", "Besoin d’aide?", "Besoin d’aide ?", "Нужна помощь?", "도움이 필요하세요?", "お困りですか？", "需要帮助？"],
+  chatMentor: ["Chateá con un mentor", "Chatea con un mentor", "Clavarder avec un mentor", "Discuter avec un mentor", "Чат с наставником", "멘토와 채팅", "メンターとチャット", "与导师聊天"],
+  chatWhatsapp: ["Chateá por WhatsApp", "Chatea por WhatsApp", "Clavarder sur WhatsApp", "Discuter sur WhatsApp", "Чат в WhatsApp", "WhatsApp으로 채팅", "WhatsAppでチャット", "通过 WhatsApp 聊天"],
+};

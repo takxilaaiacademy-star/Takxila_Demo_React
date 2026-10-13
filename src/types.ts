@@ -95,7 +95,9 @@ export interface Profile {
   at: string;
 }
 
-export type Lang = 'en' | 'hi' | 'bn' | 'mr' | 'gu' | 'ta' | 'te' | 'kn' | 'ml' | 'pa';
+export type Lang =
+  | 'en' | 'hi' | 'bn' | 'mr' | 'gu' | 'ta' | 'te' | 'kn' | 'ml' | 'pa'
+  | 'es_ar' | 'es' | 'fr_ca' | 'fr' | 'ru' | 'ko' | 'ja' | 'zh_cn';
 
 export interface Preferences {
   autoplay: boolean;

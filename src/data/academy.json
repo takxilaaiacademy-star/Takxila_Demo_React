@@ -1,0 +1,198 @@
+{
+  "_comment": "Your Moodle academy (academy.takxila.in). For each course, instance is the number at the end of its Add to cart link (enrol/cart/do.php?action=add&instance=84) and courseId is the id in its page link (course/view.php?id=26). Fill in the missing ones; a course with an instance is added to the academy cart automatically.",
+  "baseUrl": "https://academy.takxila.in",
+  "paths": {
+    "addToCart": "/enrol/cart/do.php?action=add&instance={instance}",
+    "cart": "/enrol/cart/view.php",
+    "checkout": "/enrol/cart/checkout.php",
+    "course": "/course/view.php?id={courseId}",
+    "search": "/course/search.php?search={query}"
+  },
+  "syncOnAdd": true,
+  "courses": {
+    "claude-7": {
+      "courseId": null,
+      "instance": null
+    },
+    "mastery-14": {
+      "courseId": null,
+      "instance": null
+    },
+    "mastery-28": {
+      "courseId": null,
+      "instance": null
+    },
+    "junior": {
+      "courseId": null,
+      "instance": null
+    },
+    "ready": {
+      "courseId": null,
+      "instance": 84
+    },
+    "n8n-agents": {
+      "courseId": null,
+      "instance": null
+    },
+    "wa-agent": {
+      "courseId": null,
+      "instance": null
+    },
+    "agentic": {
+      "courseId": null,
+      "instance": null
+    },
+    "wa-mastery": {
+      "courseId": null,
+      "instance": null
+    },
+    "omni-master": {
+      "courseId": null,
+      "instance": null
+    },
+    "kling-master": {
+      "courseId": null,
+      "instance": null
+    },
+    "genai-complete": {
+      "courseId": null,
+      "instance": null
+    },
+    "mj-advanced": {
+      "courseId": null,
+      "instance": null
+    },
+    "claude-code": {
+      "courseId": null,
+      "instance": null
+    },
+    "claude-master": {
+      "courseId": null,
+      "instance": null
+    },
+    "claude-excel": {
+      "courseId": null,
+      "instance": null
+    },
+    "claude-deep": {
+      "courseId": null,
+      "instance": null
+    },
+    "perplexity": {
+      "courseId": null,
+      "instance": null
+    },
+    "deepseek": {
+      "courseId": null,
+      "instance": null
+    },
+    "lovable": {
+      "courseId": 26,
+      "instance": null
+    },
+    "chatgpt-deep": {
+      "courseId": null,
+      "instance": null
+    },
+    "omni-basics": {
+      "courseId": null,
+      "instance": null
+    },
+    "mj-entry": {
+      "courseId": null,
+      "instance": null
+    },
+    "kling-basics": {
+      "courseId": null,
+      "instance": null
+    },
+    "canva-ai": {
+      "courseId": null,
+      "instance": null
+    },
+    "gemini": {
+      "courseId": null,
+      "instance": null
+    },
+    "portfolio": {
+      "courseId": null,
+      "instance": null
+    },
+    "job-agent": {
+      "courseId": null,
+      "instance": null
+    },
+    "meta-ads": {
+      "courseId": null,
+      "instance": null
+    },
+    "ai-marketing": {
+      "courseId": null,
+      "instance": null
+    },
+    "ai-finance": {
+      "courseId": null,
+      "instance": null
+    },
+    "ai-pm": {
+      "courseId": null,
+      "instance": null
+    },
+    "ai-projects": {
+      "courseId": null,
+      "instance": null
+    },
+    "gads-mastery": {
+      "courseId": null,
+      "instance": null
+    },
+    "ai-seo": {
+      "courseId": null,
+      "instance": null
+    },
+    "gads-setup": {
+      "courseId": null,
+      "instance": null
+    },
+    "nocode-web": {
+      "courseId": null,
+      "instance": null
+    },
+    "film-1": {
+      "courseId": null,
+      "instance": null
+    },
+    "film-2": {
+      "courseId": null,
+      "instance": null
+    },
+    "film-3": {
+      "courseId": null,
+      "instance": null
+    },
+    "film-4": {
+      "courseId": null,
+      "instance": null
+    },
+    "film-5": {
+      "courseId": null,
+      "instance": null
+    },
+    "film-6": {
+      "courseId": null,
+      "instance": null
+    },
+    "film-7": {
+      "courseId": null,
+      "instance": null
+    },
+    "film-8": {
+      "courseId": null,
+      "instance": null
+    },
+    "film-9": {
+      "courseId": null,
+      "instance": null
+    }
+  }
+}

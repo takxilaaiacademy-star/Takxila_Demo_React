@@ -9,6 +9,7 @@ import { uiActions as U } from '../store/uiSlice';
 import * as T from '../store/learnerThunks';
 import type { Answers, Preferences, QuizMode, QuizState, Resume, UserData } from '../types';
 import Confetti from '../components/Confetti';
+import { applySiteLanguage, savedLanguage } from '../utils/siteTranslate';
 
 export { DEFAULT_PREFS } from '../store/learnerSlice';
 
@@ -137,6 +138,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const party = useAppSelector((s) => s.ui.party);
   const hasSel = useAppSelector((s) => s.ui.sel.length > 0);
   const reduce = useAppSelector((s) => s.learner.data.prefs.reduceMotion);
+  // Logged in: the learner's language. Before login: the last language picked in this browser.
+  const lang = useAppSelector((s) => (s.learner.email ? s.learner.data.prefs.lang : null)) ?? savedLanguage();
+
+  // Translate the whole site into the chosen language.
+  useEffect(() => {
+    applySiteLanguage(lang);
+  }, [lang]);
 
   // Reduced motion: honour the preference and the OS setting.
   useEffect(() => {

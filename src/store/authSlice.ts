@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Session, StoredUser } from '../types';
+import type { Provider } from '../utils/social';
 import { load } from '../utils/storage';
 
 /**
@@ -11,9 +12,11 @@ export const readSession = (): Session | null => load<Session | null>('session',
 interface AuthState {
   users: StoredUser[];
   session: Session | null;
+  /** Google / Facebook / Microsoft sign-in in progress, and its last error (not saved) */
+  social: { busy: Provider | null; error: string };
 }
 
-const initialState: AuthState = { users: load<StoredUser[]>('users', []), session: readSession() };
+const initialState: AuthState = { users: load<StoredUser[]>('users', []), session: readSession(), social: { busy: null, error: '' } };
 
 const authSlice = createSlice({
   name: 'auth',
@@ -31,6 +34,12 @@ const authSlice = createSlice({
     },
     sessionEnded: (s) => {
       s.session = null;
+    },
+    socialStarted: (s, a: PayloadAction<Provider>) => {
+      s.social = { busy: a.payload, error: '' };
+    },
+    socialFinished: (s, a: PayloadAction<string | undefined>) => {
+      s.social = { busy: null, error: a.payload ?? '' };
     },
   },
 });
