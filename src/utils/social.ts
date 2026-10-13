@@ -52,6 +52,22 @@ function decodeJwt(token: string): Record<string, string> {
   return JSON.parse(json) as Record<string, string>;
 }
 
+/** Where each provider keeps its list of allowed return addresses. */
+const SETTINGS: Record<Provider, string> = {
+  google: 'Google Cloud Console > APIs & Services > Credentials > your OAuth client: add it under "Authorized redirect URIs", and add ' +
+    'the site address under "Authorized JavaScript origins"',
+  facebook: 'Facebook Developers > your app > Facebook Login > Settings: add it under "Valid OAuth Redirect URIs" and turn on ' +
+    '"Client OAuth login" and "Web OAuth login"',
+  microsoft: 'Azure Portal > App registrations > your app > Authentication: add it as a "Single-page application" redirect URI and tick ' +
+    '"ID tokens"',
+};
+
+/** The popup was closed before it came back. The usual cause is a return address the provider does not know yet. */
+function closedMessage(provider: Provider, redirect: string) {
+  return `The ${CFG[provider].label} window closed before sign-in finished. If it showed an error such as "redirect_uri_mismatch" ` +
+    `or "invalid request", the provider does not know this website yet. Add ${redirect} in ${SETTINGS[provider]}.`;
+}
+
 export function socialSignIn(provider: Provider): Promise<SocialProfile> {
   const cfg = CFG[provider];
   if (!cfg.id) return Promise.reject(new Error(`${cfg.label} sign-in is not set up yet.`));
@@ -67,7 +83,7 @@ export function socialSignIn(provider: Provider): Promise<SocialProfile> {
     const timer = setInterval(() => {
       if (popup.closed) {
         cleanup();
-        reject(new Error('Sign-in was cancelled.'));
+        reject(new Error(closedMessage(provider, redirect)));
       }
     }, 600);
     const cleanup = () => {

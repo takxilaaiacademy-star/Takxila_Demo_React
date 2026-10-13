@@ -304,7 +304,7 @@ export default function AuthPage() {
             </Tabs>
 
             {(formErr || social.error) && (
-              <Alert severity="error" sx={{ mb: 2 }}>
+              <Alert severity="error" sx={{ mb: 2, wordBreak: "break-word" }}>
                 {formErr || social.error}{" "}
                 {/No account/.test(formErr) && (
                   <Link

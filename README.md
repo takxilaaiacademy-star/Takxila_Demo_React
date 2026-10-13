@@ -177,17 +177,17 @@ Most things you will want to change are **data, not code**. Edit the file, save,
 
 ```ini
 # Public sign-in client IDs (already set in src/data/oauth.json). Never a secret here.
-VITE_GOOGLE_CLIENT_ID=125782148071-8mkq9p4g7cu9sbdq788ts2f5npogcnnc.apps.googleusercontent.com
-VITE_FACEBOOK_APP_ID=2088492579209696
-VITE_MICROSOFT_CLIENT_ID=8f014a78-4fc3-468f-b20e-d678378c1a5a
+VITE_GOOGLE_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+VITE_FACEBOOK_APP_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+VITE_MICROSOFT_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # Razorpay key id (rzp_test_... while testing, rzp_live_... in production)
-VITE_RAZORPAY_KEY_ID=
+VITE_RAZORPAY_KEY_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # Learner emails through EmailJS
-VITE_EMAILJS_SERVICE_ID=
-VITE_EMAILJS_TEMPLATE_ID=
-VITE_EMAILJS_PUBLIC_KEY=
+VITE_EMAILJS_SERVICE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+VITE_EMAILJS_TEMPLATE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+VITE_EMAILJS_PUBLIC_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # Your live address, used for the logo and buttons inside emails
 VITE_SITE_URL=https://takxila.in
