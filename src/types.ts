@@ -1,6 +1,15 @@
-export type CatId = 'challenge' | 'agents' | 'claude' | 'tools' | 'creative' | 'nocode' | 'business' | 'career' | 'film';
-export type GroupId = 'challenge' | 'agents' | 'toolkit' | 'career' | 'film';
-export type CatFilter = GroupId | 'all' | 'free';
+export type CatId =
+  | "challenge"
+  | "agents"
+  | "claude"
+  | "tools"
+  | "creative"
+  | "nocode"
+  | "business"
+  | "career"
+  | "film";
+export type GroupId = "challenge" | "agents" | "toolkit" | "career" | "film";
+export type CatFilter = GroupId | "all" | "free";
 
 export interface CourseData {
   id: string;
@@ -30,20 +39,25 @@ export interface Course extends CourseData {
 }
 
 /** [value, label, tag weights, budget cap] */
-export type QuizOption = [value: string, label: string, weights?: Record<string, number>, budgetCap?: number];
+export type QuizOption = [
+  value: string,
+  label: string,
+  weights?: Record<string, number>,
+  budgetCap?: number,
+];
 
 export interface Question {
   id: string;
   q: string;
   sub: string;
   opts: QuizOption[];
-  only?: 'onboard';
+  only?: "onboard";
   optional?: boolean;
   multi?: boolean;
   max?: number;
 }
 
-export type QuizMode = 'onboard' | 'calc';
+export type QuizMode = "onboard" | "calc";
 export type Answers = Record<string, string | string[] | undefined>;
 
 export interface QuizState {
@@ -80,9 +94,11 @@ export interface StoredUser {
   /** Referral code entered at sign-up */
   refBy?: string;
   /** Set when the account was created with Google, Facebook or Microsoft */
-  provider?: 'google' | 'facebook' | 'microsoft';
+  provider?: "google" | "facebook" | "microsoft";
+  /** 'admin' for the academy admin account (support@takxila.in) */
+  role?: "admin";
 }
-export type User = Omit<StoredUser, 'passHash'>;
+export type User = Omit<StoredUser, "passHash">;
 
 export interface Session {
   email: string;
@@ -96,8 +112,24 @@ export interface Profile {
 }
 
 export type Lang =
-  | 'en' | 'hi' | 'bn' | 'mr' | 'gu' | 'ta' | 'te' | 'kn' | 'ml' | 'pa'
-  | 'es_ar' | 'es' | 'fr_ca' | 'fr' | 'ru' | 'ko' | 'ja' | 'zh_cn';
+  | "en"
+  | "hi"
+  | "bn"
+  | "mr"
+  | "gu"
+  | "ta"
+  | "te"
+  | "kn"
+  | "ml"
+  | "pa"
+  | "es_ar"
+  | "es"
+  | "fr_ca"
+  | "fr"
+  | "ru"
+  | "ko"
+  | "ja"
+  | "zh_cn";
 
 export interface Preferences {
   autoplay: boolean;
@@ -159,7 +191,7 @@ export interface ReferralRec {
   reward: number;
 }
 
-export type ActivityType = 'enroll' | 'lesson' | 'complete' | 'purchase';
+export type ActivityType = "enroll" | "lesson" | "complete" | "purchase";
 export interface Activity {
   type: ActivityType;
   courseId: string;
@@ -196,7 +228,12 @@ export interface UserData {
   dismissedAnns: string[];
 }
 
-export type NotificationKind = 'purchase' | 'enroll' | 'complete' | 'certificate' | 'info';
+export type NotificationKind =
+  | "purchase"
+  | "enroll"
+  | "complete"
+  | "certificate"
+  | "info";
 
 export interface AppNotification {
   id: string;

@@ -11,6 +11,7 @@ import LightModeIcon from '@mui/icons-material/LightModeOutlined';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import AdminIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import { Link as RouterLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth, useUser } from '../context/AuthContext';
 import { useStore } from '../context/StoreContext';
@@ -23,6 +24,8 @@ import Logo from './Logo';
 import ChatWidget from './ChatWidget';
 import CartUpsell from './CartUpsell';
 import NotificationBell from './NotificationBell';
+import { useAppDispatch, useAppSelector } from '../store';
+import { adminActions } from '../store/adminSlice';
 import { useBackToTop } from '../utils/scrollFx';
 import { PreviewProvider } from './Preview';
 import QuizDialog from './QuizDialog';
@@ -100,7 +103,13 @@ function waitForVisibleImages(root: HTMLElement | null, max: number): Promise<vo
 
 export default function Layout() {
   const user = useUser();
-  const { logout } = useAuth();
+  const { logout, isAdminAccount } = useAuth();
+  const dispatch = useAppDispatch();
+  const adminMode = useAppSelector((s) => s.admin.mode);
+  // The admin account always works in Admin mode (no switch to User mode).
+  useEffect(() => {
+    if (isAdminAccount && adminMode !== 'admin') dispatch(adminActions.modeSet('admin'));
+  }, [isAdminAccount, adminMode, dispatch]);
   const { cart, ready, openQuiz, prefs, setPrefs } = useStore();
   const { mode, toggleMode } = useThemeMode();
   const nav = useNavigate();
@@ -171,7 +180,7 @@ export default function Layout() {
               <IconButton sx={{ display: { lg: 'none' } }} onClick={() => setDrawer(true)} aria-label="Open menu">
                 <MenuIcon />
               </IconButton>
-              <Box component={RouterLink} to="/" sx={{ color: 'inherit', textDecoration: 'none', mr: 2 }}>
+              <Box component={RouterLink} to="/" sx={{ color: 'inherit', textDecoration: 'none', mr: 2, '&:hover': { textDecoration: 'none' } }}>
                 <Logo size={42} withText={!isXs} />
               </Box>
               <Stack direction="row" spacing={0.25} sx={{ display: { xs: 'none', lg: 'flex' }, flexGrow: 1 }}>
@@ -251,6 +260,10 @@ export default function Layout() {
             </MenuItem>
           ))}
           <Divider />
+          {isAdminAccount && [
+            <MenuItem key="adm" onClick={() => go('/admin')} selected={active('/admin')}><AdminIcon fontSize="small" sx={{ mr: 1 }} /> Admin</MenuItem>,
+            <Divider key="d" />,
+          ]}
           <MenuItem onClick={() => go('/preferences')}>{t('preferences')}</MenuItem>
           <MenuItem onClick={(e) => setLangMenu(e.currentTarget)} sx={{ justifyContent: 'space-between' }}>
             {t('language')} <ChevronRightIcon fontSize="small" />

@@ -12,6 +12,8 @@
     { "path": "courses", "file": "./pages/Courses.tsx" },
     { "path": "courses/:id", "file": "./pages/CourseDetail.tsx" },
     { "path": "courses/:id/grades", "file": "./pages/CourseDetail.tsx", "props": { "tab": "grades" } },
+    { "path": "learn/:id", "file": "./pages/Learn.tsx" },
+    { "path": "admin", "file": "./pages/Admin.tsx" },
     { "path": "cart", "file": "./pages/Cart.tsx" },
     { "path": "dashboard", "file": "./pages/Dashboard.tsx" },
     { "path": "certificates", "file": "./pages/Certificates.tsx" },

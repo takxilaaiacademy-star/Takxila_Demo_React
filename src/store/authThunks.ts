@@ -1,9 +1,14 @@
-import { referralCode } from '../data/showcase';
-import type { Session, StoredUser } from '../types';
-import { hashPassword, remove, save } from '../utils/storage';
-import { socialSignIn, type Provider, type SocialProfile } from '../utils/social';
-import type { AppThunk } from './index';
-import { authActions as A } from './authSlice';
+import { referralCode } from "../data/showcase";
+import type { Session, StoredUser } from "../types";
+import { ADMIN_EMAIL, ADMIN_PASSWORD } from "../config/site";
+import { hashPassword, remove, save } from "../utils/storage";
+import {
+  socialSignIn,
+  type Provider,
+  type SocialProfile,
+} from "../utils/social";
+import type { AppThunk } from "./index";
+import { authActions as A } from "./authSlice";
 
 /** Sign-up, log-in and account changes. Frontend-only demo auth: passwords are SHA-256 hashed in this browser. */
 
@@ -21,29 +26,60 @@ export interface LoginInput {
   remember: boolean;
 }
 
-export const normEmail = (email: string) => String(email || '').trim().toLowerCase();
-const newId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
+export const normEmail = (email: string) =>
+  String(email || "")
+    .trim()
+    .toLowerCase();
+const newId = () =>
+  crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
 
-const startSession = (email: string, remember: boolean): AppThunk => (dispatch) => {
-  const s: Session = { email, loginAt: new Date().toISOString(), remember: !!remember };
-  remove('session');
-  remove('session', sessionStorage);
-  save('session', s, remember ? localStorage : sessionStorage);
-  save('last_email', email);
-  dispatch(A.sessionStarted(s));
-};
+const startSession =
+  (email: string, remember: boolean): AppThunk =>
+  (dispatch) => {
+    const s: Session = {
+      email,
+      loginAt: new Date().toISOString(),
+      remember: !!remember,
+    };
+    remove("session");
+    remove("session", sessionStorage);
+    save("session", s, remember ? localStorage : sessionStorage);
+    save("last_email", email);
+    dispatch(A.sessionStarted(s));
+  };
 
 export const register =
-  ({ name, email, phone, password, remember = true, refBy }: RegisterInput): AppThunk<Promise<StoredUser>> =>
+  ({
+    name,
+    email,
+    phone,
+    password,
+    remember = true,
+    refBy,
+  }: RegisterInput): AppThunk<Promise<StoredUser>> =>
   async (dispatch, getState) => {
     const e = normEmail(email);
     const { users } = getState().auth;
-    if (users.some((u) => u.email === e)) throw new Error('An account with this email already exists. Log in instead.');
-    const code = (refBy || '').trim().toUpperCase();
-    if (code && !users.some((u) => referralCode(u.name, u.email) === code)) throw new Error('That referral code is not valid. Check it or leave it empty.');
+    if (e === normEmail(ADMIN_EMAIL))
+      throw new Error(
+        "This email is reserved for the academy admin. Use a different email.",
+      );
+    if (users.some((u) => u.email === e))
+      throw new Error(
+        "An account with this email already exists. Log in instead.",
+      );
+    const code = (refBy || "").trim().toUpperCase();
+    if (code && !users.some((u) => referralCode(u.name, u.email) === code))
+      throw new Error(
+        "That referral code is not valid. Check it or leave it empty.",
+      );
     const u: StoredUser = {
-      id: newId(), name: name.trim(), email: e, phone: (phone || '').trim(),
-      passHash: await hashPassword(password), createdAt: new Date().toISOString(),
+      id: newId(),
+      name: name.trim(),
+      email: e,
+      phone: (phone || "").trim(),
+      passHash: await hashPassword(password),
+      createdAt: new Date().toISOString(),
       ...(code ? { refBy: code } : {}),
     };
     dispatch(A.userAdded(u));
@@ -55,10 +91,35 @@ export const login =
   ({ email, password, remember }: LoginInput): AppThunk<Promise<StoredUser>> =>
   async (dispatch, getState) => {
     const e = normEmail(email);
+    // The admin account: created on first login with the password from src/config/site.ts.
+    if (e === normEmail(ADMIN_EMAIL)) {
+      if (password !== ADMIN_PASSWORD)
+        throw new Error("Wrong password. Please try again.");
+      let admin = getState().auth.users.find((x) => x.email === e);
+      if (!admin) {
+        admin = {
+          id: newId(),
+          name: "Takxila Admin",
+          email: e,
+          phone: "",
+          passHash: await hashPassword(ADMIN_PASSWORD),
+          createdAt: new Date().toISOString(),
+          role: "admin",
+        };
+        dispatch(A.userAdded(admin));
+      } else if (admin.role !== "admin")
+        dispatch(A.userUpdated({ email: e, patch: { role: "admin" } }));
+      dispatch(startSession(e, remember));
+      return { ...admin, role: "admin" as const };
+    }
     const u = getState().auth.users.find((x) => x.email === e);
-    if (!u) throw new Error('No account found for this email. Register first.');
-    if (!u.passHash && u.provider) throw new Error(`This account uses ${u.provider[0].toUpperCase() + u.provider.slice(1)} sign-in. Use that button below.`);
-    if (u.passHash !== (await hashPassword(password))) throw new Error('Wrong password. Please try again.');
+    if (!u) throw new Error("No account found for this email. Register first.");
+    if (!u.passHash && u.provider)
+      throw new Error(
+        `This account uses ${u.provider[0].toUpperCase() + u.provider.slice(1)} sign-in. Use that button below.`,
+      );
+    if (u.passHash !== (await hashPassword(password)))
+      throw new Error("Wrong password. Please try again.");
     dispatch(startSession(e, remember));
     return u;
   };
@@ -71,9 +132,13 @@ export const socialLogin =
     let u = getState().auth.users.find((x) => x.email === e);
     if (!u) {
       u = {
-        id: newId(), name: p.name.trim() || e, email: e, phone: '',
-        passHash: '', // no password: this account signs in with its provider
-        createdAt: new Date().toISOString(), provider: p.provider,
+        id: newId(),
+        name: p.name.trim() || e,
+        email: e,
+        phone: "",
+        passHash: "", // no password: this account signs in with its provider
+        createdAt: new Date().toISOString(),
+        provider: p.provider,
         ...(p.avatar ? { avatar: p.avatar } : {}),
       };
       dispatch(A.userAdded(u));
@@ -83,8 +148,8 @@ export const socialLogin =
   };
 
 export const logout = (): AppThunk => (dispatch) => {
-  remove('session');
-  remove('session', sessionStorage);
+  remove("session");
+  remove("session", sessionStorage);
   dispatch(A.sessionEnded());
 };
 
@@ -93,9 +158,15 @@ export const changePassword =
   async (dispatch, getState) => {
     const { users, session } = getState().auth;
     const u = users.find((x) => x.email === session?.email);
-    if (!u) throw new Error('Please log in again.');
-    if (u.passHash !== (await hashPassword(current))) throw new Error('Your current password is not right.');
-    dispatch(A.userUpdated({ email: u.email, patch: { passHash: await hashPassword(next) } }));
+    if (!u) throw new Error("Please log in again.");
+    if (u.passHash !== (await hashPassword(current)))
+      throw new Error("Your current password is not right.");
+    dispatch(
+      A.userUpdated({
+        email: u.email,
+        patch: { passHash: await hashPassword(next) },
+      }),
+    );
   };
 
 /** The whole "Log in with Google / Facebook / Microsoft" flow: popup, profile, account, session. Resolves true when signed in. */
@@ -109,7 +180,11 @@ export const signInWithProvider =
       dispatch(A.socialFinished());
       return true;
     } catch (e) {
-      dispatch(A.socialFinished(e instanceof Error ? e.message : 'Sign-in failed. Please try again.'));
+      dispatch(
+        A.socialFinished(
+          e instanceof Error ? e.message : "Sign-in failed. Please try again.",
+        ),
+      );
       return false;
     }
   };

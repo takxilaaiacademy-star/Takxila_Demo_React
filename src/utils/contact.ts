@@ -4,8 +4,8 @@ import { mailtoHref, sendMail } from './mail';
 
 // Where mentor requests and WhatsApp chats go.
 export const MENTOR_EMAIL = 'takxila.ai.academy@gmail.com';
-export const WHATSAPP_NUMBER = '917992412683'; // country code + number, as wa.me expects
-export const WHATSAPP_DISPLAY = '+91 79924 12683';
+export const WHATSAPP_NUMBER = '917276607776';
+export const WHATSAPP_DISPLAY = '+91 72766 07776';
 
 export interface MentorRequest {
   name: string;
