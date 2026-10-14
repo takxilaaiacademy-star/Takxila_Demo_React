@@ -41,6 +41,8 @@ export default function Learn() {
   const { user, isAdmin } = useAuth();
   const { owned, prog, lessons, completeLesson } = useStore();
   const overrides = useAppSelector((s) => s.admin.playerUrls);
+  // Courses the admin opened for everybody (Admin > Courses > Open access) play without enrolling.
+  const isOpen = useAppSelector((s) => s.site.openCourses.includes(id));
   const c = courseById(id);
 
   const stageRef = useRef<HTMLDivElement>(null);
@@ -60,7 +62,7 @@ export default function Learn() {
   }, [src]);
 
   if (!c) return <Navigate to="/my-courses" replace />;
-  if (!owned.includes(c.id) && !isAdmin)
+  if (!owned.includes(c.id) && !isAdmin && !isOpen)
     return <Navigate to={"/courses/" + c.id} replace />;
 
   const list = lessonsFor(c);
@@ -68,6 +70,7 @@ export default function Learn() {
   const pct = prog[c.id] || 0;
   const finished = done >= list.length;
   const adminPreview = isAdmin && !owned.includes(c.id);
+  const openAccess = isOpen && !owned.includes(c.id) && !isAdmin;
   const help = `Hi Takxila team, I'm ${user?.name ?? "a learner"}. I need help with "${c.title}".`;
 
   const fullscreen = () => {
@@ -142,6 +145,22 @@ export default function Learn() {
                 }}
               >
                 Admin preview
+              </Box>
+            )}
+            {openAccess && (
+              <Box
+                sx={{
+                  px: 1.5,
+                  py: 0.5,
+                  borderRadius: 99,
+                  fontSize: 12.5,
+                  fontWeight: 800,
+                  bgcolor: "rgba(46,204,113,.18)",
+                  color: "#5BE08F",
+                  border: "1px solid rgba(46,204,113,.5)",
+                }}
+              >
+                Open access
               </Box>
             )}
           </Stack>

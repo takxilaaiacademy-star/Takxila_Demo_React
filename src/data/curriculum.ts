@@ -2,6 +2,8 @@ import type { Course } from '../types';
 
 // Lessons for a course, built from its "learn" items and module count (max 12).
 const cache = new Map<string, string[]>();
+/** Called when the admin edits a course, so lesson lists are rebuilt from the new text. */
+export const clearLessonCache = () => cache.clear();
 export function lessonsFor(c: Course): string[] {
   const hit = cache.get(c.id);
   if (hit) return hit;

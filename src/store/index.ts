@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { dayKey } from "../data/showcase";
+import { applySite } from "../data/liveCourses";
 import type { UserData } from "../types";
 import { load, save } from "../utils/storage";
 import { api } from "./api";
@@ -12,6 +13,7 @@ import learner, {
   learnerActions,
   migrateLearner,
 } from "./learnerSlice";
+import site, { siteDataOf } from "./siteSlice";
 import theme from "./themeSlice";
 import ui, { uiActions } from "./uiSlice";
 
@@ -22,6 +24,7 @@ import ui, { uiActions } from "./uiSlice";
  *   learner        the logged-in learner's data              -> tx_user_<email>
  *   announcements  site announcements                        -> tx_announcements
  *   admin          grants, player links, admin/user mode -> tx_grants, tx_player_urls, tx_admin_mode
+ *   site           everything the admin edits on the website -> tx_site
  *   theme          dark / light                              -> tx_theme
  *   ui             selection, dialogs, toasts (not saved)
  *   api            RTK Query: visitor counter, form emails
@@ -37,6 +40,7 @@ export const store = configureStore({
     theme,
     ui,
     admin,
+    site,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefault) => getDefault().concat(api.middleware),
@@ -82,6 +86,8 @@ function syncGrants() {
       learnerActions.enrolled({ ids, at: new Date().toISOString() }),
     );
 }
+// The admin's course edits must be in place before anything reads the course list.
+applySite(siteDataOf(store.getState().site));
 syncLearner();
 
 // ---------- Persistence: write a slice to localStorage only when it actually changed ----------
@@ -103,6 +109,13 @@ store.subscribe(() => {
   if (next.admin.playerUrls !== prev.admin.playerUrls)
     save("player_urls", next.admin.playerUrls);
   if (next.admin.mode !== prev.admin.mode) save("admin_mode", next.admin.mode);
+  // BACKEND HOOK: when you add a server, send siteDataOf(next.site) to it here (and load it at start-up
+  // in siteSlice.ts) so every visitor sees the admin's changes, not just this browser.
+  if (next.site.rev !== prev.site.rev) {
+    const data = siteDataOf(next.site);
+    applySite(data);
+    save("site", data);
+  }
   const grantsChanged = next.admin.grants !== prev.admin.grants;
   const who =
     next.auth.session !== prev.auth.session ||

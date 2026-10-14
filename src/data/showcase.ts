@@ -143,6 +143,11 @@ export const PACKS: Pack[] = (
 
 export const packById = (id: string) => PACKS.find((p) => p.id === id);
 export const PAID = COURSES.filter((c) => c.price > 0);
+/** Called when the admin changes prices or adds courses, so the "All Access" lists stay right. */
+export const refreshPaid = () => {
+  PAID.length = 0;
+  PAID.push(...COURSES.filter((c) => c.price > 0));
+};
 export const listPrice = (ids: string[]) =>
   ids.reduce((a, id) => a + (courseById(id)?.price ?? 0), 0);
 export const packList = (p: Pack) => listPrice(p.courses);

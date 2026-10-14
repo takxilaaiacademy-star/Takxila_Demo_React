@@ -508,6 +508,35 @@ Takxila-React-new-code-4/
 
 ---
 
+## 🛠️ Admin Mode: Run the Website Without a Developer
+
+Log in with the admin account (`support@takxila.in`, password from `VITE_ADMIN_PASSWORD`). A gold **ADMIN MODE** strip appears above the navbar.
+
+| What you want | Where |
+|---|---|
+| Edit a course (title, price, banner, summary video, lesson player link, "What you'll learn", sections, lectures, requirements, description) | Pencil on any course card, **Edit this course** on a course page, or **Admin > Courses > Edit** |
+| Add a new course | **Add course** in the gold strip, or **Admin > Courses > Add a course** |
+| Hide or delete a course | Edit > **Access** tab (built-in courses are hidden and can be restored; courses you created are deleted) |
+| Let anybody with an account watch a course | **Admin > Courses**: switch on **Open access** (or **Open all to everyone**) |
+| Give courses to one learner or to all current learners | **Admin > Give access** |
+| Rename or hide navbar items, show an announcement banner | **Admin > Navbar & banner** |
+| See the site exactly as a learner does (navbar included) | **Preview as learner** (gold strip or account menu); **Back to admin mode** returns |
+| Save everything to a file / move it to another computer / start over | **Admin > Backup & restore** |
+
+Admin mode has its own navbar (Home, Courses, Admin panel, Announcements, About, Helpdesk, Policies, Contact). Learner-only items (Dashboard, My courses, Calculator, cart, notifications) appear in the learner preview.
+
+**Lesson player links** accept any `https` link. YouTube, Vimeo and Google Drive share links are converted to their embed form automatically.
+
+**Where it is saved:** the admin's edits are stored in `tx_site` (and `tx_grants`, `tx_player_urls`) in the admin's browser. Visitors on other devices see them only after a server is connected. The hook is marked `BACKEND HOOK` in `src/store/index.ts`: send `siteDataOf(next.site)` to your API there and load it in `src/store/siteSlice.ts` at start-up.
+
+### Logging out and localStorage
+
+`CLEAR_ON_LOGOUT` in `src/config/site.ts` decides what logout clears:
+
+* `'session'` (default): removes the login, last email, theme, admin mode and all of sessionStorage. It keeps the keys listed in `KEEP_ON_LOGOUT` (accounts, learner progress, grants, announcements, the admin's site edits), because without a server those keys *are* the database.
+* `'everything'`: clears all of localStorage and sessionStorage. This deletes every account and all admin edits in that browser. Use it only on shared computers or once a server stores the data.
+* `'off'`: only ends the session.
+
 ## 🎨 Design System
 
 | Element | Dark mode | Light mode |

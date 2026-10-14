@@ -17,10 +17,10 @@ import FastField from '../components/FastField';
 
 type SortKey = 'popular' | 'low' | 'high' | 'az';
 const SORTS: Record<SortKey, string> = { popular: 'Most popular', low: 'Price: low to high', high: 'Price: high to low', az: 'Title: A to Z' };
-const PILLS: [CatFilter, string][] = [['all', 'All Courses (' + COURSES.length + ')'], ...GROUP_PILLS, ['free', 'Free']];
 
-// Counts per category, computed once.
-const COUNTS = COURSES.reduce<Record<string, number>>((a, c) => ({ ...a, [c.group]: (a[c.group] || 0) + 1, ...(c.price === 0 && { free: (a.free || 0) + 1 }) }), {});
+// Counts per category, worked out from the live course list (the admin can add and hide courses).
+const countsOf = () => COURSES.reduce<Record<string, number>>((a, c) => ({ ...a, [c.group]: (a[c.group] || 0) + 1, ...(c.price === 0 && { free: (a.free || 0) + 1 }) }), {});
+const pillsOf = (): [CatFilter, string][] => [['all', 'All Courses (' + COURSES.length + ')'], ...GROUP_PILLS, ['free', 'Free']];
 
 const SORTERS: Record<SortKey, (a: Course, b: Course) => number> = {
   popular: (a, b) => Number(b.featured) - Number(a.featured),
@@ -31,6 +31,8 @@ const SORTERS: Record<SortKey, (a: Course, b: Course) => number> = {
 
 export default function Courses() {
   const { prefs } = useStore();
+  const PILLS = pillsOf();
+  const COUNTS = countsOf();
   const [params, setParams] = useSearchParams();
   const cat = (params.get('cat') || 'all') as CatFilter;
   const sort = (params.get('sort') || 'popular') as SortKey;

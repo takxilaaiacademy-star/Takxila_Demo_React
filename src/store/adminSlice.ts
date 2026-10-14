@@ -45,6 +45,11 @@ const adminSlice = createSlice({
     modeSet: (s, a: PayloadAction<AdminMode>) => {
       s.mode = a.payload;
     },
+    /** Admin > Backup & restore: put back grants and player links from an exported file. */
+    replaced: (s, a: PayloadAction<{ grants?: Grants; playerUrls?: Record<string, string> }>) => {
+      if (a.payload.grants) s.grants = a.payload.grants;
+      if (a.payload.playerUrls) s.playerUrls = a.payload.playerUrls;
+    },
   },
 });
 

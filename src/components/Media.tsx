@@ -60,7 +60,9 @@ interface VideoProps {
 const probe = typeof document !== 'undefined' ? document.createElement('video') : null;
 /** MP4 (H.264) where the browser can play it, otherwise the WebM (VP9) copy next to it. */
 const preferMp4 = !!probe?.canPlayType('video/mp4; codecs="avc1.42E01E"');
-const swapExt = (src: string, ext: 'mp4' | 'webm') => src.replace(/\.(mp4|webm)$/, '.' + ext);
+// Built-in videos ship as both .mp4 and .webm, so the format the browser likes is picked. A link or file the admin
+// added (any other address) is played exactly as given.
+const swapExt = (src: string, ext: 'mp4' | 'webm') => (src.startsWith('/media/videos/') ? src.replace(/\.(mp4|webm)$/, '.' + ext) : src);
 
 /** Course summary video. The file is fetched once and played from a blob: URL. */
 export function CourseVideo({ src, poster, autoPlay = true, title }: VideoProps) {

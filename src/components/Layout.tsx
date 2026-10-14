@@ -26,6 +26,9 @@ import CartUpsell from './CartUpsell';
 import NotificationBell from './NotificationBell';
 import { useAppDispatch, useAppSelector } from '../store';
 import { adminActions } from '../store/adminSlice';
+import VisibilityIcon from '@mui/icons-material/VisibilityOutlined';
+import { SiteBannerStrip } from './admin/AdminBar';
+import { CourseEditorHost } from './admin/CourseEditor';
 import { useBackToTop } from '../utils/scrollFx';
 import { PreviewProvider } from './Preview';
 import QuizDialog from './QuizDialog';
@@ -33,7 +36,8 @@ import SearchDialog from './SearchDialog';
 import SelectionBar from './SelectionBar';
 
 interface NavItem {
-  key: StrKey;
+  key: string;
+  label?: string;
   to: string;
   subs?: [label: string, to: string][];
 }
@@ -53,21 +57,34 @@ const NAV: NavItem[] = [
   { key: 'contact', to: '/contact', subs: [['Contact form', '/contact'], ['Mentorship', '/mentorship'], ['Announcements', '/announcements'], ['Helpdesk', '/helpdesk']] },
 ];
 
-// The profile menu, in the same order as the academy's Moodle site.
+const ADMIN_NAV: NavItem[] = [
+  { key: 'home', to: '/home' },
+  NAV[1],
+  {
+    key: 'admin', label: 'Admin panel', to: '/admin',
+    subs: [['Courses', '/admin?tab=courses'], ['Give access', '/admin?tab=access'], ['Course players', '/admin?tab=players'], ['Learners', '/admin?tab=learners'], ['Navbar & banner', '/admin?tab=site'], ['Backup & restore', '/admin?tab=backup']],
+  }
+];
+
+
+export const LEARNER_NAV: { key: string; label: string }[] = NAV.map((n) => ({ key: n.key, label: n.label ?? translate('en', n.key as StrKey) }));
+
 const PROFILE_MENU: [StrKey, string][] = [
   ['purchases', '/purchases'], ['profile', '/profile'], ['grades', '/grades'], ['calendar', '/calendar'],
   ['files', '/files'], ['reports', '/reports'], ['certificates', '/certificates'], ['refer', '/refer'], ['resume', '/resume'], ['leaderboard', '/leaderboard'], ['mentorship', '/mentorship'],
 ];
 
+
+const ADMIN_PROFILE_KEYS: StrKey[] = ['profile', 'calendar', 'resume', 'leaderboard'];
+
 const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
 
-/** Shown while a page's code loads (pages are split into their own files). */
 export function PageLoader({ full = false }: { full?: boolean }) {
   return (
     <>
       <LinearProgress color="secondary" sx={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 2000, height: 3 }} />
       {full && (
-        // The spinner only fades in if the page takes more than 300 ms, so quick page changes show no flash.
+        
         <Box role="status" aria-live="polite" sx={{ minHeight: '70vh', display: 'grid', placeItems: 'center', position: 'relative', zIndex: 1, animation: 'txfade .2s .3s both' }}>
           <Stack alignItems="center" spacing={2}>
             <Box sx={{ position: 'relative', width: 72, height: 72, display: 'grid', placeItems: 'center' }}>
@@ -105,11 +122,13 @@ export default function Layout() {
   const user = useUser();
   const { logout, isAdminAccount } = useAuth();
   const dispatch = useAppDispatch();
-  const adminMode = useAppSelector((s) => s.admin.mode);
-  // The admin account always works in Admin mode (no switch to User mode).
-  useEffect(() => {
-    if (isAdminAccount && adminMode !== 'admin') dispatch(adminActions.modeSet('admin'));
-  }, [isAdminAccount, adminMode, dispatch]);
+  const { isAdmin } = useAuth();
+  const siteRev = useAppSelector((s) => s.site.rev);
+  const navHidden = useAppSelector((s) => s.site.navHidden);
+  const navLabels = useAppSelector((s) => s.site.navLabels);
+  // Admin mode has its own navbar. Learners (and the admin's "Preview as learner") get the normal one, minus what the admin hid.
+  const navItems = isAdmin ? ADMIN_NAV : NAV.filter((n) => !navHidden.includes(n.key));
+  const navText = (n: NavItem) => navLabels[n.key] || n.label || translate(prefs.lang, n.key as StrKey);
   const { cart, ready, openQuiz, prefs, setPrefs } = useStore();
   const { mode, toggleMode } = useThemeMode();
   const nav = useNavigate();
@@ -143,7 +162,8 @@ export default function Layout() {
   // Right after login: open the AI course calculator on top of Home, then clear the flag so a refresh doesn't reopen it.
   useEffect(() => {
     if (!ready || !(loc.state as { calc?: boolean } | null)?.calc) return;
-    openQuiz('calc');
+    // The AI calculator is for learners only: the admin in Admin mode never gets it.
+    if (!isAdmin) openQuiz('calc');
     nav(loc.pathname + loc.search, { replace: true, state: null });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, loc.state]);
@@ -171,6 +191,7 @@ export default function Layout() {
     <PreviewProvider>
       <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflowX: 'clip' }}>
         <Background />
+        <SiteBannerStrip />
         <AppBar position="sticky" color="transparent" elevation={0} sx={{ top: 0, zIndex: 1100, pt: { xs: 1, md: 1.5 }, px: { xs: 1, md: 2 } }}>
           <Container
             maxWidth="xl"
@@ -184,7 +205,7 @@ export default function Layout() {
                 <Logo size={42} withText={!isXs} />
               </Box>
               <Stack direction="row" spacing={0.25} sx={{ display: { xs: 'none', lg: 'flex' }, flexGrow: 1 }}>
-                {NAV.map((n) => (
+                {navItems.map((n) => (
                   <Button
                     key={n.key}
                     color="inherit"
@@ -198,7 +219,7 @@ export default function Layout() {
                       '&:hover::after': { transform: 'scaleX(1)' },
                     }}
                   >
-                    {t(n.key)}
+                    {navText(n)}
                   </Button>
                 ))}
               </Stack>
@@ -213,14 +234,19 @@ export default function Layout() {
                   {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
                 </IconButton>
               </Tooltip>
-              <Tooltip title={t('cart')}>
-                <IconButton onClick={() => go('/cart')}>
-                  <Badge badgeContent={cart.length} color="error">
-                    <ShoppingCartIcon />
-                  </Badge>
-                </IconButton>
-              </Tooltip>
-              <NotificationBell label={t('notifications')} empty={t('noNotifications')} seeAll={t('seeAll')} onGo={go} />
+              {/* Learner tools: hidden in Admin mode, shown in "Preview as learner" */}
+              {!isAdmin && (
+                <>
+                  <Tooltip title={t('cart')}>
+                    <IconButton onClick={() => go('/cart')}>
+                      <Badge badgeContent={cart.length} color="error">
+                        <ShoppingCartIcon />
+                      </Badge>
+                    </IconButton>
+                  </Tooltip>
+                  <NotificationBell label={t('notifications')} empty={t('noNotifications')} seeAll={t('seeAll')} onGo={go} />
+                </>
+              )}
               <Button onClick={(e) => setUserMenu(e.currentTarget)} color="inherit" endIcon={<KeyboardArrowDownIcon />} sx={{ p: 0.5, minWidth: 0, borderRadius: 99, '& .MuiButton-endIcon': { ml: 0.25, display: { xs: 'none', sm: 'inherit' } } }} aria-label="Account menu">
                 <Avatar src={user.avatar} sx={{ width: 38, height: 38, bgcolor: 'primary.main', color: 'primary.contrastText', fontWeight: 800, fontSize: 15, border: 2, borderColor: 'secondary.main' }}>
                   {initials(user.name)}
@@ -254,21 +280,25 @@ export default function Layout() {
             </Typography>
           </Box>
           <Divider />
-          {PROFILE_MENU.map(([k, to]) => (
+          {/* Admin mode shows a short menu; "Preview as learner" shows the full learner menu. */}
+          {PROFILE_MENU.filter(([k]) => !isAdmin || ADMIN_PROFILE_KEYS.includes(k)).map(([k, to]) => (
             <MenuItem key={k} onClick={() => go(to)} selected={active(to)}>
               {t(k)}
             </MenuItem>
           ))}
           <Divider />
           {isAdminAccount && [
-            <MenuItem key="adm" onClick={() => go('/admin')} selected={active('/admin')}><AdminIcon fontSize="small" sx={{ mr: 1 }} /> Admin</MenuItem>,
+            <MenuItem key="adm" onClick={() => go('/admin')} selected={active('/admin')}><AdminIcon fontSize="small" sx={{ mr: 1 }} /> Admin panel</MenuItem>,
+            <MenuItem key="mode" onClick={() => { setUserMenu(null); dispatch(adminActions.modeSet(isAdmin ? 'user' : 'admin')); }}>
+              <VisibilityIcon fontSize="small" sx={{ mr: 1 }} /> {isAdmin ? 'Preview as learner' : 'Back to admin mode'}
+            </MenuItem>,
             <Divider key="d" />,
           ]}
-          <MenuItem onClick={() => go('/preferences')}>{t('preferences')}</MenuItem>
+          {!isAdmin && <MenuItem onClick={() => go('/preferences')}>{t('preferences')}</MenuItem>}
           <MenuItem onClick={(e) => setLangMenu(e.currentTarget)} sx={{ justifyContent: 'space-between' }}>
             {t('language')} <ChevronRightIcon fontSize="small" />
           </MenuItem>
-          <MenuItem onClick={() => { setUserMenu(null); openQuiz('onboard'); }}>{t('updateAnswers')}</MenuItem>
+          {!isAdmin && <MenuItem onClick={() => { setUserMenu(null); openQuiz('onboard'); }}>{t('updateAnswers')}</MenuItem>}
           <Divider />
           <MenuItem onClick={doLogout}>{t('logout')}</MenuItem>
         </Menu>
@@ -294,10 +324,10 @@ export default function Layout() {
           </Box>
           <Divider />
           <List>
-            {NAV.map((n) =>
+            {navItems.map((n) =>
               n.subs ? (
                 <Box key={n.key}>
-                  <ListSubheader sx={{ bgcolor: 'transparent', fontWeight: 700 }}>{t(n.key)}</ListSubheader>
+                  <ListSubheader sx={{ bgcolor: 'transparent', fontWeight: 700 }}>{navText(n)}</ListSubheader>
                   {n.subs.map(([l, to]) => (
                     <ListItemButton key={l} onClick={() => go(to)} sx={{ pl: 4 }}>
                       <ListItemText primary={l} />
@@ -306,13 +336,15 @@ export default function Layout() {
                 </Box>
               ) : (
                 <ListItemButton key={n.key} selected={active(n.to)} onClick={() => go(n.to)}>
-                  <ListItemText primary={t(n.key)} primaryTypographyProps={{ fontWeight: 600 }} />
+                  <ListItemText primary={navText(n)} primaryTypographyProps={{ fontWeight: 600 }} />
                 </ListItemButton>
               ),
             )}
-            <ListItemButton onClick={() => go('/announcements')}>
-              <ListItemText primary={t('announcements')} primaryTypographyProps={{ fontWeight: 600 }} />
-            </ListItemButton>
+            {!navItems.some((n) => n.key === 'announcements') && (
+              <ListItemButton onClick={() => go('/announcements')}>
+                <ListItemText primary={t('announcements')} primaryTypographyProps={{ fontWeight: 600 }} />
+              </ListItemButton>
+            )}
             <ListItemButton onClick={toggleMode}>
               <ListItemText primary={mode === 'dark' ? 'Light theme' : 'Dark theme'} primaryTypographyProps={{ fontWeight: 600 }} />
             </ListItemButton>
@@ -325,7 +357,7 @@ export default function Layout() {
         {/* The page and footer appear together once the page has loaded; until then a loader shows. */}
         <Box component="main" ref={mainRef} sx={{ flexGrow: 1, position: 'relative', zIndex: 1 }}>
           {loading && <PageLoader full />}
-          <Box key={loc.pathname} sx={loading ? { position: 'absolute', inset: 0, opacity: 0, pointerEvents: 'none', overflow: 'hidden' } : { animation: 'txfade .18s ease both' }}>
+          <Box key={loc.pathname + (loc.pathname.startsWith('/admin') ? '' : ':' + siteRev)} sx={loading ? { position: 'absolute', inset: 0, opacity: 0, pointerEvents: 'none', overflow: 'hidden' } : { animation: 'txfade .18s ease both' }}>
             <Suspense fallback={null}>
               <Outlet />
               <PageReady key={loc.pathname} onReady={markReady} />
@@ -336,6 +368,7 @@ export default function Layout() {
         {!loading && <Footer />}
 
         <SearchDialog open={search} onClose={() => setSearch(false)} />
+        {isAdminAccount && <CourseEditorHost />}
         <QuizDialog />
         <SelectionBar />
         <ChatWidget />

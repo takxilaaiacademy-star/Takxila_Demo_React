@@ -6,6 +6,28 @@
 //   tx_user_<email>     per-user data: cart, enrolled courses, progress, quiz answers, calculator answers
 const PREFIX = 'tx_';
 
+/**
+ * Logout clean-up. Removes this app's saved data from the browser.
+ *   keep = null      : wipe ALL of localStorage and sessionStorage
+ *   keep = ["users"]  : remove every tx_ key except the ones listed (a trailing "_" means "starts with"); sessionStorage is emptied
+ */
+export function clearBrowserData(keep: string[] | null): void {
+  try {
+    if (keep === null) {
+      localStorage.clear();
+      sessionStorage.clear();
+      return;
+    }
+    const kept = (k: string) => keep.some((p) => (p.endsWith('_') ? k.startsWith(PREFIX + p) : k === PREFIX + p));
+    Object.keys(localStorage)
+      .filter((k) => k.startsWith(PREFIX) && !kept(k))
+      .forEach((k) => localStorage.removeItem(k));
+    sessionStorage.clear();
+  } catch {
+    /* storage blocked: nothing to clear */
+  }
+}
+
 export function load<T>(key: string, fallback: T, store: Storage = localStorage): T {
   try {
     const raw = store.getItem(PREFIX + key);

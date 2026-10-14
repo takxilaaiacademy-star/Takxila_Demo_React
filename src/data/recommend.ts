@@ -1,8 +1,8 @@
 import type { Answers, Course, Plan, Question, QuizMode, Recommendation } from '../types';
-import { COURSES } from './courses';
+import { COURSES, HIDDEN_COURSES } from './courses';
 import { QB } from './quiz';
 
-export const courseById = (id: string): Course | undefined => COURSES.find((c) => c.id === id);
+export const courseById = (id: string): Course | undefined => COURSES.find((c) => c.id === id) ?? HIDDEN_COURSES.find((c) => c.id === id);
 export const optOf = (q: Question, v: string | undefined) => q.opts.find((o) => o[0] === v);
 export const questionsFor = (mode: QuizMode): Question[] => QB.filter((q) => !q.only || q.only === mode);
 

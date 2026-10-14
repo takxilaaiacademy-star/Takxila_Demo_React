@@ -43,8 +43,9 @@ import { useBackToTop } from '../utils/scrollFx';
 const LINKS: [label: string, id: string][] = [
   ['Courses', 'courses'], ['Inside', 'inside'], ['Challenges', 'challenges'], ['Packs', 'packs'], ['Compare', 'compare'],
 ];
-const TOTAL_LESSONS = COURSES.reduce((a, c) => a + lessonsFor(c).length, 0);
-const TOTAL_HOURS = Math.round(COURSES.reduce((a, c) => a + hoursOf(c), 0));
+// Functions, not constants: the admin can add or hide courses while the site is open.
+const totalLessons = () => COURSES.reduce((a, c) => a + lessonsFor(c).length, 0);
+const totalHours = () => Math.round(COURSES.reduce((a, c) => a + hoursOf(c), 0));
 const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
 function Section({ id, kick, title, hl, sub, children }: { id?: string; kick: string; title: string; hl: string; sub?: string; children: ReactNode }) {
@@ -168,7 +169,7 @@ function Hero() {
           <Grid item xs={12} md={7}>
             <Chip
               icon={<SchoolIcon />}
-              label={`${COURSES.length} courses · ${GROUP_PILLS.length} tracks · ${TOTAL_LESSONS}+ lessons`}
+              label={`${COURSES.length} courses · ${GROUP_PILLS.length} tracks · ${totalLessons()}+ lessons`}
               variant="outlined"
               sx={(t) => ({ mb: 3, fontWeight: 700, borderColor: t.tx.line, background: t.tx.surface, backdropFilter: 'blur(10px)', animation: 'txblurin .6s both' })}
             />
@@ -197,7 +198,7 @@ function Hero() {
               {(
                 [
                   [COURSES.length, '', 'Courses'],
-                  [TOTAL_HOURS, '+', 'Hours of learning'],
+                  [totalHours(), '+', 'Hours of learning'],
                   [99, '₹', 'Courses from'],
                 ] as const
               ).map(([v, s, l]) => (

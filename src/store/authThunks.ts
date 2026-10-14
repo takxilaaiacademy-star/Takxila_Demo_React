@@ -1,7 +1,13 @@
 import { referralCode } from "../data/showcase";
 import type { Session, StoredUser } from "../types";
-import { ADMIN_EMAIL, ADMIN_PASSWORD } from "../config/site";
-import { hashPassword, remove, save } from "../utils/storage";
+import {
+  ADMIN_EMAIL,
+  ADMIN_PASSWORD,
+  CLEAR_ON_LOGOUT,
+  KEEP_ON_LOGOUT,
+} from "../config/site";
+import { clearBrowserData, hashPassword, remove, save } from "../utils/storage";
+import { adminActions } from "./adminSlice";
 import {
   socialSignIn,
   type Provider,
@@ -147,9 +153,17 @@ export const socialLogin =
     return u;
   };
 
+/**
+ * Log out: end the session, then clear what the browser saved (see CLEAR_ON_LOGOUT in src/config/site.ts).
+ * The in-memory learner data is dropped by the store when the session ends, so the next person starts clean.
+ */
 export const logout = (): AppThunk => (dispatch) => {
+  // Next login starts in Admin mode again (done first, so the value it saves is wiped below).
+  dispatch(adminActions.modeSet("admin"));
   remove("session");
   remove("session", sessionStorage);
+  if (CLEAR_ON_LOGOUT === "everything") clearBrowserData(null);
+  else if (CLEAR_ON_LOGOUT === "session") clearBrowserData(KEEP_ON_LOGOUT);
   dispatch(A.sessionEnded());
 };
 

@@ -30,6 +30,14 @@ export interface CourseData {
   tags: string[];
 }
 
+/** Admin changes to a course. Any field left out keeps its built-in value. */
+export interface CourseEdit extends Partial<Omit<CourseData, "id">> {
+  /** Summary video: a link or a small uploaded file */
+  video?: string;
+}
+/** A course the admin created from the panel (not in src/data/courses.ts) */
+export type CustomCourse = CourseData & { video?: string };
+
 export interface Course extends CourseData {
   catLabel: string;
   /** 10-second summary video, rendered by tools/render-videos.mjs */

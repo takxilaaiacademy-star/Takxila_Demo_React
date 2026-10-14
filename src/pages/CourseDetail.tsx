@@ -52,6 +52,8 @@ import { usePreview } from "../components/Preview";
 import { ComparisonTable, CourseFaq } from "../components/Showcase";
 import { useAuth } from "../context/AuthContext";
 import { useStore } from "../context/StoreContext";
+import { useAppDispatch, useAppSelector } from "../store";
+import { siteActions } from "../store/siteSlice";
 import { CAT_PILLS } from "../data/courses";
 import type { CourseContent } from "../data/courseContent";
 import { lessonsFor } from "../data/curriculum";
@@ -175,6 +177,9 @@ const loadContent = () =>
 
 function useCourseContent(id: string | undefined) {
   const [all, setAll] = useState<Record<string, CourseContent> | null>(null);
+  // Text the admin edited in Admin > Courses > Edit (sections, lectures, requirements ...).
+  const edits = useAppSelector((s) => s.site.contentEdits);
+  const rev = useAppSelector((s) => s.site.rev);
   useEffect(() => {
     let live = true;
     void loadContent().then((m) => live && setAll(m));
@@ -182,7 +187,28 @@ function useCourseContent(id: string | undefined) {
       live = false;
     };
   }, []);
-  return all && id ? (all[id] ?? null) : undefined;
+  return useMemo(() => {
+    if (!all || !id) return undefined;
+    const course = courseById(id);
+    // A course the admin created has no built-in page text yet: start from its card text.
+    const base: CourseContent | null =
+      all[id] ??
+      (course
+        ? {
+            subtitle: course.short,
+            learn: course.learn,
+            sections: [],
+            requirements: [],
+            audience: [],
+            description: [course.desc],
+          }
+        : null);
+    if (!base) return null;
+    const merged = edits[id] ? { ...base, ...edits[id] } : base;
+    // An empty "This course includes" list means: use the standard list.
+    return merged.includes && merged.includes.length === 0 ? { ...merged, includes: undefined } : merged;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [all, id, edits, rev]);
 }
 
 /**
@@ -217,6 +243,9 @@ export default function CourseDetail({
 
   const c = id ? courseById(id) : undefined;
   const content = useCourseContent(c?.id);
+  const dispatch = useAppDispatch();
+  // Open access: the admin let everybody with an account watch this course.
+  const isOpen = useAppSelector((s) => !!id && s.site.openCourses.includes(id));
   const lessonRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -482,6 +511,8 @@ export default function CourseDetail({
                 c={c}
                 isOwned={isOwned}
                 isAdmin={isAdmin}
+                isOpen={isOpen}
+                onEdit={() => dispatch(siteActions.editorOpened(c.id))}
                 inCart={cart.includes(c.id)}
                 pct={prog[c.id] || 0}
                 enrolled={enrolledAt[c.id]}
@@ -708,6 +739,10 @@ interface BuyCardProps {
   c: Course;
   isOwned: boolean;
   isAdmin: boolean;
+  /** Everybody can watch this course (Admin > Courses > Open access) */
+  isOpen: boolean;
+  /** Admin only: open the course editor */
+  onEdit: () => void;
   inCart: boolean;
   pct: number;
   enrolled?: string;
@@ -722,6 +757,8 @@ function BuyCard({
   c,
   isOwned,
   isAdmin,
+  isOpen,
+  onEdit,
   inCart,
   pct,
   enrolled,
@@ -887,15 +924,21 @@ function BuyCard({
                 </>
               )}
             </Stack>
-            {isAdmin && (
+            {(isAdmin || isOpen) && (
               <Button
                 fullWidth
-                variant="text"
+                variant={isOpen && !isAdmin ? "contained" : "text"}
+                color={isOpen && !isAdmin ? "success" : "primary"}
                 startIcon={<PlayCircleIcon />}
                 onClick={() => nav("/learn/" + c.id)}
                 sx={{ mt: 1 }}
               >
-                Admin: preview the lessons
+                {isAdmin ? "Admin: preview the lessons" : "Open access: watch the lessons now"}
+              </Button>
+            )}
+            {isAdmin && (
+              <Button fullWidth variant="outlined" onClick={onEdit} sx={{ mt: 1 }}>
+                Admin: edit this course
               </Button>
             )}
             <Typography

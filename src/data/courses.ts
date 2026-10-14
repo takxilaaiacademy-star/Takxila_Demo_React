@@ -1398,10 +1398,18 @@ export const COURSE_REFS: Record<string, { code: string; days: number; mrp: numb
   "film-9": { code: "TX-FilmM-9", days: 14, mrp: 249, academyUrl: "https://academy.takxila.in/course/view.php?id=17" },
 };
 
-export const COURSES: Course[] = DATA.map((c) => ({
+// ---------------------------------------------------------------------------------------------
+// LIVE COURSE LIST
+// `COURSES` is the list every page reads. The admin panel (Admin > Courses) edits, adds and hides
+// courses; src/data/liveCourses.ts then rebuilds this same array in place, so no page needs to change.
+// ---------------------------------------------------------------------------------------------
+export const BASE_DATA: CourseData[] = DATA;
+
+/** Turns plain course data into the full Course the pages use (adds the label, video and search text). */
+export const buildCourse = (c: CourseData & { video?: string }): Course => ({
   ...c,
   catLabel: GROUPS[c.group],
-  video: "/media/videos/" + c.id + ".mp4",
+  video: c.video || "/media/videos/" + c.id + ".mp4",
   search: [
     c.title,
     c.kicker,
@@ -1414,4 +1422,17 @@ export const COURSES: Course[] = DATA.map((c) => ({
   ]
     .join(" ")
     .toLowerCase(),
-}));
+});
+
+export const COURSES: Course[] = DATA.map(buildCourse);
+
+/** Courses the admin hid from the catalog. Learners who already own one can still open it. */
+export const HIDDEN_COURSES: Course[] = [];
+
+/** Used by src/data/liveCourses.ts: swap the contents of the live lists without changing their identity. */
+export function replaceCourses(visible: Course[], hidden: Course[]) {
+  COURSES.length = 0;
+  COURSES.push(...visible);
+  HIDDEN_COURSES.length = 0;
+  HIDDEN_COURSES.push(...hidden);
+}

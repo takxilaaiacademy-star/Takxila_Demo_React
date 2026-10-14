@@ -5,7 +5,13 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import KeyIcon from '@mui/icons-material/VpnKeyOutlined';
 import PeopleIcon from '@mui/icons-material/PeopleAltOutlined';
 import PlayIcon from '@mui/icons-material/SmartDisplayOutlined';
-import { Navigate } from 'react-router-dom';
+import SchoolIcon from '@mui/icons-material/SchoolOutlined';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import BackupIcon from '@mui/icons-material/BackupOutlined';
+import { Navigate, useSearchParams } from 'react-router-dom';
+import AdminBackup from '../components/admin/AdminBackup';
+import AdminCourses from '../components/admin/AdminCourses';
+import AdminSite from '../components/admin/AdminSite';
 import { useAuth } from '../context/AuthContext';
 import { useStoreActions } from '../context/StoreContext';
 import { COURSES } from '../data/courses';
@@ -18,13 +24,19 @@ import type { UserData } from '../types';
 import { load, save } from '../utils/storage';
 
 const EMAIL_RE = /^\S+@\S+\.\S+$/;
-const OPTIONS = [...COURSES].sort((a, b) => a.title.localeCompare(b.title));
+// Read from the live list (the admin can add, hide and rename courses), so it is a function, not a constant.
+const optionsNow = () => [...COURSES].sort((a, b) => a.title.localeCompare(b.title));
+type Tab = 'courses' | 'access' | 'players' | 'learners' | 'site' | 'backup';
+const TABS: Tab[] = ['courses', 'access', 'players', 'learners', 'site', 'backup'];
 
-/** Admin area: give a learner access to courses by email, set the player link per course, see who has joined. */
+/** Admin area: edit courses and the navbar, give access, set course players, see who has joined, back everything up. */
 export default function Admin() {
   const { isAdmin, isAdminAccount } = useAuth();
   const dispatch = useAppDispatch();
-  const [tab, setTab] = useState<'access' | 'players' | 'learners'>('access');
+  const [params, setParams] = useSearchParams();
+  const q = params.get('tab') as Tab | null;
+  const tab: Tab = q && TABS.includes(q) ? q : 'courses';
+  const setTab = (t: Tab) => setParams({ tab: t }, { replace: true });
 
   if (!isAdminAccount) return <Navigate to="/home" replace />;
 
@@ -47,19 +59,25 @@ export default function Admin() {
         </Box>
         <Box>
           <Typography variant="h4" component="h1" sx={{ fontSize: { xs: 26, md: 34 } }}>Admin</Typography>
-          <Typography color="text.secondary">Give access, set course players, see your learners.</Typography>
+          <Typography color="text.secondary">Edit courses, videos and the navbar, give access, see your learners. No developer needed.</Typography>
         </Box>
       </Stack>
 
-      <Tabs value={tab} onChange={(_, v: typeof tab) => setTab(v)} variant="scrollable" sx={{ mb: 3, borderBottom: 1, borderColor: 'divider' }}>
+      <Tabs value={tab} onChange={(_, v: Tab) => setTab(v)} variant="scrollable" sx={{ mb: 3, borderBottom: 1, borderColor: 'divider' }}>
+        <Tab value="courses" icon={<SchoolIcon fontSize="small" />} iconPosition="start" label="Courses" />
         <Tab value="access" icon={<KeyIcon fontSize="small" />} iconPosition="start" label="Give access" />
         <Tab value="players" icon={<PlayIcon fontSize="small" />} iconPosition="start" label="Course players" />
         <Tab value="learners" icon={<PeopleIcon fontSize="small" />} iconPosition="start" label="Learners" />
+        <Tab value="site" icon={<MenuOpenIcon fontSize="small" />} iconPosition="start" label="Navbar & banner" />
+        <Tab value="backup" icon={<BackupIcon fontSize="small" />} iconPosition="start" label="Backup & restore" />
       </Tabs>
 
+      {tab === 'courses' && <AdminCourses />}
       {tab === 'access' && <AccessTab />}
       {tab === 'players' && <PlayersTab />}
       {tab === 'learners' && <LearnersTab />}
+      {tab === 'site' && <AdminSite />}
+      {tab === 'backup' && <AdminBackup />}
     </Container>
   );
 }
@@ -70,6 +88,10 @@ function AccessTab() {
   const dispatch = useAppDispatch();
   const { toast } = useStoreActions();
   const grants = useAppSelector((s) => s.admin.grants);
+  const users = useAppSelector((s) => s.auth.users);
+  const rev = useAppSelector((s) => s.site.rev);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const OPTIONS = useMemo(optionsNow, [rev]);
   const [email, setEmail] = useState('');
   const [picked, setPicked] = useState<typeof OPTIONS>([]);
   const [err, setErr] = useState('');
@@ -82,6 +104,16 @@ function AccessTab() {
     setErr('');
     toast(`Access given to ${e}: ${picked.length} course${picked.length > 1 ? 's' : ''}.`);
     setEmail('');
+    setPicked([]);
+  };
+  // Everybody who has an account in this browser (the admin account excluded).
+  const giveEveryone = () => {
+    if (!picked.length) return setErr('Choose at least one course.');
+    const learners = users.filter((u) => u.role !== 'admin');
+    if (!learners.length) return setErr('No learner has signed up in this browser yet. Use "Open access" in the Courses tab to let everybody watch, including people who sign up later.');
+    learners.forEach((u) => dispatch(adminActions.accessGranted({ email: u.email, ids: picked.map((c) => c.id) })));
+    setErr('');
+    toast(`${picked.length} course${picked.length > 1 ? 's' : ''} given to ${learners.length} learner${learners.length > 1 ? 's' : ''}.`);
     setPicked([]);
   };
   const entries = Object.entries(grants) as [string, string[]][];
@@ -122,6 +154,8 @@ function AccessTab() {
             </Stack>
             {err && <Typography color="error" sx={{ fontSize: 13 }}>{err}</Typography>}
             <Button variant="contained" size="large" onClick={give}>Give access</Button>
+            <Button variant="outlined" onClick={giveEveryone}>Give these courses to ALL current learners</Button>
+            <Typography color="text.secondary" sx={{ fontSize: 12.5 }}>For people who sign up later too, turn on "Open access" for the course in the Courses tab.</Typography>
           </Stack>
         </Box>
       </Grid>
@@ -161,13 +195,15 @@ function PlayersTab() {
   const dispatch = useAppDispatch();
   const urls = useAppSelector((s) => s.admin.playerUrls);
   const [q, setQ] = useState('');
-  const list = useMemo(() => OPTIONS.filter((c) => c.title.toLowerCase().includes(q.toLowerCase())), [q]);
+  const rev = useAppSelector((s) => s.site.rev);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const list = useMemo(() => optionsNow().filter((c) => c.title.toLowerCase().includes(q.toLowerCase())), [q, rev]);
 
   return (
     <Box sx={panelSx}>
       <Typography variant="h6" sx={{ mb: 0.5 }}>Course players</Typography>
       <Typography color="text.secondary" sx={{ fontSize: 14, mb: 2 }}>
-        Learners watch the lesson inside the site. Paste the academy link for a course here. Empty means the default link is used. Only https links on takxila.in are accepted.
+        Learners watch the lesson inside the site. Paste the link for a course here: an academy link, or a YouTube, Vimeo or Google Drive share link (converted for you). Empty means the default link is used. Only https links are accepted.
       </Typography>
       <TextField size="small" placeholder="Search a course" value={q} onChange={(e) => setQ(e.target.value)} fullWidth sx={{ mb: 2 }} />
       <Stack spacing={1.5}>
@@ -192,7 +228,7 @@ function PlayerRow({ id, title, value, builtIn, onSave }: { id: string; title: s
         onChange={(e) => setV(e.target.value)}
         placeholder={builtIn}
         error={bad}
-        helperText={bad ? 'Use an https link on takxila.in' : ' '}
+        helperText={bad ? 'Use a link that starts with https://' : ' '}
         FormHelperTextProps={{ sx: { mt: 0.25 } }}
         InputProps={{
           endAdornment: (

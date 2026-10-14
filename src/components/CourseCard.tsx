@@ -1,10 +1,14 @@
 import { memo } from 'react';
-import { Box, Button, Card, CardContent, Checkbox, Chip, LinearProgress, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Checkbox, Chip, IconButton, LinearProgress, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { useNavigate } from 'react-router-dom';
 import type { Theme } from '@mui/material/styles';
+import EditIcon from '@mui/icons-material/EditOutlined';
+import { useAuth } from '../context/AuthContext';
 import { useStore } from '../context/StoreContext';
+import { useAppDispatch, useAppSelector } from '../store';
+import { siteActions } from '../store/siteSlice';
 import { offText, priceText } from '../data/recommend';
 import type { Course } from '../types';
 import { BlobImg, shimmer } from './Media';
@@ -45,6 +49,9 @@ interface CardViewProps {
 export const CourseCardView = memo(function CourseCardView({ c, index, isOwned, inCart, selected, pct, addToCart, toggleSel }: CardViewProps) {
   const nav = useNavigate();
   const preview = usePreview();
+  const { isAdmin } = useAuth();
+  const dispatch = useAppDispatch();
+  const isOpen = useAppSelector((st) => st.site.openCourses.includes(c.id));
   const open = () => nav('/courses/' + c.id);
   const label = isOwned ? 'Go to course' : c.price === 0 ? 'Enroll for free' : inCart ? 'In cart · go to cart' : 'View and add to cart';
   const act = () => (isOwned ? open() : inCart ? nav('/cart') : addToCart(c.id));
@@ -72,6 +79,14 @@ export const CourseCardView = memo(function CourseCardView({ c, index, isOwned, 
         >
           <PlayArrowRoundedIcon fontSize="small" /> Preview
         </Box>
+        {isAdmin && (
+          <Tooltip title="Admin: edit this course">
+            <IconButton size="small" onClick={() => dispatch(siteActions.editorOpened(c.id))} aria-label={'Edit ' + c.title} sx={{ position: 'absolute', top: 4, left: 4, bgcolor: '#F5B93F', color: '#0A1022', '&:hover': { bgcolor: '#FFD98A' } }}>
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        )}
+        {isOpen && <Chip size="small" color="success" label="Open access" sx={{ position: 'absolute', bottom: 6, left: 6, height: 22, fontSize: 11, fontWeight: 700 }} />}
         {!isOwned && (
           <Tooltip title={selected ? 'Remove from selection' : 'Select to add several at once'}>
             <Checkbox

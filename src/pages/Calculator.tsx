@@ -1,5 +1,7 @@
 import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
 import CalculateIcon from '@mui/icons-material/CalculateOutlined';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { PlanStats, RecGrid } from '../components/Recommendations';
 import { Page } from '../components/Section';
 import { useStore } from '../context/StoreContext';
@@ -8,6 +10,8 @@ import { questionsFor, recommend } from '../data/recommend';
 
 export default function Calculator() {
   const { calc, owned, openQuiz } = useStore();
+  const { isAdmin } = useAuth();
+  if (isAdmin) return <Navigate to="/home" replace />;
   const recs = calc ? recommend(calc, owned) : [];
   return (
     <Page>
