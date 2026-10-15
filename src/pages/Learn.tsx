@@ -4,7 +4,6 @@ import {
   Button,
   CircularProgress,
   Container,
-  Grid,
   IconButton,
   Stack,
   Tooltip,
@@ -13,16 +12,16 @@ import {
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import FullscreenIcon from "@mui/icons-material/FullscreenRounded";
 import OpenInNewIcon from "@mui/icons-material/OpenInNewRounded";
-import ViewSidebarIcon from "@mui/icons-material/ViewSidebarOutlined";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremiumOutlined";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import CallIcon from "@mui/icons-material/CallOutlined";
 import LockOpenIcon from "@mui/icons-material/LockOpenRounded";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Logo from "../components/Logo";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { useAuth } from "../context/AuthContext";
 import { useStore } from "../context/StoreContext";
+import { useThemeMode } from "../context/ThemeModeContext";
 import { TEL_HREF } from "../config/site";
 import { lessonsFor } from "../data/curriculum";
 import { isAllowedPlayerUrl, playerUrlFor } from "../data/player";
@@ -31,27 +30,61 @@ import { useAppSelector } from "../store";
 import { whatsappLink } from "../utils/contact";
 
 /**
- * Learn page: the course player.
- * The academy lesson plays in a large frame, with a progress panel beside it.
- * Opens for enrolled learners (and for the admin in Admin mode, to preview any course).
+ * Courses whose player tracks its own progress (its own modules, XP, resume point).
+ * For these the page shows only the player, with no lesson list or progress panel beside it.
+ */
+const SELF_TRACKED = new Set(["claude-7"]);
+
+/** Adds ?theme=dark|light so an embedded page can start in the same theme as this site. */
+const withTheme = (url: string, mode: string) => {
+  try {
+    const u = new URL(url);
+    if (u.hostname.endsWith("takxila.in")) return url; // the Moodle academy does not need it
+    u.searchParams.set("theme", mode);
+    return u.toString();
+  } catch {
+    return url;
+  }
+};
+
+const originOf = (url: string) => {
+  try {
+    return new URL(url).origin;
+  } catch {
+    return "*";
+  }
+};
+
+/**
+ * Learn page: a focused study screen.
+ * Just a slim top bar and a big player. The theme (dark / light) is pushed into the player
+ * so both always match.
  */
 export default function Learn() {
   const { id = "" } = useParams();
   const nav = useNavigate();
   const { user, isAdmin } = useAuth();
-  const { owned, prog, lessons, completeLesson } = useStore();
+  const { owned, lessons, completeLesson } = useStore();
+  const { mode } = useThemeMode();
   const overrides = useAppSelector((s) => s.admin.playerUrls);
   // Courses the admin opened for everybody (Admin > Courses > Open access) play without enrolling.
   const isOpen = useAppSelector((s) => s.site.openCourses.includes(id));
   const c = courseById(id);
 
   const stageRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLIFrameElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [slow, setSlow] = useState(false);
-  const [focus, setFocus] = useState(false);
 
-  const src = useMemo(() => playerUrlFor(id, overrides), [id, overrides]);
-  const safe = isAllowedPlayerUrl(src);
+  const baseSrc = useMemo(() => playerUrlFor(id, overrides), [id, overrides]);
+  const safe = isAllowedPlayerUrl(baseSrc);
+  const isAcademy = baseSrc.includes("takxila.in");
+
+  // The frame starts with the theme active at load time. Later switches are sent with postMessage,
+  // so the lesson never reloads and nobody loses their place.
+  const startMode = useRef(mode);
+  const src = useMemo(() => withTheme(baseSrc, startMode.current), [baseSrc]);
+  const openHref = useMemo(() => withTheme(baseSrc, mode), [baseSrc, mode]);
 
   // Show a "taking a while" hint if the lesson has not loaded after 8 seconds.
   useEffect(() => {
@@ -61,13 +94,27 @@ export default function Learn() {
     return () => clearTimeout(t);
   }, [src]);
 
+  // Tell the embedded page which theme is active: on load, and every time the theme changes.
+  useEffect(() => {
+    if (!safe || isAcademy) return;
+    const target = originOf(src);
+    const send = () =>
+      frameRef.current?.contentWindow?.postMessage(
+        { type: "tx-theme", theme: mode, mode },
+        target,
+      );
+    send();
+    const timers = [300, 1200, 3000].map((ms) => setTimeout(send, ms));
+    return () => timers.forEach(clearTimeout);
+  }, [mode, loaded, src, safe, isAcademy]);
+
   if (!c) return <Navigate to="/my-courses" replace />;
   if (!owned.includes(c.id) && !isAdmin && !isOpen)
     return <Navigate to={"/courses/" + c.id} replace />;
 
+  const selfTracked = SELF_TRACKED.has(c.id);
   const list = lessonsFor(c);
   const done = lessons[c.id] || 0;
-  const pct = prog[c.id] || 0;
   const finished = done >= list.length;
   const adminPreview = isAdmin && !owned.includes(c.id);
   const openAccess = isOpen && !owned.includes(c.id) && !isAdmin;
@@ -86,546 +133,313 @@ export default function Learn() {
     mozallowfullscreen: "true",
   } as Record<string, string>;
 
+  const pill = {
+    px: 1.8,
+    py: 0.6,
+    borderRadius: "999px",
+    fontSize: 13,
+    fontWeight: 700,
+    textTransform: "none",
+  } as const;
+
   return (
-    <Box sx={{ pb: { xs: 4, md: 8 } }}>
-      {/* Hero strip: back button, title and a quick status */}
-      <Box
-        sx={{
-          mt: { xs: 2, md: 3 },
-          pt: { xs: 2.5, md: 3.5 },
-          pb: { xs: 5, md: 7 },
-          background:
-            "radial-gradient(900px 300px at 85% -20%, rgba(245,185,63,.28), transparent 60%), radial-gradient(700px 320px at 0% 0%, rgba(106,63,224,.45), transparent 60%), linear-gradient(120deg, #0b1022 0%, #141a3a 60%, #1d1450 100%)",
-          color: "#fff",
-        }}
+    <Container
+      maxWidth="xl"
+      sx={{ pt: { xs: 2, md: 3 }, pb: { xs: 2, md: 4 } }}
+    >
+      {/* Slim top bar */}
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1.25}
+        sx={{ mb: { xs: 1.5, md: 2 }, flexWrap: "wrap", rowGap: 1 }}
       >
-        <Container maxWidth="xl">
+        <Button
+          onClick={() => nav(-1)}
+          startIcon={<ArrowBackRoundedIcon />}
+          sx={(t) => ({
+            ...pill,
+            color: "text.primary",
+            background: t.tx.surface,
+            border: `1px solid ${t.tx.line}`,
+            backdropFilter: "blur(16px)",
+            transition: "transform .2s",
+            "&:hover": { transform: "translateX(-3px)", background: t.tx.glow },
+          })}
+        >
+          Back
+        </Button>
+
+        <Typography
+          noWrap
+          component="h1"
+          sx={{
+            fontWeight: 900,
+            fontSize: { xs: 16, md: 22 },
+            letterSpacing: "-.01em",
+            flexGrow: 1,
+            minWidth: 0,
+            background: "linear-gradient(90deg, #F5B93F, #C86BFF 50%, #6C8BFF)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          {c.title}
+        </Typography>
+
+        {adminPreview && (
           <Stack
             direction="row"
+            spacing={0.6}
             alignItems="center"
-            spacing={1.5}
-            sx={{ mb: 2 }}
+            sx={{
+              ...pill,
+              bgcolor: "rgba(245,185,63,.18)",
+              color: "#F5B93F",
+              border: "1px solid rgba(245,185,63,.5)",
+              fontSize: 12,
+            }}
           >
+            <LockOpenIcon sx={{ fontSize: 14 }} />
+            <span>Admin preview</span>
+          </Stack>
+        )}
+        {openAccess && (
+          <Box
+            sx={{
+              ...pill,
+              bgcolor: "rgba(46,204,113,.16)",
+              color: "#2ECC71",
+              border: "1px solid rgba(46,204,113,.5)",
+              fontSize: 12,
+            }}
+          >
+            Open access
+          </Box>
+        )}
+
+        {/* Progress controls only for courses that do not track progress inside their own player */}
+        {!selfTracked &&
+          (finished ? (
             <Button
-              onClick={() => nav(-1)}
-              startIcon={<ArrowBackRoundedIcon />}
+              variant="contained"
+              startIcon={<WorkspacePremiumIcon />}
+              onClick={() => nav("/certificates")}
+              sx={pill}
+            >
+              Get my certificate
+            </Button>
+          ) : (
+            <Tooltip
+              title={adminPreview ? "Progress is not saved in preview" : ""}
+            >
+              <span>
+                <Button
+                  variant="contained"
+                  startIcon={<CheckRoundedIcon />}
+                  onClick={() => completeLesson(c.id)}
+                  disabled={adminPreview}
+                  sx={pill}
+                >
+                  Done · {done}/{list.length}
+                </Button>
+              </span>
+            </Tooltip>
+          ))}
+
+        <Stack direction="row" spacing={0.5}>
+          <Tooltip title="Ask for help on WhatsApp">
+            <IconButton
+              size="small"
+              component="a"
+              href={whatsappLink(help)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp"
+              sx={(t) => ({
+                color: "text.primary",
+                border: `1px solid ${t.tx.line}`,
+                background: t.tx.surface,
+              })}
+            >
+              <WhatsAppIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Call us">
+            <IconButton
+              size="small"
+              component="a"
+              href={TEL_HREF}
+              aria-label="Call"
+              sx={(t) => ({
+                color: "text.primary",
+                border: `1px solid ${t.tx.line}`,
+                background: t.tx.surface,
+              })}
+            >
+              <CallIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Full screen">
+            <IconButton
+              size="small"
+              onClick={fullscreen}
+              aria-label="Full screen"
+              sx={(t) => ({
+                color: "text.primary",
+                border: `1px solid ${t.tx.line}`,
+                background: t.tx.surface,
+              })}
+            >
+              <FullscreenIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Open in a new tab">
+            <IconButton
+              size="small"
+              component="a"
+              href={openHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open lesson in a new tab"
+              sx={(t) => ({
+                color: "text.primary",
+                border: `1px solid ${t.tx.line}`,
+                background: t.tx.surface,
+              })}
+            >
+              <OpenInNewIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      </Stack>
+
+      {/* The player: one big glowing card */}
+      <Box
+        ref={stageRef}
+        sx={{
+          p: "2px",
+          borderRadius: { xs: "20px", md: "28px" },
+          backgroundSize: "200% 200%",
+          background:
+            "linear-gradient(135deg, #F5B93F, #C86BFF 45%, #4868FF, #F5B93F)",
+          animation: "txgradient 8s ease infinite",
+          boxShadow:
+            "0 30px 80px rgba(72,104,255,.25), 0 8px 24px rgba(0,0,0,.25)",
+          height: { xs: "calc(100svh - 150px)", md: "calc(100vh - 150px)" },
+          minHeight: 480,
+          display: "flex",
+          "&:fullscreen": { borderRadius: 0, p: 0, height: "100vh" },
+        }}
+      >
+        <Box
+          sx={(t) => ({
+            position: "relative",
+            flex: 1,
+            overflow: "hidden",
+            borderRadius: { xs: "18px", md: "26px" },
+            bgcolor: t.palette.background.default,
+            "&:fullscreen, :fullscreen &": { borderRadius: 0 },
+          })}
+        >
+          {!loaded && safe && (
+            <Stack
+              alignItems="center"
+              justifyContent="center"
+              spacing={2}
               sx={{
-                mb: 2.5,
-                px: 2.2,
-                py: 0.7,
-                borderRadius: "999px",
-                color: "#fff",
-                fontSize: "0.85rem",
-                fontWeight: 600,
-                textTransform: "none",
-                background: "rgba(255, 255, 255, 0.08)",
-                border: "1px solid rgba(255, 255, 255, 0.16)",
-                backdropFilter: "blur(16px)",
-                transition: "all 0.22s ease-in-out",
-                "&:hover": {
-                  background: "rgba(255, 255, 255, 0.18)",
-                  borderColor: "rgba(255, 255, 255, 0.35)",
-                  transform: "translateX(-3px)",
-                },
+                position: "absolute",
+                inset: 0,
+                textAlign: "center",
+                px: 3,
+                background:
+                  "radial-gradient(500px 260px at 50% 40%, rgba(106,63,224,.22), transparent 70%)",
               }}
             >
-              Back
-            </Button>
-            {adminPreview && (
               <Box
                 sx={{
-                  px: 1.5,
-                  py: 0.5,
-                  borderRadius: 99,
-                  fontSize: 12.5,
-                  fontWeight: 800,
-                  bgcolor: "rgba(245,185,63,.2)",
-                  color: "#F5B93F",
-                  border: "1px solid rgba(245,185,63,.5)",
+                  position: "relative",
+                  width: 84,
+                  height: 84,
+                  display: "grid",
+                  placeItems: "center",
                 }}
               >
-                Admin preview
+                <CircularProgress
+                  size={84}
+                  thickness={2.2}
+                  sx={{ position: "absolute", inset: 0, color: "#F5B93F" }}
+                />
+                <Logo size={40} withText={false} />
               </Box>
-            )}
-            {openAccess && (
-              <Box
-                sx={{
-                  px: 1.5,
-                  py: 0.5,
-                  borderRadius: 99,
-                  fontSize: 12.5,
-                  fontWeight: 800,
-                  bgcolor: "rgba(46,204,113,.18)",
-                  color: "#5BE08F",
-                  border: "1px solid rgba(46,204,113,.5)",
-                }}
-              >
-                Open access
-              </Box>
-            )}
-          </Stack>
-          <Typography
-            variant="h3"
-            component="h1"
-            sx={{
-              fontSize: { xs: 24, md: 38 },
-              lineHeight: 1.15,
-              maxWidth: 900,
-            }}
-          >
-            {c.title}
-          </Typography>
-          <Typography
-            sx={{
-              mt: 1,
-              opacity: 0.85,
-              maxWidth: 720,
-              fontSize: { xs: 15, md: 17 },
-            }}
-          >
-            {c.short}
-          </Typography>
-          <Stack direction="row" gap={1} flexWrap="wrap" sx={{ mt: 2 }}>
-            {[`${list.length} lessons`, `${pct}% done`, c.meta[0]]
-              .filter(Boolean)
-              .map((m) => (
-                <Box
-                  key={m}
-                  sx={{
-                    px: 1.5,
-                    py: 0.5,
-                    borderRadius: 99,
-                    fontSize: 13,
-                    fontWeight: 700,
-                    background: "rgba(255,255,255,.12)",
-                    border: "1px solid rgba(255,255,255,.22)",
-                    backdropFilter: "blur(10px)",
-                  }}
+              <Typography sx={{ fontWeight: 800 }}>
+                Getting your lesson ready…
+              </Typography>
+              {slow && (
+                <Typography
+                  color="text.secondary"
+                  sx={{ fontSize: 13.5, maxWidth: 380 }}
                 >
-                  {m}
-                </Box>
-              ))}
-          </Stack>
-        </Container>
+                  {isAcademy && "Sign in to academy.takxila.in in this browser, or "}
+                  {!isAcademy && "Taking longer than usual. "}
+                  <Box
+                    component="a"
+                    href={openHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{ color: "#F5B93F", fontWeight: 700 }}
+                  >
+                    {isAcademy ? "open the lesson in a new tab" : "Open the lesson in a new tab"}
+                  </Box>
+                  .
+                </Typography>
+              )}
+            </Stack>
+          )}
+
+          {safe ? (
+            <iframe
+              ref={frameRef}
+              key={src}
+              id="scorm_object"
+              title={c.title}
+              src={src}
+              allowFullScreen
+              allow="fullscreen; autoplay; clipboard-write; encrypted-media"
+              onLoad={() => setLoaded(true)}
+              {...legacyFullscreen}
+              style={{
+                width: "100%",
+                height: "100%",
+                border: 0,
+                display: "block",
+                opacity: loaded ? 1 : 0,
+                transition: "opacity .4s",
+              }}
+            />
+          ) : (
+            <Stack
+              alignItems="center"
+              justifyContent="center"
+              sx={{ height: "100%", px: 3, textAlign: "center" }}
+            >
+              <Typography sx={{ fontWeight: 700 }}>
+                This lesson link is not allowed.
+              </Typography>
+              <Typography color="text.secondary" sx={{ fontSize: 14 }}>
+                Player links must be https links. Ask the admin to fix it.
+              </Typography>
+            </Stack>
+          )}
+        </Box>
       </Box>
 
-      <Container
-        maxWidth="xl"
-        sx={{ mt: { xs: -3.5, md: -5 }, position: "relative", zIndex: 2 }}
-      >
-        <Grid container spacing={{ xs: 2, md: 3 }}>
-          {/* The lesson player */}
-          <Grid item xs={12} lg={focus ? 12 : 8.5}>
-            <Box
-              ref={stageRef}
-              sx={{
-                p: "2px",
-                borderRadius: "26px",
-                background:
-                  "linear-gradient(135deg, #F5B93F, #9B3FD0 45%, #4868FF)",
-                boxShadow:
-                  "0 30px 80px rgba(72,104,255,.28), 0 10px 30px rgba(0,0,0,.35)",
-                "&:fullscreen": {
-                  borderRadius: 0,
-                  p: 0,
-                  background: "#070b18",
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  borderRadius: "24px",
-                  overflow: "hidden",
-                  bgcolor: "#070b18",
-                }}
-              >
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  spacing={1}
-                  sx={{
-                    px: { xs: 1.5, md: 2.5 },
-                    py: 1,
-                    color: "#fff",
-                    borderBottom: "1px solid rgba(255,255,255,.1)",
-                  }}
-                >
-                  <Logo size={26} withText={false} />
-                  <Typography
-                    noWrap
-                    sx={{ fontWeight: 700, fontSize: 14, flexGrow: 1 }}
-                  >
-                    {c.kicker}
-                  </Typography>
-                  <Tooltip title={focus ? "Show lesson panel" : "Focus mode"}>
-                    <IconButton
-                      size="small"
-                      onClick={() => setFocus((f) => !f)}
-                      sx={{
-                        color: "#fff",
-                        display: { xs: "none", lg: "inline-flex" },
-                      }}
-                      aria-label="Toggle focus mode"
-                    >
-                      <ViewSidebarIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Full screen">
-                    <IconButton
-                      size="small"
-                      onClick={fullscreen}
-                      sx={{ color: "#fff" }}
-                      aria-label="Full screen"
-                    >
-                      <FullscreenIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Open in a new tab">
-                    <IconButton
-                      size="small"
-                      component="a"
-                      href={src}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      sx={{ color: "#fff" }}
-                      aria-label="Open lesson in a new tab"
-                    >
-                      <OpenInNewIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-
-                <Box
-                  sx={{
-                    position: "relative",
-                    height: { xs: "62vh", md: "min(76vh, 780px)" },
-                    minHeight: 420,
-                    "&:fullscreen, :fullscreen &": {
-                      height: "calc(100vh - 52px)",
-                    },
-                  }}
-                >
-                  {!loaded && (
-                    <Stack
-                      alignItems="center"
-                      justifyContent="center"
-                      spacing={2}
-                      sx={{
-                        position: "absolute",
-                        inset: 0,
-                        color: "#c0c7de",
-                        textAlign: "center",
-                        px: 3,
-                        background:
-                          "radial-gradient(500px 260px at 50% 40%, rgba(106,63,224,.25), transparent 70%)",
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          position: "relative",
-                          width: 84,
-                          height: 84,
-                          display: "grid",
-                          placeItems: "center",
-                        }}
-                      >
-                        <CircularProgress
-                          size={84}
-                          thickness={2.2}
-                          sx={{
-                            position: "absolute",
-                            inset: 0,
-                            color: "#F5B93F",
-                          }}
-                        />
-                        <Logo size={40} withText={false} />
-                      </Box>
-                      <Typography sx={{ fontWeight: 700, color: "#fff" }}>
-                        Getting your lesson ready…
-                      </Typography>
-                      {slow && (
-                        <Typography sx={{ fontSize: 13.5, maxWidth: 380 }}>
-                          Taking longer than usual. Sign in to
-                          academy.takxila.in in this browser, or{" "}
-                          <Box
-                            component="a"
-                            href={src}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            sx={{ color: "#F5B93F", fontWeight: 700 }}
-                          >
-                            open the lesson in a new tab
-                          </Box>
-                          .
-                        </Typography>
-                      )}
-                    </Stack>
-                  )}
-                  {safe ? (
-                    <iframe
-                      key={src}
-                      id="scorm_object"
-                      title={c.title}
-                      src={src}
-                      allowFullScreen
-                      allow="fullscreen; autoplay; clipboard-write; encrypted-media"
-                      onLoad={() => setLoaded(true)}
-                      {...legacyFullscreen}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        border: 0,
-                        display: "block",
-                        opacity: loaded ? 1 : 0,
-                        transition: "opacity .4s",
-                      }}
-                    />
-                  ) : (
-                    <Stack
-                      alignItems="center"
-                      justifyContent="center"
-                      sx={{
-                        height: "100%",
-                        color: "#fff",
-                        px: 3,
-                        textAlign: "center",
-                      }}
-                    >
-                      <Typography sx={{ fontWeight: 700 }}>
-                        This lesson link is not allowed.
-                      </Typography>
-                      <Typography sx={{ opacity: 0.8, fontSize: 14 }}>
-                        Player links must be https links on takxila.in. Ask the
-                        admin to fix it.
-                      </Typography>
-                    </Stack>
-                  )}
-                </Box>
-              </Box>
-            </Box>
-            <Typography color="text.secondary" sx={{ mt: 1.5, fontSize: 13 }}>
-              Black screen or a login page? Sign in to{" "}
-              <strong>academy.takxila.in</strong> in this browser once, then
-              reload.
-            </Typography>
-          </Grid>
-
-          {/* Progress and lessons */}
-          {!focus && (
-            <Grid item xs={12} lg={3.5}>
-              <Stack
-                spacing={2.5}
-                sx={{ position: { lg: "sticky" }, top: { lg: 100 } }}
-              >
-                <Box
-                  sx={(t) => ({
-                    p: 2.5,
-                    borderRadius: "22px",
-                    background: t.tx.surface,
-                    border: `1px solid ${t.tx.line}`,
-                    backdropFilter: "blur(22px)",
-                  })}
-                >
-                  <Stack direction="row" spacing={2.5} alignItems="center">
-                    <Box sx={{ position: "relative", display: "inline-flex" }}>
-                      <CircularProgress
-                        variant="determinate"
-                        value={100}
-                        size={92}
-                        thickness={4}
-                        sx={(t) => ({ color: t.tx.line, position: "absolute" })}
-                      />
-                      <CircularProgress
-                        variant="determinate"
-                        value={pct}
-                        size={92}
-                        thickness={4}
-                        color={pct >= 100 ? "success" : "secondary"}
-                        sx={{ "& circle": { strokeLinecap: "round" } }}
-                      />
-                      <Box
-                        sx={{
-                          position: "absolute",
-                          inset: 0,
-                          display: "grid",
-                          placeItems: "center",
-                        }}
-                      >
-                        <Typography sx={{ fontWeight: 800, fontSize: 22 }}>
-                          {pct}%
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Box>
-                      <Typography
-                        sx={{ fontWeight: 800, fontSize: 18, lineHeight: 1.2 }}
-                      >
-                        {finished ? "Course complete" : "Keep going"}
-                      </Typography>
-                      <Typography
-                        color="text.secondary"
-                        sx={{ fontSize: 14, mt: 0.5 }}
-                      >
-                        {done} of {list.length} lessons done
-                      </Typography>
-                    </Box>
-                  </Stack>
-                  {finished ? (
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      startIcon={<WorkspacePremiumIcon />}
-                      onClick={() => nav("/certificates")}
-                      sx={{ mt: 2.25 }}
-                    >
-                      Get my certificate
-                    </Button>
-                  ) : (
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      startIcon={<CheckRoundedIcon />}
-                      onClick={() => completeLesson(c.id)}
-                      disabled={adminPreview}
-                      sx={{ mt: 2.25 }}
-                    >
-                      I finished lesson {done + 1}
-                    </Button>
-                  )}
-                </Box>
-
-                <Box
-                  sx={(t) => ({
-                    p: 2,
-                    borderRadius: "22px",
-                    background: t.tx.surface,
-                    border: `1px solid ${t.tx.line}`,
-                    backdropFilter: "blur(22px)",
-                    maxHeight: 360,
-                    overflow: "auto",
-                  })}
-                >
-                  <Typography sx={{ fontWeight: 800, mb: 1, px: 0.5 }}>
-                    Your lessons
-                  </Typography>
-                  <Stack spacing={0.5}>
-                    {list.map((m, i) => {
-                      const complete = i < done;
-                      const next = i === done;
-                      return (
-                        <Stack
-                          key={i}
-                          direction="row"
-                          spacing={1.5}
-                          alignItems="center"
-                          sx={(t) => ({
-                            p: 1,
-                            borderRadius: "12px",
-                            ...(next && {
-                              background: t.tx.glow,
-                              border: `1px solid ${t.tx.hl}`,
-                            }),
-                          })}
-                        >
-                          <Box
-                            sx={{
-                              width: 26,
-                              height: 26,
-                              flex: "0 0 26px",
-                              borderRadius: "50%",
-                              display: "grid",
-                              placeItems: "center",
-                              fontSize: 12,
-                              fontWeight: 800,
-                              bgcolor: complete
-                                ? "success.main"
-                                : "transparent",
-                              color: complete ? "#fff" : "text.secondary",
-                              border: complete ? "none" : "1.5px solid",
-                              borderColor: next ? "secondary.main" : "divider",
-                            }}
-                          >
-                            {complete ? (
-                              <CheckRoundedIcon sx={{ fontSize: 16 }} />
-                            ) : (
-                              i + 1
-                            )}
-                          </Box>
-                          <Typography
-                            sx={{
-                              fontSize: 14,
-                              fontWeight: next ? 700 : 500,
-                              opacity: complete ? 0.65 : 1,
-                            }}
-                          >
-                            {m}
-                          </Typography>
-                        </Stack>
-                      );
-                    })}
-                  </Stack>
-                </Box>
-
-                <Box
-                  sx={(t) => ({
-                    p: 2,
-                    borderRadius: "22px",
-                    border: `1px dashed ${t.tx.line}`,
-                  })}
-                >
-                  <Typography sx={{ fontWeight: 800 }}>
-                    Stuck on something?
-                  </Typography>
-                  <Typography
-                    color="text.secondary"
-                    sx={{ fontSize: 13.5, mb: 1.5 }}
-                  >
-                    A real person replies. Call or message us.
-                  </Typography>
-                  <Stack direction="row" spacing={1}>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      startIcon={<CallIcon />}
-                      component="a"
-                      href={TEL_HREF}
-                      sx={{ flex: 1 }}
-                    >
-                      Call
-                    </Button>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      startIcon={<WhatsAppIcon />}
-                      component="a"
-                      href={whatsappLink(help)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      sx={{ flex: 1 }}
-                    >
-                      WhatsApp
-                    </Button>
-                  </Stack>
-                </Box>
-                {adminPreview && (
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    alignItems="center"
-                    sx={{ color: "text.secondary", fontSize: 13 }}
-                  >
-                    <LockOpenIcon fontSize="small" />{" "}
-                    <span>
-                      You are previewing this course as admin. Progress is not
-                      saved.
-                    </span>
-                  </Stack>
-                )}
-              </Stack>
-            </Grid>
-          )}
-        </Grid>
-      </Container>
-    </Box>
+      {isAcademy && (
+        <Typography color="text.secondary" sx={{ mt: 1.25, fontSize: 13 }}>
+          Black screen or a login page? Sign in to{" "}
+          <strong>academy.takxila.in</strong> in this browser once, then reload.
+        </Typography>
+      )}
+    </Container>
   );
 }

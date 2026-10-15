@@ -12,6 +12,7 @@ export const DEFAULT_PLAYER_URL =
 /** courseId -> player link. Add a line here when a course gets its own package. */
 export const PLAYER_URLS: Record<string, string> = {
   'mastery-14': DEFAULT_PLAYER_URL,
+  'claude-deep': 'https://claude-deep-dive.vercel.app/',
 };
 
 export const playerUrlFor = (courseId: string, overrides: Record<string, string> = {}) =>
