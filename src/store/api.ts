@@ -1,4 +1,6 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import { MAIL_WEBHOOK_URL } from '../config/site';
+import { load } from '../utils/storage';
 
 /**
  * Every call to an outside service goes through this RTK Query API, so loading and error states,
@@ -20,6 +22,10 @@ export const emailjsConfig = {
   template: import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '',
   publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '',
 };
+// Or: a free Google Apps Script web app that sends the HTML from the academy's own Gmail (tools/email/Code.gs).
+// Order: .env, then src/config/site.ts, then a link the admin pasted in Admin > Emails to test (that browser only).
+export const mailWebhook = () => (import.meta.env.VITE_MAIL_WEBHOOK as string | undefined) || MAIL_WEBHOOK_URL || load<string>('mail_webhook', '');
+export const mailWebhookIsLocal = () => !import.meta.env.VITE_MAIL_WEBHOOK && !MAIL_WEBHOOK_URL && !!load<string>('mail_webhook', '');
 export const emailjsReady = () => !!(emailjsConfig.service && emailjsConfig.template && emailjsConfig.publicKey);
 
 export interface LearnerEmailRequest {
@@ -28,7 +34,12 @@ export interface LearnerEmailRequest {
   subject: string;
   html: string;
   text: string;
+  /** Short labelled summary (order, courses, total) used by the plain FormSubmit fallback */
+  fields?: Record<string, string>;
 }
+
+/** Which way learner emails go out right now (shown in Admin > Emails). */
+export const emailRoute = (): 'emailjs' | 'webhook' | 'formsubmit' => (emailjsReady() ? 'emailjs' : mailWebhook() ? 'webhook' : 'formsubmit');
 
 export interface MailRequest {
   subject: string;
@@ -86,8 +97,8 @@ export const api = createApi({
      * Email a learner (purchase, enrolment, course completed). With EmailJS set up, the branded HTML goes to the learner.
      * Without it, FormSubmit sends a plain copy to the academy inbox and CCs the learner.
      */
-    learnerEmail: build.mutation<'emailjs' | 'formsubmit', LearnerEmailRequest>({
-      queryFn: async ({ to, name, subject, html, text }) => {
+    learnerEmail: build.mutation<'emailjs' | 'webhook' | 'formsubmit', LearnerEmailRequest>({
+      queryFn: async ({ to, name, subject, html, text, fields }) => {
         try {
           if (emailjsReady()) {
             const res = await fetch(EMAILJS, {
@@ -101,10 +112,21 @@ export const api = createApi({
             if (!res.ok) return { error: { message: (await res.text().catch(() => '')) || 'EmailJS refused the email.' } };
             return { data: 'emailjs' };
           }
+          const hook = mailWebhook();
+          if (hook) {
+            // text/plain + no-cors: Google Apps Script accepts it without a CORS preflight. The reply cannot be read, so a sent request counts as sent.
+            await fetch(hook, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ to, name, subject, html, text, replyTo: INBOX }) });
+            return { data: 'webhook' };
+          }
+          // Last resort, FormSubmit: it cannot send your HTML. The inbox gets a tidy table (order, courses, total) and the
+          // learner gets the friendly plain-text version as an auto-reply, instead of a copy of a form submission.
           const res = await fetch(FORMSUBMIT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({ _subject: subject, _template: 'box', _captcha: 'false', _cc: to, name, email: to, message: text }),
+            body: JSON.stringify({
+              _subject: subject, _template: 'table', _captcha: 'false', _autoresponse: text,
+              Learner: name, email: to, ...(fields ?? { Message: text }),
+            }),
           });
           const data = (await res.json().catch(() => ({}))) as { success?: string | boolean; message?: string };
           if (!res.ok || String(data.success) === 'false') return { error: { message: data.message || 'The email could not be sent.' } };

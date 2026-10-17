@@ -73,7 +73,7 @@ function Section({ id, kick, title, hl, sub, children }: { id?: string; kick: st
 
 function LandingNav() {
   const nav = useNavigate();
-  const { isAuthed, user } = useAuth();
+  const { isAuthed, user, homePath } = useAuth();
   const { mode, toggleMode } = useThemeMode();
   const [scrolled, setScrolled] = useState(false);
   const [drawer, setDrawer] = useState(false);
@@ -112,7 +112,7 @@ function LandingNav() {
           {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
         </IconButton>
         {isAuthed ? (
-          <Button variant="contained" onClick={() => nav('/dashboard')} endIcon={<ArrowForwardIcon />} sx={{ minHeight: 40, whiteSpace: 'nowrap' }}>
+          <Button variant="contained" onClick={() => nav(homePath)} endIcon={<ArrowForwardIcon />} sx={{ minHeight: 40, whiteSpace: 'nowrap' }}>
             {user ? 'Hi ' + user.name.split(' ')[0] : 'Dashboard'}
           </Button>
         ) : (
@@ -158,7 +158,7 @@ const ORBIT = ['claude-code', 'agentic', 'mj-advanced', 'film-3', 'meta-ads', 'w
 
 function Hero() {
   const nav = useNavigate();
-  const { isAuthed } = useAuth();
+  const { isAuthed, homePath } = useAuth();
   return (
     <Box component="section" sx={{ position: 'relative', overflow: 'hidden', pt: { xs: 14, md: 18 }, pb: { xs: 8, md: 12 } }}>
       <GridBackdrop />
@@ -187,7 +187,7 @@ function Hero() {
               step by step, with summary videos, hands-on projects, grades and a certificate.
             </Typography>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ animation: 'txblurin .7s .9s both' }}>
-              <MovingBorderButton filled onClick={() => nav(isAuthed ? '/dashboard' : '/auth#register')}>
+              <MovingBorderButton filled onClick={() => nav(isAuthed ? homePath : '/auth#register')}>
                 {isAuthed ? 'Go to my dashboard' : 'Start learning free'} <ArrowForwardIcon fontSize="small" />
               </MovingBorderButton>
               <MovingBorderButton onClick={() => go('courses')}>

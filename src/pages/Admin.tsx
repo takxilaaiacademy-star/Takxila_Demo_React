@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { Autocomplete, Box, Button, Chip, Container, Grid, IconButton, InputAdornment, Stack, Tab, Tabs, TextField, Tooltip, Typography } from '@mui/material';
+import { lazy, Suspense, useMemo, useState } from 'react';
+import { Autocomplete, Box, Button, Chip, CircularProgress, Container, Grid, IconButton, InputAdornment, Stack, Tab, Tabs, TextField, Tooltip, Typography } from '@mui/material';
 import AdminIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import KeyIcon from '@mui/icons-material/VpnKeyOutlined';
@@ -8,10 +8,22 @@ import PlayIcon from '@mui/icons-material/SmartDisplayOutlined';
 import SchoolIcon from '@mui/icons-material/SchoolOutlined';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import BackupIcon from '@mui/icons-material/BackupOutlined';
+import DashboardIcon from '@mui/icons-material/SpaceDashboardOutlined';
+import HistoryIcon from '@mui/icons-material/HistoryRounded';
+import MailIcon from '@mui/icons-material/MailOutlineRounded';
+import OrdersIcon from '@mui/icons-material/ReceiptLongOutlined';
 import { Navigate, useSearchParams } from 'react-router-dom';
-import AdminBackup from '../components/admin/AdminBackup';
-import AdminCourses from '../components/admin/AdminCourses';
-import AdminSite from '../components/admin/AdminSite';
+import { panelSx } from '../components/admin/adminUi';
+
+// Each tab is its own small file, downloaded the first time it is opened, so the admin panel opens fast.
+const AdminOverview = lazy(() => import('../components/admin/AdminOverview'));
+const AdminUsers = lazy(() => import('../components/admin/AdminUsers'));
+const AdminOrders = lazy(() => import('../components/admin/AdminOrders'));
+const AdminActivity = lazy(() => import('../components/admin/AdminActivity'));
+const AdminEmails = lazy(() => import('../components/admin/AdminEmails'));
+const AdminBackup = lazy(() => import('../components/admin/AdminBackup'));
+const AdminCourses = lazy(() => import('../components/admin/AdminCourses'));
+const AdminSite = lazy(() => import('../components/admin/AdminSite'));
 import { useAuth } from '../context/AuthContext';
 import { useStoreActions } from '../context/StoreContext';
 import { COURSES } from '../data/courses';
@@ -26,17 +38,27 @@ import { load, save } from '../utils/storage';
 const EMAIL_RE = /^\S+@\S+\.\S+$/;
 // Read from the live list (the admin can add, hide and rename courses), so it is a function, not a constant.
 const optionsNow = () => [...COURSES].sort((a, b) => a.title.localeCompare(b.title));
-type Tab = 'courses' | 'access' | 'players' | 'learners' | 'site' | 'backup';
-const TABS: Tab[] = ['courses', 'access', 'players', 'learners', 'site', 'backup'];
+type Tab = 'overview' | 'users' | 'orders' | 'courses' | 'access' | 'players' | 'activity' | 'emails' | 'site' | 'backup';
+const TABS: Tab[] = ['overview', 'users', 'orders', 'courses', 'access', 'players', 'activity', 'emails', 'site', 'backup'];
+/** Admin tabs: [id, label, icon]. The navbar's admin menu links to the same ids. */
+export const ADMIN_TABS: [Tab, string][] = [
+  ['overview', 'Dashboard'], ['users', 'Users'], ['orders', 'Orders'], ['courses', 'Courses'], ['access', 'Give access'], ['players', 'Course players'],
+  ['activity', 'Activity'], ['emails', 'Emails'], ['site', 'Navbar & banner'], ['backup', 'Backup & restore'],
+];
+const ICONS: Record<Tab, JSX.Element> = {
+  overview: <DashboardIcon fontSize="small" />, users: <PeopleIcon fontSize="small" />, orders: <OrdersIcon fontSize="small" />, courses: <SchoolIcon fontSize="small" />, access: <KeyIcon fontSize="small" />,
+  players: <PlayIcon fontSize="small" />, activity: <HistoryIcon fontSize="small" />, emails: <MailIcon fontSize="small" />, site: <MenuOpenIcon fontSize="small" />, backup: <BackupIcon fontSize="small" />,
+};
 
 /** Admin area: edit courses and the navbar, give access, set course players, see who has joined, back everything up. */
 export default function Admin() {
   const { isAdmin, isAdminAccount } = useAuth();
   const dispatch = useAppDispatch();
   const [params, setParams] = useSearchParams();
-  const q = params.get('tab') as Tab | null;
-  const tab: Tab = q && TABS.includes(q) ? q : 'courses';
-  const setTab = (t: Tab) => setParams({ tab: t }, { replace: true });
+  const raw = params.get('tab');
+  const q = (raw === 'learners' ? 'users' : raw) as Tab | null;
+  const tab: Tab = q && TABS.includes(q) ? q : 'overview';
+  const setTab = (t: string) => setParams({ tab: t }, { replace: true });
 
   if (!isAdminAccount) return <Navigate to="/home" replace />;
 
@@ -46,7 +68,7 @@ export default function Admin() {
         <AdminIcon sx={{ fontSize: 56, color: 'secondary.main' }} />
         <Typography variant="h4" sx={{ mt: 1, mb: 1 }}>You are in User mode</Typography>
         <Typography color="text.secondary" sx={{ mb: 3 }}>The site looks the way a learner sees it. Switch back to manage courses and access.</Typography>
-        <Button variant="contained" size="large" onClick={() => dispatch(adminActions.modeSet('admin'))}>Switch to Admin mode</Button>
+        <Button variant="contained" size="large" onClick={() => dispatch(adminActions.modeSet('admin'))}>Back to Admin mode</Button>
       </Container>
     );
   }
@@ -59,30 +81,30 @@ export default function Admin() {
         </Box>
         <Box>
           <Typography variant="h4" component="h1" sx={{ fontSize: { xs: 26, md: 34 } }}>Admin</Typography>
-          <Typography color="text.secondary">Edit courses, videos and the navbar, give access, see your learners. No developer needed.</Typography>
+          <Typography color="text.secondary">Your learners, numbers, courses and content in one place. No developer needed.</Typography>
         </Box>
       </Stack>
 
-      <Tabs value={tab} onChange={(_, v: Tab) => setTab(v)} variant="scrollable" sx={{ mb: 3, borderBottom: 1, borderColor: 'divider' }}>
-        <Tab value="courses" icon={<SchoolIcon fontSize="small" />} iconPosition="start" label="Courses" />
-        <Tab value="access" icon={<KeyIcon fontSize="small" />} iconPosition="start" label="Give access" />
-        <Tab value="players" icon={<PlayIcon fontSize="small" />} iconPosition="start" label="Course players" />
-        <Tab value="learners" icon={<PeopleIcon fontSize="small" />} iconPosition="start" label="Learners" />
-        <Tab value="site" icon={<MenuOpenIcon fontSize="small" />} iconPosition="start" label="Navbar & banner" />
-        <Tab value="backup" icon={<BackupIcon fontSize="small" />} iconPosition="start" label="Backup & restore" />
+      <Tabs value={tab} onChange={(_, v: Tab) => setTab(v)} variant="scrollable" allowScrollButtonsMobile sx={{ mb: 3, borderBottom: 1, borderColor: 'divider' }}>
+        {ADMIN_TABS.map(([id, label]) => <Tab key={id} value={id} icon={ICONS[id]} iconPosition="start" label={label} />)}
       </Tabs>
 
-      {tab === 'courses' && <AdminCourses />}
-      {tab === 'access' && <AccessTab />}
-      {tab === 'players' && <PlayersTab />}
-      {tab === 'learners' && <LearnersTab />}
-      {tab === 'site' && <AdminSite />}
-      {tab === 'backup' && <AdminBackup />}
+      <Suspense fallback={<Box sx={{ py: 8, display: 'grid', placeItems: 'center' }}><CircularProgress color="secondary" /></Box>}>
+        {tab === 'overview' && <AdminOverview go={setTab} />}
+        {tab === 'users' && <AdminUsers />}
+        {tab === 'orders' && <AdminOrders />}
+        {tab === 'courses' && <AdminCourses />}
+        {tab === 'access' && <AccessTab />}
+        {tab === 'players' && <PlayersTab />}
+        {tab === 'activity' && <AdminActivity />}
+        {tab === 'emails' && <AdminEmails />}
+        {tab === 'site' && <AdminSite />}
+        {tab === 'backup' && <AdminBackup />}
+      </Suspense>
     </Container>
   );
 }
 
-const panelSx = (t: import('@mui/material').Theme) => ({ p: { xs: 2, md: 3 }, borderRadius: '22px', background: t.tx.surface, border: `1px solid ${t.tx.line}`, backdropFilter: 'blur(22px)' });
 
 function AccessTab() {
   const dispatch = useAppDispatch();
@@ -244,38 +266,5 @@ function PlayerRow({ id, title, value, builtIn, onSave }: { id: string; title: s
       />
       <Button variant="outlined" size="small" disabled={bad || v.trim() === value} onClick={() => onSave(v)}>Save</Button>
     </Stack>
-  );
-}
-
-function LearnersTab() {
-  const users = useAppSelector((s) => s.auth.users);
-  const grants = useAppSelector((s) => s.admin.grants);
-  const rows = users
-    .filter((u) => u.role !== 'admin')
-    .map((u) => {
-      const d = load<Partial<UserData>>('user_' + u.email, {});
-      return { ...u, owned: d.owned?.length ?? 0, granted: grants[u.email]?.length ?? 0 };
-    });
-  return (
-    <Box sx={panelSx}>
-      <Typography variant="h6" sx={{ mb: 0.5 }}>Learners in this browser ({rows.length})</Typography>
-      <Typography color="text.secondary" sx={{ fontSize: 14, mb: 2 }}>Accounts are saved in the browser they sign up in. See the README for how to connect a server.</Typography>
-      {rows.length === 0 ? (
-        <Typography color="text.secondary">No learners have signed up in this browser yet.</Typography>
-      ) : (
-        <Stack spacing={1}>
-          {rows.map((u) => (
-            <Stack key={u.id} direction="row" spacing={2} alignItems="center" sx={(t) => ({ p: 1.5, borderRadius: '14px', border: `1px solid ${t.tx.line}` })}>
-              <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-                <Typography sx={{ fontWeight: 700 }} noWrap>{u.name}</Typography>
-                <Typography color="text.secondary" sx={{ fontSize: 13 }} noWrap>{u.email}</Typography>
-              </Box>
-              <Chip size="small" label={`${u.owned} course${u.owned === 1 ? '' : 's'}`} />
-              {u.granted > 0 && <Chip size="small" color="secondary" label={`${u.granted} from you`} />}
-            </Stack>
-          ))}
-        </Stack>
-      )}
-    </Box>
   );
 }

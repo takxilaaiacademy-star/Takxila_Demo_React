@@ -12,7 +12,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AdminIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
-import { Link as RouterLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth, useUser } from '../context/AuthContext';
 import { useStore } from '../context/StoreContext';
 import { useThemeMode } from '../context/ThemeModeContext';
@@ -27,7 +27,7 @@ import NotificationBell from './NotificationBell';
 import { useAppDispatch, useAppSelector } from '../store';
 import { adminActions } from '../store/adminSlice';
 import VisibilityIcon from '@mui/icons-material/VisibilityOutlined';
-import { SiteBannerStrip } from './admin/AdminBar';
+import AdminBar, { SiteBannerStrip } from './admin/AdminBar';
 import { CourseEditorHost } from './admin/CourseEditor';
 import { useBackToTop } from '../utils/scrollFx';
 import { PreviewProvider } from './Preview';
@@ -57,13 +57,18 @@ const NAV: NavItem[] = [
   { key: 'contact', to: '/contact', subs: [['Contact form', '/contact'], ['Mentorship', '/mentorship'], ['Announcements', '/announcements'], ['Helpdesk', '/helpdesk']] },
 ];
 
+// Admin mode: the admin panel's big sections get their own navbar tabs.
 const ADMIN_NAV: NavItem[] = [
-  { key: 'home', to: '/home' },
   NAV[1],
+  { key: 'admin-dash', label: 'Dashboard', to: '/admin?tab=overview' },
+  { key: 'admin-users', label: 'Users', to: '/admin?tab=users' },
   {
-    key: 'admin', label: 'Admin panel', to: '/admin',
-    subs: [['Courses', '/admin?tab=courses'], ['Give access', '/admin?tab=access'], ['Course players', '/admin?tab=players'], ['Learners', '/admin?tab=learners'], ['Navbar & banner', '/admin?tab=site'], ['Backup & restore', '/admin?tab=backup']],
-  }
+    key: 'admin-content', label: 'Content', to: '/admin?tab=courses',
+    subs: [['Courses', '/admin?tab=courses'], ['Give access', '/admin?tab=access'], ['Course players', '/admin?tab=players'], ['Navbar & banner', '/admin?tab=site']],
+  },
+  { key: 'admin-orders', label: 'Orders', to: '/admin?tab=orders' },
+  { key: 'admin-activity', label: 'Activity', to: '/admin?tab=activity' },
+  { key: 'admin-more', label: 'More', to: '/admin?tab=emails', subs: [['Emails', '/admin?tab=emails'], ['Backup & restore', '/admin?tab=backup'], ['Announcements', '/announcements']] },
 ];
 
 
@@ -75,7 +80,9 @@ const PROFILE_MENU: [StrKey, string][] = [
 ];
 
 
-const ADMIN_PROFILE_KEYS: StrKey[] = ['profile', 'calendar', 'resume', 'leaderboard'];
+const ADMIN_PROFILE_KEYS: StrKey[] = ['profile'];
+/** Learner-only pages. In Admin mode they send the admin to the dashboard ("Preview as learner" shows them). */
+const LEARNER_ONLY = ['/home', '/dashboard', '/cart', '/my-courses', '/calculator', '/purchases', '/grades', '/certificates', '/refer', '/resume', '/leaderboard', '/mentorship', '/files', '/reports', '/calendar'];
 
 const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
 
@@ -173,7 +180,12 @@ export default function Layout() {
     document.documentElement.lang = prefs.lang;
   }, [prefs.lang]);
 
-  const active = (to: string) => (to === '/' ? loc.pathname === '/' : loc.pathname.startsWith(to));
+  const active = (to: string): boolean => {
+    const [path, query] = to.split('?');
+    if (query) return loc.pathname === path && (loc.search.includes(query) || (path === '/admin' && !loc.search && query === 'tab=overview'));
+    return path === '/' ? loc.pathname === '/' : loc.pathname.startsWith(path);
+  };
+  const itemActive = (n: NavItem) => (n.to.includes('?') && n.subs ? n.subs.some(([, to]) => active(to)) : active(n.to));
   const go = (to: string) => {
     setMenu(null);
     setUserMenu(null);
@@ -191,6 +203,7 @@ export default function Layout() {
     <PreviewProvider>
       <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflowX: 'clip' }}>
         <Background />
+        <AdminBar />
         <SiteBannerStrip />
         <AppBar position="sticky" color="transparent" elevation={0} sx={{ top: 0, zIndex: 1100, pt: { xs: 1, md: 1.5 }, px: { xs: 1, md: 2 } }}>
           <Container
@@ -213,9 +226,9 @@ export default function Layout() {
                     onClick={(e) => (n.subs ? setMenu({ anchor: e.currentTarget, item: n }) : go(n.to))}
                     sx={{
                       fontWeight: 600, fontSize: 14, px: 1.1, minHeight: 40, borderRadius: '10px', position: 'relative',
-                      color: active(n.to) ? 'secondary.main' : 'text.primary',
+                      color: itemActive(n) ? 'secondary.main' : 'text.primary',
                       '& .MuiButton-endIcon': { ml: 0.25 },
-                      '&::after': { content: '""', position: 'absolute', left: 10, right: 10, bottom: 4, height: 2, borderRadius: 2, bgcolor: 'secondary.main', transform: active(n.to) ? 'scaleX(1)' : 'scaleX(0)', transition: 'transform .3s cubic-bezier(.2,.8,.2,1)' },
+                      '&::after': { content: '""', position: 'absolute', left: 10, right: 10, bottom: 4, height: 2, borderRadius: 2, bgcolor: 'secondary.main', transform: itemActive(n) ? 'scaleX(1)' : 'scaleX(0)', transition: 'transform .3s cubic-bezier(.2,.8,.2,1)' },
                       '&:hover::after': { transform: 'scaleX(1)' },
                     }}
                   >
@@ -289,7 +302,7 @@ export default function Layout() {
           <Divider />
           {isAdminAccount && [
             <MenuItem key="adm" onClick={() => go('/admin')} selected={active('/admin')}><AdminIcon fontSize="small" sx={{ mr: 1 }} /> Admin panel</MenuItem>,
-            <MenuItem key="mode" onClick={() => { setUserMenu(null); dispatch(adminActions.modeSet(isAdmin ? 'user' : 'admin')); }}>
+            <MenuItem key="mode" onClick={() => { setUserMenu(null); dispatch(adminActions.modeSet(isAdmin ? 'user' : 'admin')); nav(isAdmin ? '/home' : '/admin'); }}>
               <VisibilityIcon fontSize="small" sx={{ mr: 1 }} /> {isAdmin ? 'Preview as learner' : 'Back to admin mode'}
             </MenuItem>,
             <Divider key="d" />,
@@ -329,7 +342,7 @@ export default function Layout() {
                 <Box key={n.key}>
                   <ListSubheader sx={{ bgcolor: 'transparent', fontWeight: 700 }}>{navText(n)}</ListSubheader>
                   {n.subs.map(([l, to]) => (
-                    <ListItemButton key={l} onClick={() => go(to)} sx={{ pl: 4 }}>
+                    <ListItemButton key={l} selected={active(to)} onClick={() => go(to)} sx={{ pl: 4 }}>
                       <ListItemText primary={l} />
                     </ListItemButton>
                   ))}
@@ -359,7 +372,7 @@ export default function Layout() {
           {loading && <PageLoader full />}
           <Box key={loc.pathname + (loc.pathname.startsWith('/admin') ? '' : ':' + siteRev)} sx={loading ? { position: 'absolute', inset: 0, opacity: 0, pointerEvents: 'none', overflow: 'hidden' } : { animation: 'txfade .18s ease both' }}>
             <Suspense fallback={null}>
-              <Outlet />
+              {isAdmin && LEARNER_ONLY.includes(loc.pathname) ? <Navigate to="/admin" replace /> : <Outlet />}
               <PageReady key={loc.pathname} onReady={markReady} />
             </Suspense>
           </Box>
@@ -371,7 +384,7 @@ export default function Layout() {
         {isAdminAccount && <CourseEditorHost />}
         <QuizDialog />
         <SelectionBar />
-        <ChatWidget />
+        {!isAdmin && <ChatWidget />}
         <CartUpsell />
       </Box>
     </PreviewProvider>

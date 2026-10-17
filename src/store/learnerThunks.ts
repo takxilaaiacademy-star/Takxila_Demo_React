@@ -8,6 +8,9 @@ import { learnerActions as L } from './learnerSlice';
 import { uiActions as U } from './uiSlice';
 import { openAcademyCheckout, syncAcademyAdd } from '../utils/academy';
 import { emailData, emailLearner, toEmailCourse } from '../emails/send';
+import { inAdminMode, inPreview } from './roles';
+
+const ADMIN_FREE = 'As the admin you already have every course, free. Use "Preview as learner" to try buying.';
 
 /**
  * Learner actions with side effects (toasts, confetti, notifications, referral credit).
@@ -32,6 +35,7 @@ export const addToCart = (id: string): AppThunk => (dispatch, getState) => {
   const c = courseById(id);
   const { owned, cart } = getState().learner.data;
   if (!c) return;
+  if (inAdminMode(getState())) return dispatch(U.toastShown(ADMIN_FREE));
   if (owned.includes(id)) return dispatch(U.toastShown('You are already enrolled in this course.'));
   if (c.price === 0) {
     dispatch(L.enrolled({ ids: [id], at: now() }));
@@ -43,12 +47,13 @@ export const addToCart = (id: string): AppThunk => (dispatch, getState) => {
   }
   if (cart.includes(id)) return dispatch(U.toastShown('Already in your cart.'));
   dispatch(L.cartAdded([id]));
-  syncAcademyAdd(id);
+  if (!inPreview(getState())) syncAcademyAdd(id);
   dispatch(U.upsellSet(id));
 };
 
 /** Add several courses at once (selection bar, combos). */
 export const addMany = (ids: string[]): AppThunk => (dispatch, getState) => {
+  if (inAdminMode(getState())) return dispatch(U.toastShown(ADMIN_FREE));
   const { owned, cart } = getState().learner.data;
   const fresh = ids.filter((id) => !owned.includes(id) && !cart.includes(id));
   const free = fresh.filter((id) => courseById(id)?.price === 0);
@@ -61,7 +66,7 @@ export const addMany = (ids: string[]): AppThunk => (dispatch, getState) => {
   }
   if (paid.length) {
     dispatch(L.cartAdded(paid));
-    paid.forEach(syncAcademyAdd);
+    if (!inPreview(getState())) paid.forEach(syncAcademyAdd);
   }
   dispatch(U.selCleared());
   dispatch(
@@ -89,7 +94,7 @@ export const checkout = (paymentId?: string): AppThunk => (dispatch, getState) =
     subtotal: priced.subtotal, discounts: priced.lines, total: priced.total,
     ...(paymentId && { paymentId }),
   };
-  if (usedReferral && user?.refBy) {
+  if (usedReferral && user?.refBy && !inPreview(getState())) {
     // Credit the friend who shared the code.
     const all = load<Record<string, ReferralRec[]>>('referrals', {});
     const rec: ReferralRec = { name: user.name, email: user.email, courses: priced.ids, at: order.at, reward: REFERRAL_REWARD };
@@ -116,7 +121,7 @@ export const checkout = (paymentId?: string): AppThunk => (dispatch, getState) =
     dispatch(emailLearner(kind, data));
   }
   dispatch(U.celebrated());
-  dispatch(U.toastShown(paymentId ? 'Payment received. Your courses are ready.' : 'Enrolled! Your courses are ready.'));
+  dispatch(U.toastShown(inPreview(getState()) ? 'Preview: enrolled without paying. Nothing is saved and no email is sent.' : paymentId ? 'Payment received. Your courses are ready.' : 'Enrolled! Your courses are ready.'));
 };
 
 /** Tick the next lesson of a course. Finishing the last one completes the course and readies the certificate. */

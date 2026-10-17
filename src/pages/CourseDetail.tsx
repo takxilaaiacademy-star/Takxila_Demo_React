@@ -61,6 +61,7 @@ import { courseById, priceText } from "../data/recommend";
 import { ALL_ACCESS_PRICE, PAID } from "../data/showcase";
 import type { Course } from "../types";
 import CoursePromo from "../components/CoursePromo";
+import RichText from "../components/RichText";
 
 /**
  * Consolidated JSON configuration holding repeated styling, badge themes,
@@ -683,6 +684,7 @@ export default function CourseDetail({
                         </Box>
                         <Description
                           paragraphs={content.description}
+                          html={content.html}
                           audience={content.audience}
                         />
                       </>
@@ -857,6 +859,11 @@ function BuyCard({
               >
                 View my grades
               </Button>
+              {isAdmin && (
+                <Button variant="contained" color="secondary" onClick={onEdit}>
+                  Admin: edit this course
+                </Button>
+              )}
             </Stack>
           </>
         ) : c.price === 0 ? (
@@ -1134,9 +1141,11 @@ function Curriculum({
 /** Expandable course description and target audience list */
 function Description({
   paragraphs,
+  html,
   audience,
 }: {
   paragraphs: string[];
+  html?: string;
   audience: string[];
 }) {
   const [more, setMore] = useState(false);
@@ -1156,7 +1165,7 @@ function Description({
           }),
         }}
       >
-        {paragraphs.map((p, i) => (
+        {html ? <RichText html={html} /> : paragraphs.map((p, i) => (
           <Typography
             key={i}
             sx={{

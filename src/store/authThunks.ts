@@ -2,7 +2,7 @@ import { referralCode } from "../data/showcase";
 import type { Session, StoredUser } from "../types";
 import {
   ADMIN_EMAIL,
-  ADMIN_PASSWORD,
+  ADMIN_FIRST_PASSWORD,
   CLEAR_ON_LOGOUT,
   KEEP_ON_LOGOUT,
 } from "../config/site";
@@ -41,7 +41,7 @@ const newId = () =>
 
 const startSession =
   (email: string, remember: boolean): AppThunk =>
-  (dispatch) => {
+  (dispatch, getState) => {
     const s: Session = {
       email,
       loginAt: new Date().toISOString(),
@@ -51,6 +51,9 @@ const startSession =
     remove("session", sessionStorage);
     save("session", s, remember ? localStorage : sessionStorage);
     save("last_email", email);
+    // Admin > Users shows when each person last logged in and how often.
+    const u = getState().auth.users.find((x) => x.email === email);
+    if (u) dispatch(A.userUpdated({ email, patch: { lastLoginAt: s.loginAt, logins: (u.logins ?? 0) + 1 } }));
     dispatch(A.sessionStarted(s));
   };
 
@@ -97,24 +100,25 @@ export const login =
   ({ email, password, remember }: LoginInput): AppThunk<Promise<StoredUser>> =>
   async (dispatch, getState) => {
     const e = normEmail(email);
-    // The admin account: created on first login with the password from src/config/site.ts.
+    // The admin account. First login in this browser: the password typed becomes the admin password
+    // (or must equal VITE_ADMIN_PASSWORD when that is set). After that only its hash is checked.
     if (e === normEmail(ADMIN_EMAIL)) {
-      if (password !== ADMIN_PASSWORD)
-        throw new Error("Wrong password. Please try again.");
       let admin = getState().auth.users.find((x) => x.email === e);
-      if (!admin) {
-        admin = {
-          id: newId(),
-          name: "Takxila Admin",
-          email: e,
-          phone: "",
-          passHash: await hashPassword(ADMIN_PASSWORD),
-          createdAt: new Date().toISOString(),
-          role: "admin",
-        };
-        dispatch(A.userAdded(admin));
-      } else if (admin.role !== "admin")
-        dispatch(A.userUpdated({ email: e, patch: { role: "admin" } }));
+      if (!admin || !admin.passHash) {
+        if (ADMIN_FIRST_PASSWORD && password !== ADMIN_FIRST_PASSWORD)
+          throw new Error("Wrong password. Please try again.");
+        if (password.length < 8)
+          throw new Error("First admin login: choose a password of at least 8 characters. It becomes the admin password.");
+        const passHash = await hashPassword(password);
+        if (!admin) {
+          admin = { id: newId(), name: "Takxila Admin", email: e, phone: "", passHash, createdAt: new Date().toISOString(), role: "admin" };
+          dispatch(A.userAdded(admin));
+        } else dispatch(A.userUpdated({ email: e, patch: { passHash, role: "admin" } }));
+      } else {
+        if (admin.passHash !== (await hashPassword(password)))
+          throw new Error("Wrong password. Please try again.");
+        if (admin.role !== "admin") dispatch(A.userUpdated({ email: e, patch: { role: "admin" } }));
+      }
       dispatch(startSession(e, remember));
       return { ...admin, role: "admin" as const };
     }

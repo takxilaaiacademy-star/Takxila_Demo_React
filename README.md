@@ -69,6 +69,7 @@
 
 | Version | Highlights |
 | :--- | :--- |
+| **Rect-1** | **Admin dashboard** with monthly charts (enrolments: bought / given / free, revenue, sign-ups), KPIs, deadlines and recent activity · **Users** tab: last login, logins, courses, progress and **days left** per course, CSV export · **Activity log** of every content change, access change, sign-up, login and purchase · **Moodle-style text editor** (menu bar, toolbar, Source code, word count, accessibility checker, media manager) for the course summary · Moodle **General** settings in the course editor (short name, ID number, visibility, start/end date, course type, days to complete) · admin sections as **navbar tabs** · **order email fix** (designed HTML through Google Apps Script or EmailJS, tidy table + plain-text copy otherwise) · admin password no longer in the code · **Admin owns every course free** (no cart, no buying), lands on the **Dashboard**, **Orders** tab with every learner purchase · **Learner preview is a sandbox** (nothing saved, no emails, no real payment) · faster curriculum editor · screens scale from **Jio phone (240 px) to 100-inch 4K/8K TVs** · `tools/email/Code.gs` for Google Apps Script |
 | **new-code-5** | Course content from the Word files for 17 more courses: Lovable, ChatGPT, Claude (4 courses), Gemini, Perplexity, DeepSeek, Generative AI, Midjourney (2), Kling (2), Google Omni (2) and Canva. Prices and titles unchanged |
 | **new-code-4** | Course content from the Word files for 9 courses (sections, lectures, includes, level, language) · black-and-gold **special-offer promo card** on course pages and Home · **8 more languages** (18 total) with **whole-site live translation** · **Google, Facebook and Microsoft login** through Redux · **Academy cart sync** on every add-to-cart, plus **Proceed to checkout** on academy.takxila.in · this README |
 | **new-code-3** | Reliable PDF and DOCX reading for the ATS score · branded HTML emails with the logo for purchase, free enrolment and course completion · About Us page |
@@ -189,6 +190,9 @@ VITE_EMAILJS_SERVICE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 VITE_EMAILJS_TEMPLATE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 VITE_EMAILJS_PUBLIC_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+# Learner emails through your Google Apps Script web app (tools/email/Code.gs)
+VITE_MAIL_WEBHOOK=https://script.google.com/macros/s/xxxxxxxx/exec
+
 # Your live address, used for the logo and buttons inside emails
 VITE_SITE_URL=https://takxila.in
 ```
@@ -252,7 +256,18 @@ A black card with gold accents, modelled on the Lovable Deep Dive poster: catego
 
 ### 6. ✉️ Branded Learner Emails
 - HTML emails with the Takxila logo for **course purchase**, **free enrolment** and **course completion** (greeting plus "your certificate is ready").
-- Sent through **EmailJS** when its three keys are set, otherwise through **FormSubmit** with the learner in copy.
+- Sent, in this order of preference, through **EmailJS** (three keys in `.env`), or a free **Google Apps Script** web app on the academy Gmail (`tools/email/Code.gs`, put its `/exec` link in `VITE_MAIL_WEBHOOK`). Both send the designed HTML.
+- With neither set, **FormSubmit** is used: it cannot send designed emails, so the inbox gets a tidy table (order, courses, total) and the learner a readable plain-text copy as an auto-reply. **Admin > Emails** shows which one is active and sends a test.
+- Set `VITE_SITE_URL` to your live address: Gmail cannot load the logo from `localhost`.
+- **Google Apps Script, step by step** (free, sends from the academy Gmail, about 100 emails a day):
+  1. Open [script.google.com](https://script.google.com) signed in as the academy Gmail, **New project**.
+  2. Delete what is there, paste all of `tools/email/Code.gs`, press **Save**.
+  3. Optional: pick `testSend` in the function list and **Run** it once; allow the permissions; a test mail arrives.
+  4. **Deploy > New deployment**, type **Web app**, *Execute as* **Me**, *Who has access* **Anyone**, **Deploy**, allow the permissions, copy the link ending in `/exec`.
+  5. Test now: **Admin > More > Emails**, paste it in **Apps Script link**, **Use link**, then **Send test** to any address.
+  6. For every visitor: put it in `.env` as `VITE_MAIL_WEBHOOK=` (or in `MAIL_WEBHOOK_URL` in `src/config/site.ts`) and rebuild.
+  7. Changed the script later? **Deploy > Manage deployments > Edit > Version: New version > Deploy** (the link stays the same).
+- **Send test** in Admin > Emails sends to whatever address you type there.
 - EmailJS template variables: `to_email`, `to_name`, `subject`, `html_body`, `text_body`, `reply_to`. In the EmailJS template, put `{{{html_body}}}` (three braces) as the content.
 
 ### 7. 🧮 AI Quiz & Course Calculator
@@ -510,20 +525,35 @@ Takxila-React-new-code-4/
 
 ## 🛠️ Admin Mode: Run the Website Without a Developer
 
-Log in with the admin account (`support@takxila.in`, password from `VITE_ADMIN_PASSWORD`). A gold **ADMIN MODE** strip appears above the navbar.
+Log in with the admin account `support@takxila.in`. **The first time in a browser, the password you type (8+ characters) becomes the admin password**; only its SHA-256 hash is saved, and you can change it in Profile. Set `VITE_ADMIN_PASSWORD` in `.env` if you want the first login to require one exact password. The admin lands on the **Dashboard**; "Hi Takxila" on the home page also opens it.
+
+> ⚠️ This is a browser-only login. Anyone who reads the site's code can get round it. For real protection, check the admin on a server.
 
 | What you want | Where |
 |---|---|
-| Edit a course (title, price, banner, summary video, lesson player link, "What you'll learn", sections, lectures, requirements, description) | Pencil on any course card, **Edit this course** on a course page, or **Admin > Courses > Edit** |
-| Add a new course | **Add course** in the gold strip, or **Admin > Courses > Add a course** |
+| See learners, enrolments, revenue and monthly charts | **Dashboard** (navbar) = **Admin > Dashboard** |
+| See who logged in, their courses, progress and days left to finish | **Users** (navbar); click a person for the detail; **CSV** downloads it all |
+| See every change made to the content, plus sign-ups, logins and purchases | **Activity** (navbar) |
+| Check how learner emails look, which service sends them, send a test | **More > Emails** |
+| Write the course summary with formatting, images, videos, tables | Edit a course > **Course page** > **Course summary** (Tools > **Source code** edits the HTML) |
+| Moodle-style settings: short name, ID number, visibility, start/end date, Paid/Free, days to complete | Edit a course > **General** |
+| Edit a course (title, price, banner, summary video, lesson player link, "What you'll learn", sections, lectures, requirements, description) | Pencil on any course card, **Admin: edit this course** on a course page, or **Admin > Courses > Edit** |
+| Add a new course | **Content > Courses > Add a course** |
+| See every learner purchase (order id, courses, amount, date) | **Orders** (navbar); **CSV** downloads it |
 | Hide or delete a course | Edit > **Access** tab (built-in courses are hidden and can be restored; courses you created are deleted) |
 | Let anybody with an account watch a course | **Admin > Courses**: switch on **Open access** (or **Open all to everyone**) |
 | Give courses to one learner or to all current learners | **Admin > Give access** |
 | Rename or hide navbar items, show an announcement banner | **Admin > Navbar & banner** |
-| See the site exactly as a learner does (navbar included) | **Preview as learner** (gold strip or account menu); **Back to admin mode** returns |
+| See the site exactly as a learner does (navbar included) | **Preview as learner** (account menu); **Back to admin mode** returns |
 | Save everything to a file / move it to another computer / start over | **Admin > Backup & restore** |
 
-Admin mode has its own navbar (Home, Courses, Admin panel, Announcements, About, Helpdesk, Policies, Contact). Learner-only items (Dashboard, My courses, Calculator, cart, notifications) appear in the learner preview.
+Admin mode has its own navbar, with no Home and no cart: Courses, **Dashboard**, **Users**, **Content** (Courses, Give access, Course players, Navbar & banner), **Orders**, **Activity** and **More** (Emails, Backup & restore, Announcements). Learner pages (Home, My courses, Cart…) open the Dashboard instead.
+
+**The admin never buys.** Every course, including hidden ones, is open to the admin for free; there is no cart or Add to cart. The admin's own lessons are not counted as learner activity and no learner email is sent to the admin.
+
+**Learner preview is a test sandbox.** While previewing, nothing is saved (accounts, cart, progress, orders), nothing goes to the activity log, no email is sent and checkout is simulated without payment. A blue strip says so. **Back to admin mode** (or reloading the page) throws the preview away.
+
+**Days left** = enrolment date + the course's *days to complete* (set in the course editor; otherwise read from the course length such as "28 Days", else 30) − today. Learner-only items (Home, My courses, Calculator, cart, notifications) appear in the learner preview.
 
 **Lesson player links** accept any `https` link. YouTube, Vimeo and Google Drive share links are converted to their embed form automatically.
 
@@ -547,6 +577,8 @@ Admin mode has its own navbar (Home, Courses, Admin panel, Announcements, About,
 | Promo cards | Black with gold `#D9A441` | Same |
 
 Effects in `src/components/fx.tsx` (spotlight, moving borders, meteors, flip words, 3D tilt) are pure CSS and MUI `sx`, with no animation library.
+
+**Every screen size.** Tested with no sideways scrolling from a 240×320 Jio phone through phones, tablets, laptops and desktops to 4K TVs. On big screens `index.html` scales the whole site with a `--tx-zoom` value (×1.35 from 2200 px wide, ×1.75 from 2800, ×2 from 3400 and ×3 from 5000 for 8K), so text stays readable on a 100-inch TV; below 300 px it shrinks to ×0.8. Change those numbers in the `<style>` block of `index.html`.
 
 ---
 

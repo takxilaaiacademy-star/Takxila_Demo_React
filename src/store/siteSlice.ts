@@ -106,6 +106,12 @@ const siteSlice = createSlice({
       }
       s.rev++;
     },
+    /** Admin > course editor > Course visibility: Show / Hide, for built-in and created courses alike. */
+    visibilitySet: (s, a: PayloadAction<{ id: string; hidden: boolean }>) => {
+      const rest = s.hiddenCourses.filter((x) => x !== a.payload.id);
+      s.hiddenCourses = a.payload.hidden ? [...rest, a.payload.id] : rest;
+      s.rev++;
+    },
     contentEdited: (s, a: PayloadAction<{ id: string; patch: Partial<CourseContent> }>) => {
       s.contentEdits[a.payload.id] = { ...s.contentEdits[a.payload.id], ...a.payload.patch };
       s.rev++;

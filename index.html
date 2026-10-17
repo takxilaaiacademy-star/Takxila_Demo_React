@@ -12,6 +12,21 @@
     href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
   <title>Takxila AI Academy</title>
   <style>
+    /* Big screens (2K/4K monitors, smart TVs up to 100 inch) scale the whole site up so text stays readable from
+       the sofa; tiny feature-phone screens (JioPhone, 240 px) scale it down a little so the header fits. */
+    :root { --tx-zoom: 1; }
+    @media (min-width: 2200px) { :root { --tx-zoom: 1.35; } }
+    @media (min-width: 2800px) { :root { --tx-zoom: 1.75; } }
+    @media (min-width: 3400px) { :root { --tx-zoom: 2; } }
+    @media (min-width: 5000px) { :root { --tx-zoom: 3; } }
+    @media (max-width: 300px) { :root { --tx-zoom: 0.8; } }
+    /* The page and every pop-up's contents are scaled; pop-up positions are not, so menus still open under their button. */
+    /* Tab underlines are measured in unscaled pixels, so on scaled screens the selected tab draws its own. */
+    @media (min-width: 2200px), (max-width: 300px) {
+      .MuiTabs-indicator { display: none; }
+      .MuiTab-root.Mui-selected { box-shadow: inset 0 -2px 0 currentColor; }
+    }
+    #root, .MuiPopover-paper > *, .MuiTooltip-tooltip, .MuiDialog-container, .MuiDrawer-paper, .MuiSnackbar-root { zoom: var(--tx-zoom); }
     .tx-boot {
       position: fixed;
       inset: 0;

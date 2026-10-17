@@ -4,6 +4,7 @@ import { lessonsFor } from '../data/curriculum';
 import { certificateId } from '../data/showcase';
 import { api } from '../store/api';
 import type { AppThunk } from '../store';
+import { isAdminAccount } from '../store/roles';
 import { renderEmail, type EmailCourse, type EmailData, type EmailKind } from './templates';
 
 /** The address used for the logo and links inside emails. */
@@ -35,16 +36,39 @@ export function emailData(kind: EmailKind, name: string, email: string, extra: P
   return d;
 }
 
+const rupee = (n: number) => (n === 0 ? 'Free' : '₹' + n.toLocaleString('en-IN'));
+
+/** The short labelled summary FormSubmit shows as a table when no HTML sender is set up. */
+export function emailFields(kind: EmailKind, d: EmailData): Record<string, string> {
+  const f: Record<string, string> = {
+    Type: kind === 'purchase' ? 'Course purchase' : kind === 'enroll' ? 'Free enrolment' : 'Course completed',
+    Courses: d.courses.map((c) => c.title + (kind === 'purchase' && c.price != null ? ` (${rupee(c.price)})` : '')).join(' • '),
+  };
+  if (d.orderId) f.Order = d.orderId;
+  if (d.paymentId) f['Payment ID'] = d.paymentId;
+  if (d.total != null && kind === 'purchase') f['Total paid'] = rupee(d.total);
+  if (d.certificateId) f.Certificate = d.certificateId;
+  if (d.date) f.Date = d.date;
+  return f;
+}
+
+/** Send any of the learner emails to an address (Admin > Emails > Send a test). */
+export const sendEmailTo = (kind: EmailKind, data: EmailData, to: string, name: string): AppThunk<Promise<'emailjs' | 'webhook' | 'formsubmit'>> => (dispatch) => {
+  const mail = renderEmail(kind, data);
+  return dispatch(api.endpoints.learnerEmail.initiate({ to, name, ...mail, fields: emailFields(kind, data) })).unwrap();
+};
+
 /** Send one branded email to the logged-in learner (quietly; a failed email never blocks the app). */
 export const emailLearner =
   (kind: EmailKind, data: EmailData): AppThunk =>
   (dispatch, getState) => {
     const { learner, auth } = getState();
-    if (!learner.data.prefs.emails || !learner.email) return;
+    // No emails for the admin's own account (Admin mode or "Preview as learner"): it is for testing only.
+    if (!learner.data.prefs.emails || !learner.email || isAdminAccount(getState())) return;
     const user = auth.users.find((u) => u.email === learner.email);
     if (!user) return;
     const mail = renderEmail(kind, data);
-    void dispatch(api.endpoints.learnerEmail.initiate({ to: user.email, name: user.name, ...mail }))
+    void dispatch(api.endpoints.learnerEmail.initiate({ to: user.email, name: user.name, ...mail, fields: emailFields(kind, data) }))
       .unwrap()
       .catch((e: unknown) => console.warn('Email not sent:', e));
   };

@@ -1,5 +1,6 @@
 import { api, INBOX } from '../store/api';
 import { store } from '../store';
+import { inPreview } from '../store/roles';
 
 export { INBOX };
 
@@ -8,6 +9,8 @@ export { INBOX };
  * which posts to FormSubmit. If it fails, the caller falls back to a mailto: link.
  */
 export async function sendMail(subject: string, fields: Record<string, string>): Promise<void> {
+  // Admin's "Preview as learner" is for testing: forms look sent, but nothing leaves the browser.
+  if (inPreview(store.getState())) return;
   try {
     await store.dispatch(api.endpoints.sendMail.initiate({ subject, fields })).unwrap();
   } catch (e) {

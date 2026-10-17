@@ -10,6 +10,8 @@ interface ImportMetaEnv {
   readonly VITE_EMAILJS_PUBLIC_KEY?: string;
   /** Your live site address (https://...), used for the logo and buttons in emails */
   readonly VITE_SITE_URL?: string;
+  readonly VITE_MAIL_WEBHOOK?: string;
+  readonly VITE_ADMIN_PASSWORD?: string;
 }
 interface ImportMeta {
   readonly env: ImportMetaEnv;

@@ -34,6 +34,7 @@ interface AuthValue {
   isAdminAccount: boolean;
   /** Admin account AND currently in Admin mode (Admin can switch to User mode to see the site as a learner) */
   isAdmin: boolean;
+  homePath: string;
   lastEmail: string;
   /** Everyone registered in this browser (name and email only), for the leaderboard */
   members: { name: string; email: string }[];
@@ -96,6 +97,8 @@ export function useAuth(): AuthValue {
     social,
     isAdminAccount,
     isAdmin: isAdminAccount && adminMode === "admin",
+    /** Where "Hi <name>", the logo and log-in send this person: the admin dashboard in Admin mode, else Home. */
+    homePath: isAdminAccount && adminMode === "admin" ? "/admin" : "/home",
     lastEmail: load<string>("last_email", ""),
     members,
   };

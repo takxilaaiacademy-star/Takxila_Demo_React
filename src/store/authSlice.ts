@@ -29,6 +29,10 @@ const authSlice = createSlice({
       const u = s.users.find((x) => x.email === a.payload.email);
       if (u) Object.assign(u, a.payload.patch);
     },
+    /** Put the saved accounts back (leaving the admin's learner preview). */
+    usersLoaded: (s, a: PayloadAction<StoredUser[]>) => {
+      s.users = a.payload;
+    },
     sessionStarted: (s, a: PayloadAction<Session>) => {
       s.session = a.payload;
     },

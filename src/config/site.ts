@@ -8,21 +8,27 @@ export const SITE = {
   /** Country code + number, no "+" or spaces: what wa.me and tel: links need */
   phoneE164: "917276607776",
   phoneDisplay: "+91 72766 07776",
-  pass:
-    (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined) ||
-    "Takxila@123",
 } as const;
+
+/**
+ * Google Apps Script email sender (tools/email/Code.gs). Paste the Web app link that ends in /exec here,
+ * or put it in .env as VITE_MAIL_WEBHOOK (the .env value wins). Empty: emails go out through FormSubmit (plain).
+ */
+export const MAIL_WEBHOOK_URL =
+  "https://script.google.com/macros/s/AKfycbzXcyK920wIkbC1M8oXnwELIgfjzES6-rn6_OoDEoeVKBq3ZsYOFE9SdGFpC6apW-dU/exec";
 
 export const TEL_HREF = "tel:+" + SITE.phoneE164;
 
 /**
- * The admin account. The email is public by nature; the password is NOT stored in the code.
- * Put it in your .env file:  VITE_ADMIN_PASSWORD=your-password
- * (Anything in a frontend bundle can be read by a visitor, so for real security move this check to a server.)
+ * The admin account. The email is public by nature; the password is NOT written in the code.
+ *   - First login in a browser: the password typed becomes the admin password (8+ characters). Only its
+ *     SHA-256 hash is saved. Change it later in Profile > Password.
+ *   - Optional: set VITE_ADMIN_PASSWORD in .env to require that exact password for the very first login.
+ * Anything in a frontend bundle can be read by a visitor, so for real security move this check to a server.
  */
 export const ADMIN_EMAIL = SITE.supportEmail;
-// Local setup: falls back to the password below when VITE_ADMIN_PASSWORD is not set. Change it before going live.
-export const ADMIN_PASSWORD = SITE.pass;
+export const ADMIN_FIRST_PASSWORD =
+  (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined) || "";
 
 /**
  * WHAT HAPPENS TO THE BROWSER'S SAVED DATA WHEN SOMEONE LOGS OUT
@@ -48,4 +54,6 @@ export const KEEP_ON_LOGOUT: string[] = [
   "referrals",
   "messages", // contact-form messages
   "visits", // visitor counter
+  "mail_webhook", // the email-sender link pasted in Admin > Emails
+  "activity_log", // the admin's activity log (content changes, sign-ups, purchases)
 ];

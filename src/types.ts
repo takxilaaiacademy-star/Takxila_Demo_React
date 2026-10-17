@@ -28,6 +28,14 @@ export interface CourseData {
   img: string;
   featured: boolean;
   tags: string[];
+  /** Optional, set from Admin > Courses (Moodle-style "General" settings) */
+  shortName?: string;
+  idNumber?: string;
+  /** YYYY-MM-DD */
+  startDate?: string;
+  endDate?: string;
+  /** Days a learner has to finish the course after enrolling (Admin > Users shows the days left) */
+  days?: number;
 }
 
 /** Admin changes to a course. Any field left out keeps its built-in value. */
@@ -95,6 +103,9 @@ export interface StoredUser {
   phone: string;
   passHash: string;
   createdAt: string;
+  /** Last time this account logged in, and how many times (shown in Admin > Users) */
+  lastLoginAt?: string;
+  logins?: number;
   city?: string;
   bio?: string;
   /** Small JPEG data URL, resized in the browser before saving */

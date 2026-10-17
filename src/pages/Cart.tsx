@@ -13,7 +13,8 @@ import { CUSTOM_MIN, PACKS, priceCart } from '../data/showcase';
 import { useUser } from '../context/AuthContext';
 import { isTestKey, payWithRazorpay, razorpayReady } from '../utils/razorpay';
 import { academyAddUrl, academyLoginUrl } from '../utils/academy';
-import { useAppDispatch } from '../store';
+import { useAppDispatch, useAppSelector } from '../store';
+import { inPreview } from '../store/roles';
 import { checkoutOnAcademy } from '../store/learnerThunks';
 import StorefrontIcon from '@mui/icons-material/StorefrontOutlined';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
@@ -26,6 +27,7 @@ export default function Cart() {
   const [setup, setSetup] = useState(false);
   const [academy, setAcademy] = useState(false);
   const dispatch = useAppDispatch();
+  const preview = useAppSelector(inPreview);
   const items = cart.map(courseById).filter((c): c is Course => !!c);
   const was = items.reduce((a, c) => a + (c.was || c.price), 0);
   const priced = priceCart(cart, owned, referralOpen);
@@ -42,6 +44,8 @@ export default function Cart() {
     nav('/my-courses');
   };
   const pay = async () => {
+    // Admin's learner preview: no real payment, the purchase is simulated in the sandbox.
+    if (preview) return done();
     if (total <= 0) return done();
     if (!razorpayReady) return setSetup(true);
     setPaying(true);
@@ -145,7 +149,7 @@ export default function Cart() {
                 <Typography sx={{ fontWeight: 800, fontSize: 20 }}>₹{total}</Typography>
               </Stack>
               {total > 0 && (
-                <Button fullWidth variant="contained" color="secondary" size="large" startIcon={<StorefrontIcon />} onClick={() => setAcademy(true)} sx={{ mb: 1.25 }}>
+                <Button fullWidth variant="contained" color="secondary" size="large" startIcon={<StorefrontIcon />} onClick={() => (preview ? done() : setAcademy(true))} sx={{ mb: 1.25 }}>
                   Proceed to checkout
                 </Button>
               )}

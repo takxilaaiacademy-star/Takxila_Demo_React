@@ -23,6 +23,8 @@ export interface CourseContent {
   audience: string[];
   /** Paragraphs of the description. A paragraph starting with "• " shows as a list line. */
   description: string[];
+  /** Rich description written in the admin's text editor (sanitised HTML). When set it is shown instead of `description`. */
+  html?: string;
   /** Optional "This course includes" lines; when set they replace the standard list on the course page */
   includes?: string[];
   /** Optional level shown under the title, e.g. "Beginner to Advanced" */

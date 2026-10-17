@@ -150,7 +150,28 @@ ${summary}
   <li>Finish all lessons to unlock your <b style="color:${INK}">verified certificate</b>.</li>
 </ul>
 <p style="margin:0 0 6px;font-size:15px;line-height:1.7">Happy learning,<br><b>Team TAKXILA</b></p>`;
-  const text = `Hi ${d.name},\n\n${free ? "You're enrolled in" : "Your order " + (d.orderId ?? "") + " is confirmed. You now have access to"}:\n${d.courses.map((c) => "- " + c.title + (free ? "" : " (" + rupees(c.price ?? 0) + ")")).join("\n")}\n${free ? "" : "\nTotal paid: " + rupees(d.total ?? 0) + "\n"}\nStart learning: ${d.site}/my-courses\n\nHappy learning,\nTeam TAKXILA`;
+  const start = d.site + (n === 1 ? "/courses/" + encodeURIComponent(d.courses[0].id) : "/my-courses");
+  const text = [
+    `Hi ${d.name.trim().split(/\s+/)[0] || "there"},`,
+    "",
+    free ? `🎓 You're enrolled! Your free course is unlocked.` : `🎉 Your order ${d.orderId ?? ""} is confirmed. Welcome to TAKXILA AI Academy!`,
+    "",
+    n === 1 ? "YOUR COURSE" : "YOUR COURSES",
+    ...d.courses.map((c) => "• " + c.title + (free ? "" : " — " + rupees(c.price ?? 0))),
+    ...(free ? [] : ["", `Total paid: ${rupees(d.total ?? 0)}`, `Order ${d.orderId ?? ""}${d.paymentId ? " · Payment ID " + d.paymentId : ""}${d.date ? " · " + d.date : ""}`]),
+    "",
+    `▶ Start learning: ${start}`,
+    "",
+    "How to get the most out of it",
+    "• Block 20 minutes a day. Small, steady practice beats weekend marathons.",
+    "• Try every prompt and exercise yourself, then apply it to your own work.",
+    "• Finish all lessons to unlock your verified certificate.",
+    "",
+    `Questions? Reply to this email, write to ${SUPPORT_EMAIL} or WhatsApp ${WHATSAPP}.`,
+    "",
+    "Happy learning,",
+    "Team TAKXILA",
+  ].join("\n");
   return {
     subject,
     html: layout(
@@ -197,7 +218,22 @@ ${
     : ""
 }
 <p style="margin:22px 0 6px;font-size:15px;line-height:1.7">With warm wishes for everything you build next,<br><b>Team TAKXILA</b></p>`;
-  const text = `Dear ${d.name},\n\nCongratulations! You have completed ${c.title}.\nYour certificate (ID ${d.certificateId ?? ""}) is ready: ${d.site}/certificates\n\nWith warm wishes,\nTeam TAKXILA`;
+  const text = [
+    `Dear ${d.name.trim().split(/\s+/)[0] || "there"},`,
+    "",
+    `🏆 Congratulations! You have completed ${c.title}.`,
+    "",
+    `Your Certificate of Completion is ready (ID ${d.certificateId ?? ""}).`,
+    `▶ Download it: ${d.site}/certificates`,
+    "",
+    "Share it on LinkedIn and tag TAKXILA AI Academy. We love to celebrate our learners!",
+    ...(next.length ? ["", "Keep the momentum going:", ...next.map((x) => `• ${x.title} — ${d.site}/courses/${encodeURIComponent(x.id)}`)] : []),
+    "",
+    `Questions? Reply to this email, write to ${SUPPORT_EMAIL} or WhatsApp ${WHATSAPP}.`,
+    "",
+    "With warm wishes,",
+    "Team TAKXILA",
+  ].join("\n");
   return {
     subject,
     html: layout(

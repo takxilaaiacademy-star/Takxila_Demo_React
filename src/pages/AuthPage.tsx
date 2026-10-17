@@ -25,6 +25,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircleRounded";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { isAdminEmail } from "../store/roles";
 import { useThemeMode } from "../context/ThemeModeContext";
 import Background from "../components/Background";
 import Logo from "../components/Logo";
@@ -84,7 +85,9 @@ function PasswordField(props: TextFieldProps) {
 }
 
 export default function AuthPage() {
-  const { isAuthed, login, register, signInWith, social, lastEmail } = useAuth();
+  const { isAuthed, login, register, signInWith, social, lastEmail, homePath } = useAuth();
+  // The admin always lands on the admin dashboard; learners on Home (or the page they were sent from).
+  const target = (admin: boolean) => (admin ? "/admin" : from || "/home");
   const { mode, toggleMode } = useThemeMode();
   const heroUrl = useBlobUrl(
     mode === "dark" ? "/assets/3.jpg" : "/assets/1.jpg",
@@ -112,7 +115,7 @@ export default function AuthPage() {
   const [formErr, setFormErr] = useState("");
   const [busy, setBusy] = useState(false);
 
-  if (isAuthed) return <Navigate to={from || "/home"} replace />;
+  if (isAuthed) return <Navigate to={homePath === "/admin" ? "/admin" : from || "/home"} replace />;
 
   const set = (k: keyof AuthForm) => (e: ChangeEvent<HTMLInputElement>) =>
     setF((s) => ({
@@ -146,7 +149,7 @@ export default function AuthPage() {
   // Google / Facebook / Microsoft sign-in runs as a Redux thunk (src/store/authThunks.ts).
   const withProvider = async (p: Provider) => {
     setFormErr("");
-    if (await signInWith(p, f.remember)) nav(from || "/home", { replace: true, state: { calc: true } });
+    if (await signInWith(p, f.remember)) nav(target(false), { replace: true, state: { calc: true } });
   };
 
   const submit = async (ev: FormEvent<HTMLFormElement>) => {
@@ -157,7 +160,7 @@ export default function AuthPage() {
     try {
       if (tab === "register") await register(f);
       else await login(f);
-      nav(from || "/home", { replace: true, state: { calc: true } });
+      nav(target(tab === "login" && isAdminEmail(f.email)), { replace: true, state: { calc: true } });
     } catch (e) {
       setFormErr(
         e instanceof Error
